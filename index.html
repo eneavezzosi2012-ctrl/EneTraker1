@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, viewport-fit=cover"/>
+  <meta name="mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="apple-mobile-web-app-title" content="Tracker"/>
+  <meta name="application-name" content="Tracker"/>
+  <meta name="theme-color" content="#000000"/>
+  <meta name="color-scheme" content="dark"/>
+  <meta name="format-detection" content="telephone=no, date=no, email=no, address=no"/>
+  <title>Enea · Tracker</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body, #root { height: 100%; background: #000000; }
+    body {
+      overscroll-behavior: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      touch-action: manipulation;
+      font-feature-settings: "kern" 1, "liga" 1;
+    }
+    ::-webkit-scrollbar { width: 2px; height: 2px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(10,132,255,0.2); border-radius: 2px; }
+    input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+
+  <link rel="stylesheet" href="style.css"/>
+
+  <!-- Firebase -->
+  <script type="module" src="firebase.js"></script>
+
+  <!-- PDF.js lazy loader -->
+  <script src="pdfjs-loader.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- Migrazione localStorage -->
+  <script src="migration.js"></script>
+
+  <!-- React + Babel -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.3/babel.min.js"></script>
+
+  <!--
+    Carica tutti i file JS in ordine, li concatena in un unico testo
+    e lo compila con Babel in un unico scope condiviso.
+    Questo è necessario perché Babel standalone con src= esterno
+    esegue ogni file in uno scope separato, rompendo le dipendenze tra file.
+  -->
+  <script>
+    (async function() {
+      // Ordine di caricamento: rispetta le dipendenze
+      const FILES = [
+        "utils.js",
+        "components-shared.js",
+        "stats.js",
+        "notes.js",
+        "tracking.js",
+        "history-editor.js",
+        "seasons-backup.js",
+        "settings.js",
+        "tab-home.js",
+        "tab-nutrition.js",
+        "tab-training.js",
+        "tab-tasks.js",
+        "tab-calendar.js",
+        "app.js",
+        "auth.js",
+      ];
+
+      try {
+        const sources = await Promise.all(
+          FILES.map(f => fetch(f).then(r => {
+            if (!r.ok) throw new Error("Impossibile caricare " + f + " (" + r.status + ")");
+            return r.text();
+          }))
+        );
+
+        // Unisce tutti i file in un unico sorgente con separatori di riga
+        const combined = sources
+          .map((src, i) => "/* === " + FILES[i] + " === */\n" + src)
+          .join("\n\n");
+
+        // Compila il tutto con Babel in un unico scope
+        const compiled = Babel.transform(combined, {
+          presets: ["react"],
+          filename: "app-bundle.jsx",
+        }).code;
+
+        // Esegue il codice compilato
+        // eslint-disable-next-line no-new-func
+        new Function(compiled)();
+
+      } catch (err) {
+        console.error("[Loader] Errore caricamento app:", err);
+        document.getElementById("root").innerHTML =
+          '<div style="color:#FF453A;padding:40px;font-family:monospace;font-size:13px;">' +
+          '<b>Errore avvio app</b><br/><br/>' + err.message +
+          '<br/><br/><small>Controlla la console per dettagli.</small></div>';
+      }
+    })();
+  </script>
+</body>
+</html>

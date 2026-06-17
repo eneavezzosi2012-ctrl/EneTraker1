@@ -1,27 +1,41 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ENEA · TRACKER — Design System v5.0
-   Pro Dark — Linear / Vercel / Raycast
+   ENEA · TRACKER — Design System v6.0
+   Pro Dark Mono — Linear · Vercel · Raycast
+   Redesign: zero blu, zero emoji nav, SVG mask icons, no childish anim
    ═══════════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
 
+/* ═══════════════════════════════════════
+   DESIGN TOKENS
+   ═══════════════════════════════════════ */
 :root {
-  /* ── Accent — usato al minimo assoluto ── */
-  --accent: #2563EB;
-  --accent-2: #1d4ed8;
-  --accent-soft: rgba(37,99,235,0.06);
-  --accent-border: rgba(37,99,235,0.22);
 
-  /* ── System colors — desaturati per palette monocromatica ── */
-  --green: rgba(255,255,255,0.82);
-  --blue: rgba(255,255,255,0.68);
+  /* ── Accent — monocromatico: ZERO BLU ──────────────────────────
+     --accent e --accent-2 erano #2563EB / #1d4ed8.
+     Sostituiti con bianco/grigio. L'unico "accento" è bianco puro.
+     --accent-soft e --accent-border erano rgba(37,99,235,…).
+     Sostituiti con fill bianco ultra-sottile.
+  ─────────────────────────────────────────────────────────────── */
+  --accent:        rgba(255,255,255,0.92);
+  --accent-2:      rgba(255,255,255,0.65);
+  --accent-soft:   rgba(255,255,255,0.04);
+  --accent-border: rgba(255,255,255,0.10);
+
+  /* ── System colors — neutralizzati, palette monocromatica ──────
+     --green / --blue / --purple / --orange / --yellow già erano
+     tinte bianche nel file originale. --yellow ora usa la stessa
+     logica delle altre. --red: unico colore semantico (errore/pericolo).
+  ─────────────────────────────────────────────────────────────── */
+  --green:  rgba(255,255,255,0.82);
+  --blue:   rgba(255,255,255,0.68);
   --purple: rgba(255,255,255,0.52);
-  --yellow: #ffffff;
+  --yellow: rgba(255,255,255,0.60);
   --orange: rgba(255,255,255,0.72);
-  --red: #e05252;
+  --red:    #e05252;
 
   /* ── Superfici ── */
-  --bg: #000000;
+  --bg:   #000000;
   --bg-2: #0a0a0a;
   --bg-3: #111111;
   --bg-4: #161616;
@@ -32,24 +46,28 @@
   --lbl-3: rgba(255,255,255,0.28);
   --lbl-4: rgba(255,255,255,0.13);
 
-  /* ── Fill sottili ── */
+  /* ── Fill ── */
   --fill-1: rgba(255,255,255,0.08);
   --fill-2: rgba(255,255,255,0.05);
   --fill-3: rgba(255,255,255,0.03);
   --fill-4: rgba(255,255,255,0.02);
 
   /* ── Bordi ── */
-  --sep: #1a1a1a;
+  --sep:        #1a1a1a;
   --sep-strong: #242424;
 
   /* ── Card ── */
-  --card-bg: #0a0a0a;
+  --card-bg:     #0a0a0a;
   --card-border: #1a1a1a;
 
-  /* ── Tipografia — Inter su tutto ── */
-  --font-sys: 'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+  /* ── Tipografia ── */
+  --font-sys:     'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
   --font-display: 'Inter', system-ui, sans-serif;
+
+  /* ── Numeri display (.bignum) ── */
+  --bignum-weight:   800;
+  --bignum-tracking: -2px;
 
   /* ── Raggi — sharp, niente morbido ── */
   --r-xs: 4px;
@@ -59,9 +77,74 @@
   --r-xl: 8px;
 
   /* ── Motion ── */
-  --spring: cubic-bezier(.34,1.56,.64,1);
-  --ios: cubic-bezier(.25,.46,.45,.94);
+  --spring: cubic-bezier(.34,1.56,.64,1); /* solo per transizioni funzionali */
+  --ios:    cubic-bezier(.25,.46,.45,.94);
   --smooth: cubic-bezier(.4,0,.2,1);
+
+  /* ══════════════════════════════════════════════════════════════
+     SVG ICON LIBRARY — Lucide 0.383 (stroke-based, URL-encoded)
+     Utilizzo: -webkit-mask-image: var(--svg-*);
+               mask-image:         var(--svg-*);
+               background-color:   currentColor;
+     Il colore dell'icona è controllato da `color` sul genitore.
+  ══════════════════════════════════════════════════════════════ */
+
+  --svg-check:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+
+  --svg-home:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
+
+  --svg-activity:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 18 12 15 21 9 3 6 12 2 12'/%3E%3C/svg%3E");
+
+  --svg-droplet:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/%3E%3C/svg%3E");
+
+  --svg-notes:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
+
+  --svg-settings:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='21' x2='4' y2='14'/%3E%3Cline x1='4' y1='10' x2='4' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12' y2='3'/%3E%3Cline x1='20' y1='21' x2='20' y2='16'/%3E%3Cline x1='20' y1='12' x2='20' y2='3'/%3E%3Cline x1='1' y1='14' x2='7' y2='14'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='17' y1='16' x2='23' y2='16'/%3E%3C/svg%3E");
+
+  --svg-search:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
+
+  --svg-pin:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='17' x2='12' y2='22'/%3E%3Cpath d='M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24z'/%3E%3C/svg%3E");
+
+  --svg-trash:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3Cpath d='M9 6V4h6v2'/%3E%3C/svg%3E");
+
+  --svg-plus:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+
+  --svg-chevron-l:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 18 9 12 15 6'/%3E%3C/svg%3E");
+
+  --svg-chevron-r:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E");
+
+  --svg-star:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+
+  --svg-star-filled:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
+
+  --svg-x:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
+
+  --svg-bold:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'/%3E%3Cpath d='M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'/%3E%3C/svg%3E");
+
+  --svg-italic:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='19' y1='4' x2='10' y2='4'/%3E%3Cline x1='14' y1='20' x2='5' y2='20'/%3E%3Cline x1='15' y1='4' x2='9' y2='20'/%3E%3C/svg%3E");
+
+  --svg-list:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Cline x1='3' y1='6' x2='3.01' y2='6'/%3E%3Cline x1='3' y1='12' x2='3.01' y2='12'/%3E%3Cline x1='3' y1='18' x2='3.01' y2='18'/%3E%3C/svg%3E");
+
+  --svg-heading:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h16'/%3E%3Cpath d='M4 6h16'/%3E%3Cpath d='M12 6v12'/%3E%3C/svg%3E");
 }
 
 /* ── RESET ── */
@@ -85,10 +168,9 @@ html, body {
   position: relative;
   isolation: isolate;
 }
-/* Niente glow colorato */
 .app::before { display: none; }
 
-.H { font-weight: 800; letter-spacing: -0.5px; }
+.H    { font-weight: 800; letter-spacing: -0.5px; }
 .MONO { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 
 /* ── AREA DI SCROLL ── */
@@ -113,10 +195,7 @@ html, body {
   position: relative;
   overflow: hidden;
 }
-/* Niente shimmer, niente stripe colorata */
 .card::before, .card::after { display: none; }
-
-/* Varianti colore → tutte neutrali */
 .co, .cb, .cg, .cp { border-color: #242424; }
 
 /* ═══════════════════════════════════════
@@ -131,7 +210,6 @@ html, body {
   font-weight: 600;
   letter-spacing: .2px;
 }
-/* Tutte le varianti → unica versione neutra */
 .po, .pg, .pb, .pp {
   background: rgba(255,255,255,0.05);
   color: rgba(255,255,255,0.45);
@@ -156,11 +234,13 @@ html, body {
   position: relative;
   overflow: hidden;
 }
-/* Niente shimmer animato */
 .pf.shimmer::after { display: none; }
 
 /* ═══════════════════════════════════════
-   INPUT
+   INPUT — focus neutro, zero blu
+   Rimossi: border-color rgba(37,99,235,…)
+            box-shadow   rgba(37,99,235,…)
+   Sostituiti con bianco/grigio sottile.
    ═══════════════════════════════════════ */
 .inp, .inp-date, textarea {
   background: #0a0a0a;
@@ -177,12 +257,18 @@ html, body {
   appearance: none;
 }
 textarea { resize: none; line-height: 1.55; }
-/* Focus: solo un accenno di blu — l'unico blu dell'intera app */
-.inp:focus, .inp-date:focus, textarea:focus {
-  border-color: rgba(37,99,235,0.45);
-  box-shadow: 0 0 0 3px rgba(37,99,235,0.07);
+
+/* Focus: bordo bianco low-opacity — Linear style */
+.inp:focus,
+.inp-date:focus,
+textarea:focus {
+  border-color: rgba(255,255,255,0.20);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
 }
-.inp::placeholder, .inp-date::placeholder, textarea::placeholder {
+
+.inp::placeholder,
+.inp-date::placeholder,
+textarea::placeholder {
   color: rgba(255,255,255,0.25);
 }
 
@@ -190,7 +276,7 @@ textarea { resize: none; line-height: 1.55; }
    BOTTONI
    ═══════════════════════════════════════ */
 
-/* Primario: bianco su nero — impatto massimo, zero colore */
+/* Primario: bianco su nero */
 .btn-p {
   background: #ffffff;
   border: none;
@@ -202,15 +288,15 @@ textarea { resize: none; line-height: 1.55; }
   font-weight: 700;
   letter-spacing: -.1px;
   cursor: pointer;
-  transition: transform .15s var(--ios), opacity .15s;
+  transition: opacity .15s var(--ios), transform .15s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
 .btn-p:active {
   transform: scale(.97) translateY(1px);
-  opacity: .86;
+  opacity: .82;
 }
 
-/* Secondario: trasparente + bordo sottile */
+/* Secondario: bordo sottile */
 .btn-s {
   background: transparent;
   border: 1px solid #1a1a1a;
@@ -221,13 +307,13 @@ textarea { resize: none; line-height: 1.55; }
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: transform .15s var(--ios), background .18s var(--ios), border-color .18s var(--ios);
+  transition: opacity .15s var(--ios), background .18s var(--ios), border-color .18s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
 .btn-s:active {
-  transform: scale(.97);
   background: #0a0a0a;
   border-color: #282828;
+  opacity: .8;
 }
 
 /* Ghost */
@@ -243,7 +329,12 @@ textarea { resize: none; line-height: 1.55; }
 .btn-g:active { color: rgba(255,255,255,0.55); }
 
 /* ═══════════════════════════════════════
-   CHECKBOX
+   CHECKBOX — SVG Lucide check, zero bounce
+   ───────────────────────────────────────
+   RIMOSSO:  animation: checkPop (spring bounce infantile)
+   RIMOSSO:  font-size 11px + emoji/testo come check
+   AGGIUNTO: ::after pseudo-element con SVG mask
+   Il check è nero su sfondo bianco — sharp, deciso.
    ═══════════════════════════════════════ */
 .ck {
   width: 22px;
@@ -255,29 +346,53 @@ textarea { resize: none; line-height: 1.55; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  font-size: 0;           /* sopprime emoji/testo — icona via ::after */
   flex-shrink: 0;
-  color: rgba(255,255,255,0.08);
-  transition: background .18s var(--ios), border-color .18s var(--ios), transform .15s var(--spring);
+  position: relative;
+  transition: background .15s var(--ios),
+              border-color .15s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
-/* Completato: check nero su bianco — pulito, deciso */
+
+/* SVG checkmark via mask — visibile solo su .ck.done */
+.ck::after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-color: transparent;   /* nascosto di default */
+  -webkit-mask-image: var(--svg-check);
+  mask-image:         var(--svg-check);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: background-color .15s var(--ios);
+}
+
+/* Completato: sfondo bianco, check nero — nessun bounce */
 .ck.done {
   background: #ffffff;
   border-color: #ffffff;
-  color: #000000;
-  animation: checkPop .28s var(--spring);
+  /* RIMOSSO: animation: checkPop .28s var(--spring) */
 }
+.ck.done::after {
+  background-color: #000000;  /* check nero su bianco */
+}
+
+/* Variante dark-ghost */
 .ck.dg.done {
   background: #ffffff;
   border-color: #ffffff;
-  color: #000000;
 }
-@keyframes checkPop {
-  0%   { transform: scale(.6); }
-  60%  { transform: scale(1.16); }
-  100% { transform: scale(1); }
+.ck.dg.done::after {
+  background-color: #000000;
 }
+
+/* @keyframes checkPop → RIMOSSO (era: scale(.6)→scale(1.16)→scale(1)) */
 
 /* ── TAG ── */
 .tag {
@@ -290,13 +405,80 @@ textarea { resize: none; line-height: 1.55; }
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: transform .15s var(--ios), background .18s var(--ios), color .18s var(--ios), border-color .18s var(--ios);
+  transition: opacity .15s var(--ios),
+              background .18s var(--ios),
+              border-color .18s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
-.tag:active { transform: scale(.95); }
+.tag:active {
+  opacity: .7;
+  background: rgba(255,255,255,0.03);
+}
+
+/* ═══════════════════════════════════════
+   ICON SYSTEM — Lucide SVG Mask
+   ───────────────────────────────────────
+   Utilizzo HTML:
+     <span class="ic ic-home"></span>
+     <span class="ic ic-search" style="--ic-size:16px"></span>
+
+   Il colore è ereditato da `color` del genitore.
+   Variante size: imposta --ic-size sul elemento.
+
+   Per la nav bar:
+     <button class="nb active">
+       <span class="nb-icon ic-home"></span>
+       <span class="nb-label">Home</span>
+     </button>
+
+   NOTA: gli emoji negli esercizi e blocchi della sezione
+   "train" sono ESCLUSI — vanno mantenuti nell'HTML.
+   ═══════════════════════════════════════ */
+.ic {
+  display: inline-block;
+  width: var(--ic-size, 20px);
+  height: var(--ic-size, 20px);
+  background-color: currentColor;
+  flex-shrink: 0;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+
+/* ── Icone navigazione ── */
+.ic-home     { -webkit-mask-image: var(--svg-home);     mask-image: var(--svg-home);     }
+.ic-activity { -webkit-mask-image: var(--svg-activity); mask-image: var(--svg-activity); }
+.ic-droplet  { -webkit-mask-image: var(--svg-droplet);  mask-image: var(--svg-droplet);  }
+.ic-notes    { -webkit-mask-image: var(--svg-notes);    mask-image: var(--svg-notes);    }
+.ic-settings { -webkit-mask-image: var(--svg-settings); mask-image: var(--svg-settings); }
+
+/* ── Icone azioni ── */
+.ic-search   { -webkit-mask-image: var(--svg-search);    mask-image: var(--svg-search);    }
+.ic-pin      { -webkit-mask-image: var(--svg-pin);       mask-image: var(--svg-pin);       }
+.ic-trash    { -webkit-mask-image: var(--svg-trash);     mask-image: var(--svg-trash);     }
+.ic-plus     { -webkit-mask-image: var(--svg-plus);      mask-image: var(--svg-plus);      }
+.ic-x        { -webkit-mask-image: var(--svg-x);         mask-image: var(--svg-x);         }
+.ic-star     { -webkit-mask-image: var(--svg-star);      mask-image: var(--svg-star);      }
+.ic-star-f   { -webkit-mask-image: var(--svg-star-filled); mask-image: var(--svg-star-filled); }
+.ic-chev-l   { -webkit-mask-image: var(--svg-chevron-l); mask-image: var(--svg-chevron-l); }
+.ic-chev-r   { -webkit-mask-image: var(--svg-chevron-r); mask-image: var(--svg-chevron-r); }
+
+/* ── Icone editor note ── */
+.ic-bold     { -webkit-mask-image: var(--svg-bold);    mask-image: var(--svg-bold);    }
+.ic-italic   { -webkit-mask-image: var(--svg-italic);  mask-image: var(--svg-italic);  }
+.ic-list     { -webkit-mask-image: var(--svg-list);    mask-image: var(--svg-list);    }
+.ic-heading  { -webkit-mask-image: var(--svg-heading); mask-image: var(--svg-heading); }
 
 /* ═══════════════════════════════════════
    BOTTOM NAV BAR
+   ───────────────────────────────────────
+   RIMOSSO:  .nb-icon { font-size: 20px }  (era emoji)
+   RIMOSSO:  .nb.active .nb-icon { transform: translateY(-2px) scale(1.06) }
+   AGGIUNTO: .nb-icon come SVG mask container
+   AGGIUNTO: transizione opacity invece di transform
    ═══════════════════════════════════════ */
 .nav {
   position: fixed;
@@ -305,7 +487,7 @@ textarea { resize: none; line-height: 1.55; }
   transform: translateX(-50%);
   width: 100%;
   max-width: 430px;
-  background: rgba(0,0,0,0.94);
+  background: rgba(0,0,0,0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid #1a1a1a;
@@ -313,6 +495,7 @@ textarea { resize: none; line-height: 1.55; }
   padding: 4px 0 calc(6px + env(safe-area-inset-bottom,0px));
   z-index: 100;
 }
+
 .nb {
   display: flex;
   flex-direction: column;
@@ -323,23 +506,37 @@ textarea { resize: none; line-height: 1.55; }
   padding: 8px 4px 4px;
   background: transparent;
   border: none;
-  color: rgba(255,255,255,0.26);
+  color: rgba(255,255,255,0.28);
   position: relative;
-  transition: color .22s var(--ios);
+  transition: color .22s var(--ios), opacity .15s;
   -webkit-tap-highlight-color: transparent;
 }
+
+/* nb-icon: SVG mask container — replica le proprietà di .ic */
 .nb-icon {
-  font-size: 20px;
-  line-height: 1;
   display: inline-block;
-  transition: transform .3s var(--spring);
+  width: 20px;
+  height: 20px;
+  background-color: currentColor;
+  flex-shrink: 0;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: opacity .22s var(--ios);
+  /* RIMOSSO: transition: transform .3s var(--spring) */
 }
+
 .nb-label {
   font-family: var(--font-sys);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: .1px;
 }
+
+/* Dot indicator — flat, no spring */
 .nb-dot {
   position: absolute;
   top: 3px;
@@ -349,13 +546,16 @@ textarea { resize: none; line-height: 1.55; }
   border-radius: 50%;
   background: #ffffff;
   transform: translateX(-50%) scale(0);
-  transition: transform .3s var(--spring);
+  transition: transform .22s var(--ios);
 }
-/* Active: bianco — niente blu */
-.nb.active { color: #ffffff; }
-.nb.active .nb-icon { transform: translateY(-2px) scale(1.06); }
+
+/* Active: bianco pieno — nessun transform sull'icona, solo colore */
+.nb.active         { color: #ffffff; }
 .nb.active .nb-dot { transform: translateX(-50%) scale(1); }
-.nb:active { transform: scale(.88); }
+/* RIMOSSO: .nb.active .nb-icon { transform: translateY(-2px) scale(1.06) } */
+
+/* Tap feedback: opacity invece di scale */
+.nb:active { opacity: .6; }
 
 /* ── WATER BUTTON ── */
 .wb {
@@ -368,13 +568,15 @@ textarea { resize: none; line-height: 1.55; }
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: transform .15s var(--ios), background .18s var(--ios), border-color .18s var(--ios);
+  transition: opacity .15s var(--ios),
+              background .18s var(--ios),
+              border-color .18s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
 .wb:active {
-  transform: scale(.95);
   background: #111111;
   border-color: #242424;
+  opacity: .8;
 }
 
 /* ── STAT CONTAINER ── */
@@ -388,13 +590,22 @@ textarea { resize: none; line-height: 1.55; }
   gap: 10px;
 }
 
-/* ── FRECCE ── */
+/* ═══════════════════════════════════════
+   FRECCE — SVG chevron, zero emoji
+   ───────────────────────────────────────
+   RIMOSSO:  font-size: 15px + carattere testuale ‹ ›
+   AGGIUNTO: font-size: 0 (nasconde testo)
+             ::after pseudo-element con SVG chevron
+   HTML: aggiungere .r per freccia destra
+     <button class="arr">   ← default: sinistra
+     <button class="arr r"> ← destra
+   ═══════════════════════════════════════ */
 .arr {
   background: #0a0a0a;
   border: 1px solid #1a1a1a;
   border-radius: var(--r-xs);
-  color: rgba(255,255,255,0.28);
-  font-size: 15px;
+  color: rgba(255,255,255,0.30);
+  font-size: 0;           /* nasconde ‹ › o qualsiasi testo */
   width: 30px;
   height: 30px;
   cursor: pointer;
@@ -402,67 +613,127 @@ textarea { resize: none; line-height: 1.55; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  transition: transform .15s var(--ios), background .18s var(--ios), color .18s var(--ios), border-color .18s var(--ios);
+  position: relative;
+  transition: opacity .15s var(--ios),
+              background .18s var(--ios),
+              color .18s var(--ios),
+              border-color .18s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
+
+/* SVG chevron via ::after */
+.arr::after {
+  content: '';
+  display: block;
+  width: 14px;
+  height: 14px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg-chevron-l);  /* default: sinistra */
+  mask-image:         var(--svg-chevron-l);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+.arr.r::after {
+  -webkit-mask-image: var(--svg-chevron-r);
+  mask-image:         var(--svg-chevron-r);
+}
+
 .arr:disabled { color: rgba(255,255,255,0.10); cursor: default; }
 .arr:not(:disabled):active {
   background: #111111;
   color: #ffffff;
   border-color: #303030;
-  transform: scale(.92);
 }
 
 /* ── DONUT ── */
 .donut-svg circle:nth-child(2) { filter: none; }
 
-/* ── STELLE — bianche quando attive ── */
+/* ═══════════════════════════════════════
+   STELLE — SVG mask, zero bounce
+   ───────────────────────────────────────
+   RIMOSSO:  emoji/unicode ★ come testo
+   RIMOSSO:  transform: scale(1.1) su .starbtn.on
+   RIMOSSO:  transform: scale(.9) su :active
+   AGGIUNTO: SVG mask via ::before
+   AGGIUNTO: versione filled su .on
+   ═══════════════════════════════════════ */
 .starbtn {
   background: none;
   border: none;
   cursor: pointer;
   padding: 0;
-  line-height: 1;
-  color: rgba(255,255,255,0.16);
-  transition: transform .22s var(--spring), color .18s var(--ios);
+  font-size: 0;           /* nasconde eventuale emoji */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  color: rgba(255,255,255,0.18);
+  transition: color .18s var(--ios), opacity .15s;
   -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+.starbtn::before {
+  content: '';
+  display: block;
+  width: 17px;
+  height: 17px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg-star);
+  mask-image:         var(--svg-star);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transition: -webkit-mask-image .12s, mask-image .12s;
 }
 .starbtn.on {
-  color: #ffffff !important;
-  transform: scale(1.1);
-  filter: none;
+  color: #ffffff !important;  /* bianco puro — monocromatico */
+  /* RIMOSSO: transform scale bounce */
 }
-.starbtn:active { transform: scale(.9); }
+.starbtn.on::before {
+  -webkit-mask-image: var(--svg-star-filled);
+  mask-image:         var(--svg-star-filled);
+}
+.starbtn:active { opacity: .6; }
 
 /* ═══════════════════════════════════════
    ANIMAZIONI
    ═══════════════════════════════════════ */
+
+/* slideUp — entra animazione funzionale, mantenuta */
 @keyframes su {
   from { transform: translateY(6px); opacity: 0; }
   to   { transform: translateY(0);   opacity: 1; }
 }
 .su { animation: su .22s var(--ios) both; }
 .tc.su > * { animation: su .30s var(--ios) both; }
-.tc.su > *:nth-child(1)  { animation-delay: .02s; }
-.tc.su > *:nth-child(2)  { animation-delay: .06s; }
-.tc.su > *:nth-child(3)  { animation-delay: .10s; }
-.tc.su > *:nth-child(4)  { animation-delay: .14s; }
-.tc.su > *:nth-child(5)  { animation-delay: .18s; }
-.tc.su > *:nth-child(6)  { animation-delay: .22s; }
-.tc.su > *:nth-child(n+7){ animation-delay: .26s; }
+.tc.su > *:nth-child(1)   { animation-delay: .02s; }
+.tc.su > *:nth-child(2)   { animation-delay: .06s; }
+.tc.su > *:nth-child(3)   { animation-delay: .10s; }
+.tc.su > *:nth-child(4)   { animation-delay: .14s; }
+.tc.su > *:nth-child(5)   { animation-delay: .18s; }
+.tc.su > *:nth-child(6)   { animation-delay: .22s; }
+.tc.su > *:nth-child(n+7) { animation-delay: .26s; }
 
-@keyframes fl {
-  0%,100% { transform: scale(1)    rotate(-2deg); }
-  33%     { transform: scale(1.12) rotate(3deg);  }
-  66%     { transform: scale(.92)  rotate(-2deg); }
-}
+/* @keyframes fl → RIMOSSO
+   Era: scale(1) rotate(-2deg) → scale(1.12) rotate(3deg)
+   Animazione "wobble" infantile — eliminata.
+   La classe .fl è ora un no-op (puoi rimuoverla dall'HTML). */
+.fl { /* no animation — rimosso per design Pro Dark */ }
 
-/* Pulse bianco invece di glow blu */
+/* Pulse — bianco ultra-sottile, mantenuto per segnali funzionali */
 @keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0  rgba(255,255,255,0.12); }
-  70%     { box-shadow: 0 0 0 8px rgba(255,255,255,0);    }
+  0%,100% { box-shadow: 0 0 0 0   rgba(255,255,255,0.10); }
+  70%     { box-shadow: 0 0 0 7px rgba(255,255,255,0);    }
 }
-.pulse { animation: pulse 2s infinite; }
+.pulse { animation: pulse 2.4s infinite; }
 
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
@@ -484,13 +755,15 @@ textarea { resize: none; line-height: 1.55; }
   text-transform: uppercase;
   color: rgba(255,255,255,0.26);
 }
-/* Numeri grandi: Inter Black, tracking strettissimo */
+
+/* Numeri grandi: Inter Black, tracking aggressivo */
 .bignum {
   font-family: var(--font-sys);
-  font-weight: 800;
+  font-weight: var(--bignum-weight);
   font-variant-numeric: tabular-nums;
-  letter-spacing: -2px;
+  letter-spacing: var(--bignum-tracking);
 }
+
 .title-app {
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
@@ -513,11 +786,11 @@ textarea { resize: none; line-height: 1.55; }
   text-align: left;
   position: relative;
   margin-bottom: 2px;
-  transition: background .18s var(--ios), transform .12s var(--ios);
+  transition: background .18s var(--ios), opacity .12s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
 .note-row:active {
-  transform: scale(.988);
+  opacity: .8;
   background: rgba(255,255,255,0.02);
 }
 .note-row + .note-row::before {
@@ -531,9 +804,15 @@ textarea { resize: none; line-height: 1.55; }
   background: rgba(255,255,255,0.02);
   border: 1px solid #242424;
 }
-.note-row.pinned + .note-row::before { display: none; }
+.note-row.pinned + .note-row::before        { display: none; }
 .note-row.pinned + .note-row.pinned::before { display: block; }
 
+/* ── Note icon: SVG mask, zero emoji ────────────────────────────
+   RIMOSSO:  font-size: 16px + emoji come contenuto
+   AGGIUNTO: font-size: 0 + ::after con SVG file-text (default)
+             pinned notes → SVG pin via cascade
+   HTML: <div class="note-icon"></div>
+   ────────────────────────────────────────────────────────────── */
 .note-icon {
   width: 36px;
   height: 36px;
@@ -543,15 +822,38 @@ textarea { resize: none; line-height: 1.55; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
+  font-size: 0;           /* sopprime emoji */
   flex-shrink: 0;
-  color: rgba(255,255,255,0.52);
+  color: rgba(255,255,255,0.45);
+  position: relative;
 }
+/* Icona default: file-text */
+.note-icon::after {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg-notes);
+  mask-image:         var(--svg-notes);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+/* Pinned: icona pin */
 .note-row.pinned .note-icon {
   background: #161616;
   border-color: #242424;
-  color: rgba(255,255,255,0.70);
+  color: rgba(255,255,255,0.65);
 }
+.note-row.pinned .note-icon::after {
+  -webkit-mask-image: var(--svg-pin);
+  mask-image:         var(--svg-pin);
+}
+
 .note-title {
   font-size: 14px;
   font-weight: 600;
@@ -590,7 +892,24 @@ textarea { resize: none; line-height: 1.55; }
 }
 .note-section-hdr.gray { color: rgba(255,255,255,0.26); }
 
-/* ── RICERCA NOTE ── */
+/* Icona sezione note — classe da aggiungere in HTML:
+   <span class="note-section-icon ic ic-pin"></span>  (per Pinned)
+   <span class="note-section-icon ic ic-notes"></span> (per Tutte) */
+.note-section-icon {
+  --ic-size: 12px;
+  opacity: .7;
+}
+
+/* ── RICERCA NOTE — focus neutro, icona SVG ─────────────────────
+   RIMOSSO:  border-color rgba(37,99,235,…) su :focus-within
+   AGGIUNTO: border bianco low-opacity
+   AGGIUNTO: .note-search-icon classe per SVG search
+   HTML suggerito:
+   <div class="note-search">
+     <span class="note-search-icon ic ic-search"></span>
+     <input placeholder="Cerca note...">
+   </div>
+   ─────────────────────────────────────────────────────────────── */
 .note-search {
   display: flex;
   align-items: center;
@@ -603,7 +922,13 @@ textarea { resize: none; line-height: 1.55; }
   transition: border-color .2s var(--ios);
 }
 .note-search:focus-within {
-  border-color: rgba(37,99,235,0.38);
+  border-color: rgba(255,255,255,0.18);  /* RIMOSSO: blu rgba(37,99,235,…) */
+}
+/* Icona search nella barra: classe helper */
+.note-search-icon {
+  --ic-size: 15px;
+  color: rgba(255,255,255,0.28);
+  flex-shrink: 0;
 }
 .note-search input {
   flex: 1;
@@ -627,10 +952,11 @@ textarea { resize: none; line-height: 1.55; }
   from { opacity: 0; }
   to   { opacity: 1; }
 }
+
 .note-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.80);
+  background: rgba(0,0,0,0.82);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 9999;
@@ -652,8 +978,8 @@ textarea { resize: none; line-height: 1.55; }
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  animation: sheetUp .28s var(--spring);
-  box-shadow: 0 -2px 28px rgba(0,0,0,0.95);
+  animation: sheetUp .28s var(--ios);  /* RIMOSSO: var(--spring) → var(--ios) */
+  box-shadow: 0 -2px 32px rgba(0,0,0,0.96);
 }
 .note-drag {
   display: flex;
@@ -675,6 +1001,12 @@ textarea { resize: none; line-height: 1.55; }
   flex-shrink: 0;
   border-bottom: 1px solid #1a1a1a;
 }
+
+/* ── Note header buttons ─────────────────────────────────────────
+   RIMOSSO:  font-size: 14px + emoji come contenuto icone
+   AGGIUNTO: font-size: 0 + ::after con SVG mask per .icon
+   I bottoni testo (es. "Annulla", "Salva") mantengono font-size.
+   ─────────────────────────────────────────────────────────────── */
 .note-hdr-btn {
   background: none;
   border: none;
@@ -684,11 +1016,13 @@ textarea { resize: none; line-height: 1.55; }
   font-weight: 500;
   cursor: pointer;
   padding: 4px 6px;
-  transition: color .15s var(--ios);
+  transition: opacity .15s var(--ios);
   -webkit-tap-highlight-color: transparent;
 }
 .note-hdr-btn:active { opacity: .5; }
 .note-hdr-btn.bold { font-weight: 700; color: #ffffff; }
+
+/* Icon buttons nel header: SVG mask via ::after */
 .note-hdr-btn.icon {
   width: 32px;
   height: 32px;
@@ -698,19 +1032,48 @@ textarea { resize: none; line-height: 1.55; }
   border-radius: 6px;
   background: #111111;
   border: 1px solid #1a1a1a;
-  font-size: 14px;
+  font-size: 0;           /* nasconde eventuale emoji */
   color: rgba(255,255,255,0.52);
+  position: relative;
+  padding: 0;
 }
+/* SVG icon via ::after — default: X (chiudi) */
+.note-hdr-btn.icon::after {
+  content: '';
+  display: block;
+  width: 15px;
+  height: 15px;
+  background-color: currentColor;
+  -webkit-mask-image: var(--svg-x);
+  mask-image:         var(--svg-x);
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+/* Pericolo: icona trash, rosso semantico */
 .note-hdr-btn.icon.danger {
   background: rgba(224,82,82,0.08);
   color: #e05252;
   border-color: rgba(224,82,82,0.18);
 }
+.note-hdr-btn.icon.danger::after {
+  -webkit-mask-image: var(--svg-trash);
+  mask-image:         var(--svg-trash);
+}
+/* Pinnata: icona pin, bianco */
 .note-hdr-btn.icon.pinned {
   background: #161616;
   color: #ffffff;
   border-color: #303030;
 }
+.note-hdr-btn.icon.pinned::after {
+  -webkit-mask-image: var(--svg-pin);
+  mask-image:         var(--svg-pin);
+}
+
 .note-meta-bar {
   text-align: center;
   font-size: 11px;
@@ -751,7 +1114,8 @@ textarea { resize: none; line-height: 1.55; }
   -webkit-user-select: text;
   user-select: text;
 }
-.note-body:empty::before, .note-body.is-empty::before {
+.note-body:empty::before,
+.note-body.is-empty::before {
   content: attr(data-placeholder);
   color: rgba(255,255,255,0.13);
   pointer-events: none;
@@ -763,15 +1127,22 @@ textarea { resize: none; line-height: 1.55; }
   margin: 8px 0 4px;
   letter-spacing: -.3px;
 }
-.note-body ul, .note-body ol { padding-left: 24px; margin: 6px 0; }
+.note-body ul,
+.note-body ol { padding-left: 24px; margin: 6px 0; }
 .note-body li { margin-bottom: 4px; }
-.note-body b, .note-body strong { font-weight: 700; color: #ffffff; }
+.note-body b,
+.note-body strong { font-weight: 700; color: #ffffff; }
 
-/* ── TOOLBAR NOTE ── */
+/* ── TOOLBAR NOTE ─────────────────────────────────────────────────
+   I pulsanti B / I / U / H mantengono il testo come indicatori
+   di formattazione — non sono emoji, sono simboli tipografici.
+   Per rimpiazzarli con SVG puri, usa le classi .ic-* e
+   i bottoni con classe .note-tb-btn.svg-icon (helper sotto).
+   ─────────────────────────────────────────────────────────────── */
 .note-toolbar {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  background: rgba(10,10,10,0.97);
+  background: rgba(8,8,8,0.98);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-top: 1px solid #1a1a1a;
@@ -787,7 +1158,7 @@ textarea { resize: none; line-height: 1.55; }
   background: transparent;
   border: none;
   border-radius: 4px;
-  color: rgba(255,255,255,0.58);
+  color: rgba(255,255,255,0.52);
   font-family: var(--font-sys);
   font-size: 14px;
   font-weight: 600;
@@ -795,17 +1166,46 @@ textarea { resize: none; line-height: 1.55; }
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background .12s var(--ios), transform .1s var(--ios);
+  transition: background .12s var(--ios), opacity .1s;
   -webkit-tap-highlight-color: transparent;
 }
 .note-tb-btn:active {
   background: rgba(255,255,255,0.06);
-  transform: scale(.9);
+  opacity: .7;
+  /* RIMOSSO: transform: scale(.9) — non serve */
 }
-.note-tb-btn.bold  { font-weight: 900; }
+
+/* Stili testo per bottoni formattazione (testo) */
+.note-tb-btn.bold   { font-weight: 900; }
 .note-tb-btn.italic { font-style: italic; }
-.note-tb-btn.under { text-decoration: underline; }
-.note-tb-btn.title { font-size: 17px; font-weight: 800; }
+.note-tb-btn.under  { text-decoration: underline; }
+.note-tb-btn.title  { font-size: 17px; font-weight: 800; }
+
+/* Helper: pulsante toolbar con SVG icon anziché testo
+   HTML: <button class="note-tb-btn svg-icon ic-bold"></button> */
+.note-tb-btn.svg-icon {
+  font-size: 0;
+  position: relative;
+}
+.note-tb-btn.svg-icon::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background-color: currentColor;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+}
+/* Associazione SVG per ogni bottone toolbar */
+.note-tb-btn.svg-icon.ic-bold::before    { -webkit-mask-image: var(--svg-bold);    mask-image: var(--svg-bold);    }
+.note-tb-btn.svg-icon.ic-italic::before  { -webkit-mask-image: var(--svg-italic);  mask-image: var(--svg-italic);  }
+.note-tb-btn.svg-icon.ic-list::before    { -webkit-mask-image: var(--svg-list);    mask-image: var(--svg-list);    }
+.note-tb-btn.svg-icon.ic-heading::before { -webkit-mask-image: var(--svg-heading); mask-image: var(--svg-heading); }
+
 .note-tb-divider {
   width: 1px;
   height: 18px;
@@ -826,11 +1226,64 @@ textarea { resize: none; line-height: 1.55; }
 /* ═══════════════════════════════════════
    DRAG AND DROP
    ═══════════════════════════════════════ */
-[draggable=true] { cursor: grab; }
+[draggable=true]        { cursor: grab; }
 [draggable=true]:active { cursor: grabbing; }
 .dragging {
-  opacity: 0.30;
+  opacity: 0.28;
   border-color: #303030 !important;
 }
-.drag-over-top    { box-shadow: 0 -2px 0 0 #ffffff; }
-.drag-over-bottom { box-shadow: 0  2px 0 0 #ffffff; }
+.drag-over-top    { box-shadow: 0 -2px 0 0 rgba(255,255,255,0.50); }
+.drag-over-bottom { box-shadow: 0  2px 0 0 rgba(255,255,255,0.50); }
+
+/* ═══════════════════════════════════════════════════════════════════
+   NOTE DI MIGRAZIONE HTML — leggere prima di applicare
+   ═══════════════════════════════════════════════════════════════════
+
+   1. NAV BAR
+      Ogni .nb-icon deve ricevere una classe .ic-* per il SVG corretto:
+        <span class="nb-icon ic-home"></span>      ← Today / Home
+        <span class="nb-icon ic-activity"></span>  ← Train
+        <span class="nb-icon ic-droplet"></span>   ← Acqua
+        <span class="nb-icon ic-notes"></span>     ← Note
+        <span class="nb-icon ic-settings"></span>  ← Impostazioni
+      Rimuovere eventuali emoji dal contenuto testuale del .nb-icon.
+      ECCEZIONE: le emoji negli esercizi e blocchi di "train"
+      sono MANTENUTE — non toccare.
+
+   2. CHECKBOX
+      Il .ck non deve contenere testo/emoji. Il check appare
+      via ::after CSS quando .done è presente.
+      Rimuovere: ✓ ✔ o qualsiasi carattere testuale da .ck.
+
+   3. NOTE ICONS
+      La .note-icon non deve contenere emoji. Il CSS genera
+      automaticamente l'icona SVG via ::after.
+      Se vuoi icone custom per tipo di nota, aggiungi classi:
+        .note-icon.ic-pin    → usa var(--svg-pin)
+        .note-icon.ic-notes  → usa var(--svg-notes) (default)
+
+   4. FRECCE (.arr)
+      <button class="arr">   ← freccia sinistra (default)
+      <button class="arr r"> ← freccia destra
+      Rimuovere ‹ › o ← → dal contenuto testuale.
+
+   5. STELLE (.starbtn)
+      Rimuovere ★ ☆ o emoji dal contenuto testuale.
+      Il CSS genera l'icona SVG via ::before.
+      Usare .on per stella attiva/piena.
+
+   6. RICERCA NOTE
+      Sostituire l'emoji 🔍 con:
+        <span class="note-search-icon ic ic-search"></span>
+
+   7. ICON SYSTEM GENERALE
+      Per qualsiasi altra icona usa:
+        <span class="ic ic-[nome]"></span>
+      Disponibili: ic-home, ic-activity, ic-droplet, ic-notes,
+      ic-settings, ic-search, ic-pin, ic-trash, ic-plus, ic-x,
+      ic-star, ic-star-f, ic-chev-l, ic-chev-r,
+      ic-bold, ic-italic, ic-list, ic-heading.
+      Aggiungi nuovi SVG in :root come --svg-[nome]
+      e crea la classe .ic-[nome] corrispondente.
+
+   ═══════════════════════════════════════════════════════════════════ */

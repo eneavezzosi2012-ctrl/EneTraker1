@@ -1,7 +1,12 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ENEA · TRACKER — Design System v6.0
+   ENEA · TRACKER — Design System v7.0
    Pro Dark Mono — Linear · Vercel · Raycast
-   Redesign: zero blu, zero emoji nav, SVG mask icons, no childish anim
+   100% monocromatico (anche --red), zero keyframe "vivaci"
+   (.fl / pulse / checkPop / shimmer rimossi per sempre), nav bar
+   agganciata alle 5 tab reali dell'app (Home·Cibo·Train·Piano·Task)
+   con fallback posizionale + classi .ic-*, transizioni secche e
+   iOS-safe (-webkit-mask-image sempre accoppiato a mask-image,
+   zero "#" nei data-URI SVG — vedi nota in fondo al file).
    ═══════════════════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
@@ -11,28 +16,27 @@
    ═══════════════════════════════════════ */
 :root {
 
-  /* ── Accent — monocromatico: ZERO BLU ──────────────────────────
-     --accent e --accent-2 erano #2563EB / #1d4ed8.
-     Sostituiti con bianco/grigio. L'unico "accento" è bianco puro.
-     --accent-soft e --accent-border erano rgba(37,99,235,…).
-     Sostituiti con fill bianco ultra-sottile.
+  /* ── Accent — monocromatico puro ────────────────────────────────
+     Unico "accento" del sistema: bianco. Nessuna tinta, nessuna hue.
   ─────────────────────────────────────────────────────────────── */
-  --accent:        rgba(255,255,255,0.92);
-  --accent-2:      rgba(255,255,255,0.65);
+  --accent:        #ffffff;
+  --accent-2:      rgba(255,255,255,0.64);
   --accent-soft:   rgba(255,255,255,0.04);
   --accent-border: rgba(255,255,255,0.10);
 
-  /* ── System colors — neutralizzati, palette monocromatica ──────
-     --green / --blue / --purple / --orange / --yellow già erano
-     tinte bianche nel file originale. --yellow ora usa la stessa
-     logica delle altre. --red: unico colore semantico (errore/pericolo).
+  /* ── "System colors" — token storici mantenuti per compatibilità
+     (alcuni file JS non visibili da qui potrebbero referenziarli via
+     var(--blue) ecc.). I NOMI restano, i VALORI sono tutti bianco a
+     opacità diversa: zero hue, incluso --red. La differenziazione
+     semantica (es. "azione distruttiva") passa da peso/contrasto,
+     non da colore.
   ─────────────────────────────────────────────────────────────── */
   --green:  rgba(255,255,255,0.82);
   --blue:   rgba(255,255,255,0.68);
   --purple: rgba(255,255,255,0.52);
   --yellow: rgba(255,255,255,0.60);
   --orange: rgba(255,255,255,0.72);
-  --red:    #e05252;
+  --red:    rgba(255,255,255,0.78);
 
   /* ── Superfici ── */
   --bg:   #000000;
@@ -76,9 +80,15 @@
   --r-lg: 8px;
   --r-xl: 8px;
 
-  /* ── Motion ── */
-  --spring: cubic-bezier(.34,1.56,.64,1); /* solo per transizioni funzionali */
-  --ios:    cubic-bezier(.25,.46,.45,.94);
+  /* ── Motion — un'unica curva decisa, zero overshoot/bounce ───────
+     --spring, --ios, --smooth restano tre nomi distinti SOLO per
+     retro-compatibilità: app.js e altri file JS non toccati da questo
+     redesign referenziano var(--ios)/var(--spring) direttamente nei
+     loro stili inline. Cambiare qui il VALORE basta a "spegnere" ogni
+     rimbalzo in tutta l'app senza dover modificare una riga di JS.
+  ─────────────────────────────────────────────────────────────── */
+  --spring: cubic-bezier(.4,0,.2,1);
+  --ios:    cubic-bezier(.4,0,.2,1);
   --smooth: cubic-bezier(.4,0,.2,1);
 
   /* ══════════════════════════════════════════════════════════════
@@ -87,6 +97,9 @@
                mask-image:         var(--svg-*);
                background-color:   currentColor;
      Il colore dell'icona è controllato da `color` sul genitore.
+     NOTA iOS: ogni colore qui dentro è un nome CSS ('black'/'none'),
+     mai un hex con "#" — così non serve nessun escaping a %23 e
+     Safari su iPhone non mostra quadrati grigi vuoti.
   ══════════════════════════════════════════════════════════════ */
 
   --svg-check:
@@ -145,6 +158,15 @@
 
   --svg-heading:
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h16'/%3E%3Cpath d='M4 6h16'/%3E%3Cpath d='M12 6v12'/%3E%3C/svg%3E");
+
+  /* ── Nuove icone (v7.0) — servono alla nav bar reale dell'app:
+     Home · Cibo · Train · Piano · Task. "Train" usa --svg-activity
+     già esistente; "Task" riusa --svg-check. ─────────────────── */
+  --svg-utensils:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2'/%3E%3Cpath d='M7 2v20'/%3E%3Cpath d='M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'/%3E%3C/svg%3E");
+
+  --svg-calendar:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
 }
 
 /* ── RESET ── */
@@ -191,11 +213,13 @@ html, body {
   padding: 16px;
   margin-bottom: 8px;
   border: 1px solid #1a1a1a;
-  transition: border-color .18s var(--ios), transform .15s var(--ios);
+  transition: border-color .12s var(--smooth);
   position: relative;
   overflow: hidden;
 }
 .card::before, .card::after { display: none; }
+/* Varianti storiche (arancio/blu/verde/viola) — oggi tutte allo
+   stesso grigio neutro: nessuna distinzione cromatica per categoria. */
 .co, .cb, .cg, .cp { border-color: #242424; }
 
 /* ═══════════════════════════════════════
@@ -230,17 +254,15 @@ html, body {
   height: 100%;
   border-radius: 2px;
   background: #ffffff;
-  transition: width .9s var(--spring);
+  transition: width .35s var(--smooth);
   position: relative;
   overflow: hidden;
 }
+/* Shimmer da caricamento: disattivato — niente onde luminose */
 .pf.shimmer::after { display: none; }
 
 /* ═══════════════════════════════════════
    INPUT — focus neutro, zero blu
-   Rimossi: border-color rgba(37,99,235,…)
-            box-shadow   rgba(37,99,235,…)
-   Sostituiti con bianco/grigio sottile.
    ═══════════════════════════════════════ */
 .inp, .inp-date, textarea {
   background: #0a0a0a;
@@ -252,13 +274,13 @@ html, body {
   font-size: 15px;
   outline: none;
   width: 100%;
-  transition: border-color .18s var(--smooth), box-shadow .18s var(--smooth);
+  transition: border-color .12s var(--smooth), box-shadow .12s var(--smooth);
   -webkit-appearance: none;
   appearance: none;
 }
 textarea { resize: none; line-height: 1.55; }
 
-/* Focus: bordo bianco low-opacity — Linear style */
+/* Focus: bordo bianco low-opacity — pulito, niente alone blu */
 .inp:focus,
 .inp-date:focus,
 textarea:focus {
@@ -288,11 +310,11 @@ textarea::placeholder {
   font-weight: 700;
   letter-spacing: -.1px;
   cursor: pointer;
-  transition: opacity .15s var(--ios), transform .15s var(--ios);
+  transition: opacity .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
+/* Feedback solo via opacità: niente scale/translate "gommosi" */
 .btn-p:active {
-  transform: scale(.97) translateY(1px);
   opacity: .82;
 }
 
@@ -307,7 +329,7 @@ textarea::placeholder {
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity .15s var(--ios), background .18s var(--ios), border-color .18s var(--ios);
+  transition: opacity .1s var(--smooth), background .1s var(--smooth), border-color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .btn-s:active {
@@ -323,7 +345,7 @@ textarea::placeholder {
   color: rgba(255,255,255,0.28);
   cursor: pointer;
   padding: 4px;
-  transition: color .18s var(--ios);
+  transition: color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .btn-g:active { color: rgba(255,255,255,0.55); }
@@ -331,10 +353,8 @@ textarea::placeholder {
 /* ═══════════════════════════════════════
    CHECKBOX — SVG Lucide check, zero bounce
    ───────────────────────────────────────
-   RIMOSSO:  animation: checkPop (spring bounce infantile)
-   RIMOSSO:  font-size 11px + emoji/testo come check
-   AGGIUNTO: ::after pseudo-element con SVG mask
-   Il check è nero su sfondo bianco — sharp, deciso.
+   Nessun testo/emoji nel markup: il check appare via ::after
+   solo quando è presente .done. Nero su bianco, nessun rimbalzo.
    ═══════════════════════════════════════ */
 .ck {
   width: 22px;
@@ -349,8 +369,8 @@ textarea::placeholder {
   font-size: 0;           /* sopprime emoji/testo — icona via ::after */
   flex-shrink: 0;
   position: relative;
-  transition: background .15s var(--ios),
-              border-color .15s var(--ios);
+  transition: background .1s var(--smooth),
+              border-color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -370,14 +390,13 @@ textarea::placeholder {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  transition: background-color .15s var(--ios);
+  transition: background-color .1s var(--smooth);
 }
 
 /* Completato: sfondo bianco, check nero — nessun bounce */
 .ck.done {
   background: #ffffff;
   border-color: #ffffff;
-  /* RIMOSSO: animation: checkPop .28s var(--spring) */
 }
 .ck.done::after {
   background-color: #000000;  /* check nero su bianco */
@@ -392,8 +411,6 @@ textarea::placeholder {
   background-color: #000000;
 }
 
-/* @keyframes checkPop → RIMOSSO (era: scale(.6)→scale(1.16)→scale(1)) */
-
 /* ── TAG ── */
 .tag {
   padding: 5px 11px;
@@ -405,9 +422,9 @@ textarea::placeholder {
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;
-  transition: opacity .15s var(--ios),
-              background .18s var(--ios),
-              border-color .18s var(--ios);
+  transition: opacity .1s var(--smooth),
+              background .1s var(--smooth),
+              border-color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .tag:active {
@@ -430,9 +447,12 @@ textarea::placeholder {
        <span class="nb-icon ic-home"></span>
        <span class="nb-label">Home</span>
      </button>
+   (la classe .ic-* è opzionale in nav: vedi fallback posizionale
+   nella sezione BOTTOM NAV BAR più sotto)
 
    NOTA: gli emoji negli esercizi e blocchi della sezione
-   "train" sono ESCLUSI — vanno mantenuti nell'HTML.
+   "train" sono ESCLUSI — vanno mantenuti nell'HTML, non sono
+   gestiti da questo file.
    ═══════════════════════════════════════ */
 .ic {
   display: inline-block;
@@ -454,6 +474,9 @@ textarea::placeholder {
 .ic-droplet  { -webkit-mask-image: var(--svg-droplet);  mask-image: var(--svg-droplet);  }
 .ic-notes    { -webkit-mask-image: var(--svg-notes);    mask-image: var(--svg-notes);    }
 .ic-settings { -webkit-mask-image: var(--svg-settings); mask-image: var(--svg-settings); }
+.ic-utensils { -webkit-mask-image: var(--svg-utensils); mask-image: var(--svg-utensils); }
+.ic-calendar { -webkit-mask-image: var(--svg-calendar); mask-image: var(--svg-calendar); }
+.ic-check    { -webkit-mask-image: var(--svg-check);    mask-image: var(--svg-check);    }
 
 /* ── Icone azioni ── */
 .ic-search   { -webkit-mask-image: var(--svg-search);    mask-image: var(--svg-search);    }
@@ -475,10 +498,16 @@ textarea::placeholder {
 /* ═══════════════════════════════════════
    BOTTOM NAV BAR
    ───────────────────────────────────────
-   RIMOSSO:  .nb-icon { font-size: 20px }  (era emoji)
-   RIMOSSO:  .nb.active .nb-icon { transform: translateY(-2px) scale(1.06) }
-   AGGIUNTO: .nb-icon come SVG mask container
-   AGGIUNTO: transizione opacity invece di transform
+   .nb-icon è il contenitore mask (size/posizione). Il font-size:0
+   sopprime qualunque testo/emoji ricevuto da JSX (oggi app.js passa
+   ancora il glifo "⌂ ◎ ◈ ▦ ✓" come contenuto testuale di .nb-icon,
+   senza classi .ic-*: vedi nota di migrazione in fondo al file).
+
+   Per garantire che l'icona corretta compaia comunque, sotto è
+   definita una mappatura POSIZIONALE basata sull'ordine reale delle
+   tab in app.js (TABS = Home, Cibo, Train, Piano, Task): funziona
+   subito, senza toccare il JS. Se in futuro l'HTML aggiunge classi
+   .ic-* esplicite su .nb-icon, queste convivono senza conflitti.
    ═══════════════════════════════════════ */
 .nav {
   position: fixed;
@@ -508,7 +537,7 @@ textarea::placeholder {
   border: none;
   color: rgba(255,255,255,0.28);
   position: relative;
-  transition: color .22s var(--ios), opacity .15s;
+  transition: color .12s var(--smooth), opacity .1s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -519,15 +548,22 @@ textarea::placeholder {
   height: 20px;
   background-color: currentColor;
   flex-shrink: 0;
+  font-size: 0;            /* sopprime qualunque glifo/emoji testuale */
   -webkit-mask-size: contain;
   mask-size: contain;
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  transition: opacity .22s var(--ios);
-  /* RIMOSSO: transition: transform .3s var(--spring) */
+  transition: opacity .12s var(--smooth);
 }
+
+/* Fallback posizionale — 1:1 con l'array TABS di app.js */
+.nav .nb:nth-child(1) .nb-icon { -webkit-mask-image: var(--svg-home);     mask-image: var(--svg-home);     } /* Home */
+.nav .nb:nth-child(2) .nb-icon { -webkit-mask-image: var(--svg-utensils); mask-image: var(--svg-utensils); } /* Cibo */
+.nav .nb:nth-child(3) .nb-icon { -webkit-mask-image: var(--svg-activity); mask-image: var(--svg-activity); } /* Train */
+.nav .nb:nth-child(4) .nb-icon { -webkit-mask-image: var(--svg-calendar); mask-image: var(--svg-calendar); } /* Piano */
+.nav .nb:nth-child(5) .nb-icon { -webkit-mask-image: var(--svg-check);    mask-image: var(--svg-check);    } /* Task */
 
 .nb-label {
   font-family: var(--font-sys);
@@ -546,13 +582,12 @@ textarea::placeholder {
   border-radius: 50%;
   background: #ffffff;
   transform: translateX(-50%) scale(0);
-  transition: transform .22s var(--ios);
+  transition: transform .15s var(--smooth);
 }
 
 /* Active: bianco pieno — nessun transform sull'icona, solo colore */
 .nb.active         { color: #ffffff; }
 .nb.active .nb-dot { transform: translateX(-50%) scale(1); }
-/* RIMOSSO: .nb.active .nb-icon { transform: translateY(-2px) scale(1.06) } */
 
 /* Tap feedback: opacity invece di scale */
 .nb:active { opacity: .6; }
@@ -568,9 +603,9 @@ textarea::placeholder {
   font-size: 15px;
   font-weight: 600;
   cursor: pointer;
-  transition: opacity .15s var(--ios),
-              background .18s var(--ios),
-              border-color .18s var(--ios);
+  transition: opacity .1s var(--smooth),
+              background .1s var(--smooth),
+              border-color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .wb:active {
@@ -593,9 +628,6 @@ textarea::placeholder {
 /* ═══════════════════════════════════════
    FRECCE — SVG chevron, zero emoji
    ───────────────────────────────────────
-   RIMOSSO:  font-size: 15px + carattere testuale ‹ ›
-   AGGIUNTO: font-size: 0 (nasconde testo)
-             ::after pseudo-element con SVG chevron
    HTML: aggiungere .r per freccia destra
      <button class="arr">   ← default: sinistra
      <button class="arr r"> ← destra
@@ -614,10 +646,10 @@ textarea::placeholder {
   justify-content: center;
   flex-shrink: 0;
   position: relative;
-  transition: opacity .15s var(--ios),
-              background .18s var(--ios),
-              color .18s var(--ios),
-              border-color .18s var(--ios);
+  transition: opacity .1s var(--smooth),
+              background .1s var(--smooth),
+              color .1s var(--smooth),
+              border-color .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -654,12 +686,6 @@ textarea::placeholder {
 
 /* ═══════════════════════════════════════
    STELLE — SVG mask, zero bounce
-   ───────────────────────────────────────
-   RIMOSSO:  emoji/unicode ★ come testo
-   RIMOSSO:  transform: scale(1.1) su .starbtn.on
-   RIMOSSO:  transform: scale(.9) su :active
-   AGGIUNTO: SVG mask via ::before
-   AGGIUNTO: versione filled su .on
    ═══════════════════════════════════════ */
 .starbtn {
   background: none;
@@ -673,7 +699,7 @@ textarea::placeholder {
   width: 24px;
   height: 24px;
   color: rgba(255,255,255,0.18);
-  transition: color .18s var(--ios), opacity .15s;
+  transition: color .1s var(--smooth), opacity .1s;
   -webkit-tap-highlight-color: transparent;
   flex-shrink: 0;
 }
@@ -691,11 +717,10 @@ textarea::placeholder {
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
   mask-position: center;
-  transition: -webkit-mask-image .12s, mask-image .12s;
+  transition: -webkit-mask-image .1s, mask-image .1s;
 }
 .starbtn.on {
   color: #ffffff !important;  /* bianco puro — monocromatico */
-  /* RIMOSSO: transform scale bounce */
 }
 .starbtn.on::before {
   -webkit-mask-image: var(--svg-star-filled);
@@ -705,35 +730,28 @@ textarea::placeholder {
 
 /* ═══════════════════════════════════════
    ANIMAZIONI
+   ───────────────────────────────────────
+   Rimasta solo l'animazione d'ingresso dei contenuti (.su) e quella
+   dei modali a comparsa dal basso (sheetUp/overlayIn): sono cue
+   funzionali di "qualcosa è apparso", non micro-interazioni gommose.
+   .fl, pulse, checkPop e qualunque shimmer da caricamento sono stati
+   rimossi per intero — nessuna keyframe residua in questo file.
    ═══════════════════════════════════════ */
 
-/* slideUp — entra animazione funzionale, mantenuta */
+/* slideUp — ingresso contenuti, secco e breve */
 @keyframes su {
   from { transform: translateY(6px); opacity: 0; }
   to   { transform: translateY(0);   opacity: 1; }
 }
-.su { animation: su .22s var(--ios) both; }
-.tc.su > * { animation: su .30s var(--ios) both; }
+.su { animation: su .16s var(--smooth) both; }
+.tc.su > * { animation: su .18s var(--smooth) both; }
 .tc.su > *:nth-child(1)   { animation-delay: .02s; }
-.tc.su > *:nth-child(2)   { animation-delay: .06s; }
-.tc.su > *:nth-child(3)   { animation-delay: .10s; }
-.tc.su > *:nth-child(4)   { animation-delay: .14s; }
-.tc.su > *:nth-child(5)   { animation-delay: .18s; }
-.tc.su > *:nth-child(6)   { animation-delay: .22s; }
-.tc.su > *:nth-child(n+7) { animation-delay: .26s; }
-
-/* @keyframes fl → RIMOSSO
-   Era: scale(1) rotate(-2deg) → scale(1.12) rotate(3deg)
-   Animazione "wobble" infantile — eliminata.
-   La classe .fl è ora un no-op (puoi rimuoverla dall'HTML). */
-.fl { /* no animation — rimosso per design Pro Dark */ }
-
-/* Pulse — bianco ultra-sottile, mantenuto per segnali funzionali */
-@keyframes pulse {
-  0%,100% { box-shadow: 0 0 0 0   rgba(255,255,255,0.10); }
-  70%     { box-shadow: 0 0 0 7px rgba(255,255,255,0);    }
-}
-.pulse { animation: pulse 2.4s infinite; }
+.tc.su > *:nth-child(2)   { animation-delay: .05s; }
+.tc.su > *:nth-child(3)   { animation-delay: .08s; }
+.tc.su > *:nth-child(4)   { animation-delay: .11s; }
+.tc.su > *:nth-child(5)   { animation-delay: .14s; }
+.tc.su > *:nth-child(6)   { animation-delay: .17s; }
+.tc.su > *:nth-child(n+7) { animation-delay: .20s; }
 
 /* ── REDUCED MOTION ── */
 @media (prefers-reduced-motion: reduce) {
@@ -786,7 +804,7 @@ textarea::placeholder {
   text-align: left;
   position: relative;
   margin-bottom: 2px;
-  transition: background .18s var(--ios), opacity .12s var(--ios);
+  transition: background .1s var(--smooth), opacity .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .note-row:active {
@@ -808,9 +826,6 @@ textarea::placeholder {
 .note-row.pinned + .note-row.pinned::before { display: block; }
 
 /* ── Note icon: SVG mask, zero emoji ────────────────────────────
-   RIMOSSO:  font-size: 16px + emoji come contenuto
-   AGGIUNTO: font-size: 0 + ::after con SVG file-text (default)
-             pinned notes → SVG pin via cascade
    HTML: <div class="note-icon"></div>
    ────────────────────────────────────────────────────────────── */
 .note-icon {
@@ -901,9 +916,6 @@ textarea::placeholder {
 }
 
 /* ── RICERCA NOTE — focus neutro, icona SVG ─────────────────────
-   RIMOSSO:  border-color rgba(37,99,235,…) su :focus-within
-   AGGIUNTO: border bianco low-opacity
-   AGGIUNTO: .note-search-icon classe per SVG search
    HTML suggerito:
    <div class="note-search">
      <span class="note-search-icon ic ic-search"></span>
@@ -919,10 +931,10 @@ textarea::placeholder {
   border-radius: var(--r-md);
   padding: 9px 12px;
   margin-bottom: 14px;
-  transition: border-color .2s var(--ios);
+  transition: border-color .12s var(--smooth);
 }
 .note-search:focus-within {
-  border-color: rgba(255,255,255,0.18);  /* RIMOSSO: blu rgba(37,99,235,…) */
+  border-color: rgba(255,255,255,0.18);
 }
 /* Icona search nella barra: classe helper */
 .note-search-icon {
@@ -963,7 +975,7 @@ textarea::placeholder {
   display: flex;
   align-items: flex-end;
   justify-content: center;
-  animation: overlayIn .2s var(--ios);
+  animation: overlayIn .15s var(--smooth);
   overscroll-behavior: contain;
 }
 .note-sheet {
@@ -978,7 +990,7 @@ textarea::placeholder {
   flex-direction: column;
   overflow: hidden;
   position: relative;
-  animation: sheetUp .28s var(--ios);  /* RIMOSSO: var(--spring) → var(--ios) */
+  animation: sheetUp .18s var(--smooth);
   box-shadow: 0 -2px 32px rgba(0,0,0,0.96);
 }
 .note-drag {
@@ -1003,8 +1015,6 @@ textarea::placeholder {
 }
 
 /* ── Note header buttons ─────────────────────────────────────────
-   RIMOSSO:  font-size: 14px + emoji come contenuto icone
-   AGGIUNTO: font-size: 0 + ::after con SVG mask per .icon
    I bottoni testo (es. "Annulla", "Salva") mantengono font-size.
    ─────────────────────────────────────────────────────────────── */
 .note-hdr-btn {
@@ -1016,7 +1026,7 @@ textarea::placeholder {
   font-weight: 500;
   cursor: pointer;
   padding: 4px 6px;
-  transition: opacity .15s var(--ios);
+  transition: opacity .1s var(--smooth);
   -webkit-tap-highlight-color: transparent;
 }
 .note-hdr-btn:active { opacity: .5; }
@@ -1053,11 +1063,12 @@ textarea::placeholder {
   -webkit-mask-position: center;
   mask-position: center;
 }
-/* Pericolo: icona trash, rosso semantico */
+/* Azione distruttiva: stessa logica monocromatica, niente rosso —
+   la differenza è di peso/contrasto, non di tinta. */
 .note-hdr-btn.icon.danger {
-  background: rgba(224,82,82,0.08);
-  color: #e05252;
-  border-color: rgba(224,82,82,0.18);
+  background: rgba(255,255,255,0.05);
+  color: var(--red);
+  border-color: rgba(255,255,255,0.16);
 }
 .note-hdr-btn.icon.danger::after {
   -webkit-mask-image: var(--svg-trash);
@@ -1134,10 +1145,9 @@ textarea::placeholder {
 .note-body strong { font-weight: 700; color: #ffffff; }
 
 /* ── TOOLBAR NOTE ─────────────────────────────────────────────────
-   I pulsanti B / I / U / H mantengono il testo come indicatori
-   di formattazione — non sono emoji, sono simboli tipografici.
-   Per rimpiazzarli con SVG puri, usa le classi .ic-* e
-   i bottoni con classe .note-tb-btn.svg-icon (helper sotto).
+   I pulsanti B / I / U / H mantengono il testo come indicatori di
+   formattazione — sono simboli tipografici, non emoji. Per icone
+   SVG pure: classe .note-tb-btn.svg-icon (helper sotto).
    ─────────────────────────────────────────────────────────────── */
 .note-toolbar {
   position: absolute;
@@ -1166,13 +1176,12 @@ textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background .12s var(--ios), opacity .1s;
+  transition: background .1s var(--smooth), opacity .1s;
   -webkit-tap-highlight-color: transparent;
 }
 .note-tb-btn:active {
   background: rgba(255,255,255,0.06);
   opacity: .7;
-  /* RIMOSSO: transform: scale(.9) — non serve */
 }
 
 /* Stili testo per bottoni formattazione (testo) */
@@ -1236,54 +1245,69 @@ textarea::placeholder {
 .drag-over-bottom { box-shadow: 0  2px 0 0 rgba(255,255,255,0.50); }
 
 /* ═══════════════════════════════════════════════════════════════════
-   NOTE DI MIGRAZIONE HTML — leggere prima di applicare
+   NOTE DI MIGRAZIONE HTML — leggere prima di modificare i file JS
    ═══════════════════════════════════════════════════════════════════
 
-   1. NAV BAR
-      Ogni .nb-icon deve ricevere una classe .ic-* per il SVG corretto:
-        <span class="nb-icon ic-home"></span>      ← Today / Home
-        <span class="nb-icon ic-activity"></span>  ← Train
-        <span class="nb-icon ic-droplet"></span>   ← Acqua
-        <span class="nb-icon ic-notes"></span>     ← Note
-        <span class="nb-icon ic-settings"></span>  ← Impostazioni
-      Rimuovere eventuali emoji dal contenuto testuale del .nb-icon.
-      ECCEZIONE: le emoji negli esercizi e blocchi di "train"
-      sono MANTENUTE — non toccare.
+   1. NAV BAR (già funzionante anche senza modifiche al JS)
+      app.js oggi rende ogni tab così:
+        <span className="nb-icon">{t.icon}</span>   // t.icon = "⌂" ecc.
+      Questo CSS sopprime quel glifo (font-size:0 su .nb-icon) e mostra
+      l'icona corretta tramite mappatura POSIZIONALE (nth-child),
+      allineata all'ordine reale dell'array TABS in app.js:
+        1° Home → ic-home   2° Cibo → ic-utensils  3° Train → ic-activity
+        4° Piano → ic-calendar   5° Task → ic-check
+      Per maggiore chiarezza futura (consigliato, non obbligatorio),
+      si può aggiornare app.js così:
+        <span className="nb-icon ic-home"></span>      ← Home
+        <span className="nb-icon ic-utensils"></span>  ← Cibo
+        <span className="nb-icon ic-activity"></span>  ← Train
+        <span className="nb-icon ic-calendar"></span>  ← Piano
+        <span className="nb-icon ic-check"></span>     ← Task
+      ECCEZIONE: le emoji negli esercizi e nei blocchi di "train"
+      sono MANTENUTE — non toccarle, non sono gestite da questo CSS.
 
    2. CHECKBOX
-      Il .ck non deve contenere testo/emoji. Il check appare
-      via ::after CSS quando .done è presente.
-      Rimuovere: ✓ ✔ o qualsiasi carattere testuale da .ck.
+      Il .ck non deve contenere testo/emoji. Il check appare via
+      ::after quando .done è presente. Nessuna azione richiesta se
+      il JS già usa solo il toggle della classe "done".
 
    3. NOTE ICONS
-      La .note-icon non deve contenere emoji. Il CSS genera
-      automaticamente l'icona SVG via ::after.
-      Se vuoi icone custom per tipo di nota, aggiungi classi:
+      La .note-icon non deve contenere emoji: l'icona SVG arriva
+      automaticamente via ::after. Per icone custom per tipo nota:
         .note-icon.ic-pin    → usa var(--svg-pin)
         .note-icon.ic-notes  → usa var(--svg-notes) (default)
 
    4. FRECCE (.arr)
       <button class="arr">   ← freccia sinistra (default)
       <button class="arr r"> ← freccia destra
-      Rimuovere ‹ › o ← → dal contenuto testuale.
+      Nessun ‹ › o ← → nel contenuto testuale.
 
    5. STELLE (.starbtn)
-      Rimuovere ★ ☆ o emoji dal contenuto testuale.
-      Il CSS genera l'icona SVG via ::before.
-      Usare .on per stella attiva/piena.
+      Nessun ★ ☆ o emoji nel contenuto testuale: l'icona arriva via
+      ::before. Usare .on per stella attiva/piena.
 
    6. RICERCA NOTE
       Sostituire l'emoji 🔍 con:
         <span class="note-search-icon ic ic-search"></span>
 
    7. ICON SYSTEM GENERALE
-      Per qualsiasi altra icona usa:
+      Per qualsiasi altra icona:
         <span class="ic ic-[nome]"></span>
       Disponibili: ic-home, ic-activity, ic-droplet, ic-notes,
-      ic-settings, ic-search, ic-pin, ic-trash, ic-plus, ic-x,
-      ic-star, ic-star-f, ic-chev-l, ic-chev-r,
-      ic-bold, ic-italic, ic-list, ic-heading.
-      Aggiungi nuovi SVG in :root come --svg-[nome]
-      e crea la classe .ic-[nome] corrispondente.
+      ic-settings, ic-utensils, ic-calendar, ic-check, ic-search,
+      ic-pin, ic-trash, ic-plus, ic-x, ic-star, ic-star-f, ic-chev-l,
+      ic-chev-r, ic-bold, ic-italic, ic-list, ic-heading.
+      Nuovo SVG → aggiungi --svg-[nome] in :root + classe .ic-[nome].
+
+   8. RESIDUI BLU FUORI DA QUESTO FILE (da correggere nel JS, non qui)
+      Due punti in app.js usano colore blu HARDCODED in stile inline
+      (non una var CSS, quindi questo file non può intervenire):
+        - bottone impostazioni "⚙" → background/border/color con
+          rgba(10,132,255,…) e #0A84FF quando editMode è attivo
+        - numero STREAK in header → color:"#0A84FF"
+      Per renderli monocromatici, in app.js sostituire questi valori
+      con bianco/grigio (es. "#ffffff" o "rgba(255,255,255,0.85)"),
+      oppure con var(--accent)/var(--red) se lo stile inline viene
+      convertito a className.
 
    ═══════════════════════════════════════════════════════════════════ */

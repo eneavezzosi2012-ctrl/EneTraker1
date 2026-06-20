@@ -76,21 +76,21 @@ function NoteCard({notes,setNotes}){
   return(
     <div className="card">
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-        <div className="sechdr" style={{color:"rgba(161,161,170,0.6)"}}>📝 NOTE {notes&&notes.length>0?<span style={{color:"rgba(255,255,255,0.25)",marginLeft:4}}>· {notes.length}</span>:null}</div>
+        <div className="sechdr" style={{color:"rgba(161,161,170,0.6)",display:"flex",alignItems:"center",gap:5}}><span className="icon-note-inline"></span>NOTE {notes&&notes.length>0?<span style={{color:"rgba(255,255,255,0.25)",marginLeft:4}}>· {notes.length}</span>:null}</div>
         <button onClick={openNew} style={{background:"linear-gradient(135deg,rgba(161,161,170,0.18),rgba(255,255,255,0.1))",border:"1px solid rgba(161,161,170,0.32)",borderRadius:9,color:"#A1A1AA",fontSize:12,padding:"5px 12px",cursor:"pointer",fontWeight:700,letterSpacing:.2,boxShadow:"0 2px 8px rgba(161,161,170,0.15)"}}>＋ Nuova</button>
       </div>
       {preview.length===0?(
         <div style={{fontSize:13,color:"rgba(255,255,255,0.3)",padding:"18px 0",textAlign:"center",lineHeight:1.5}}>
-          <div style={{fontSize:32,marginBottom:6,opacity:.5}}>📝</div>
+          <div className="icon-note-empty" style={{marginBottom:6,opacity:.5}}></div>
           Nessuna nota.<br/>Tocca <span style={{color:"#A1A1AA",fontWeight:700}}>＋ Nuova</span> per crearne una.
         </div>
       ):(<>
-        {pinned.length>0&&<div className="note-section-hdr">📌 In alto</div>}
+        {pinned.length>0&&<div className="note-section-hdr"><span className="icon-pin-inline"></span> In alto</div>}
         {pinned.map(renderRow)}
         {others.length>0&&pinned.length>0&&<div className="note-section-hdr gray" style={{marginTop:10}}>Tutte</div>}
         {others.map(renderRow)}
       </>)}
-      {notes&&notes.length>preview.length&&<div style={{fontSize:11,color:"rgba(255,255,255,0.3)",textAlign:"center",marginTop:8,fontStyle:"italic"}}>+ altre {notes.length-preview.length} note in ⚙️ → Note</div>}
+      {notes&&notes.length>preview.length&&<div style={{fontSize:11,color:"rgba(255,255,255,0.3)",textAlign:"center",marginTop:8,fontStyle:"italic"}}>+ altre {notes.length-preview.length} note in Impostazioni → Note</div>}
       {editor&&<NoteEditor editor={editor} setEditor={setEditor} onSave={saveEditor} onDelete={deleteEditor}/>}
     </div>
   );
@@ -157,7 +157,7 @@ function NotesArchive({notes,setNotes}){
     <div>
       {/* Search bar iOS-style */}
       <div className="note-search">
-        <span style={{fontSize:14,color:"rgba(255,255,255,0.4)"}}>🔍</span>
+        <span className="icon-search"></span>
         <input placeholder="Cerca nelle note" value={search} onChange={e=>setSearch(e.target.value)}/>
         {search&&<button onClick={()=>setSearch("")} style={{background:"rgba(255,255,255,0.1)",border:"none",borderRadius:"50%",width:18,height:18,color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>✕</button>}
       </div>
@@ -165,12 +165,12 @@ function NotesArchive({notes,setNotes}){
 
       {filtered.length===0?(
         <div style={{fontSize:13,color:"rgba(255,255,255,0.28)",textAlign:"center",padding:"36px 0",lineHeight:1.6}}>
-          <div style={{fontSize:42,marginBottom:8,opacity:.5}}>📝</div>
+          <div className="icon-note-empty" style={{marginBottom:8,opacity:.5}}></div>
           {q?"Nessuna nota corrisponde alla ricerca.":"Nessuna nota. Tocca + Nuova per crearne una."}
         </div>
       ):(<>
         {pinnedF.length>0&&<>
-          <div className="note-section-hdr">📌 In alto · {pinnedF.length}</div>
+          <div className="note-section-hdr"><span className="icon-pin-inline"></span> In alto · {pinnedF.length}</div>
           {pinnedF.map(renderRow)}
         </>}
         {otherF.length>0&&<>
@@ -315,8 +315,8 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
         <div className="note-sheet-hdr">
           <button className="note-hdr-btn" onClick={()=>setEditor(null)} aria-label="Annulla">Annulla</button>
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            <button className={"note-hdr-btn icon "+(editor.pinned?"pinned":"")} onClick={togglePin} title={editor.pinned?"Rimuovi pin":"Pin"} aria-label={editor.pinned?"Rimuovi pin":"Aggiungi pin"}>📌</button>
-            {editor.id&&<button className="note-hdr-btn icon danger" onClick={async()=>{if(await window.__appConfirm("Eliminare questa nota?",{confirm:"Elimina",cancel:"Annulla"}))onDelete();}} aria-label="Elimina nota">🗑</button>}
+            <button className={"note-hdr-btn icon icon-pin "+(editor.pinned?"pinned":"")} onClick={togglePin} title={editor.pinned?"Rimuovi pin":"Pin"} aria-label={editor.pinned?"Rimuovi pin":"Aggiungi pin"}></button>
+            {editor.id&&<button className="note-hdr-btn icon danger icon-trash" onClick={async()=>{if(await window.__appConfirm("Eliminare questa nota?",{confirm:"Elimina",cancel:"Annulla"}))onDelete();}} aria-label="Elimina nota"></button>}
             <button className="note-hdr-btn bold" onClick={onSave} aria-label="Salva nota">Fine</button>
           </div>
         </div>

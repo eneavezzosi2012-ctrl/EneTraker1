@@ -26,19 +26,19 @@ function TasksTab({tasks,setTasks,todayTasks,taskDone,toggleTask,addTask,newTask
     React.useEffect(()=>{setDraftText(t.text);setDraftSub(t.subtitle||"");},[t.text,t.subtitle]);
 
     return(<div style={{marginBottom:6}}>
-      <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid "+(isDone?"rgba(0,201,126,0.1)":"rgba(255,255,255,0.065)"),borderRadius:13,overflow:"hidden"}}>
+      <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid "+(isDone?"rgba(228,228,231,0.1)":"rgba(255,255,255,0.065)"),borderRadius:13,overflow:"hidden"}}>
         <div style={{display:"flex",alignItems:"center",gap:9,padding:"10px 11px"}}>
           <button className={"ck "+(isQ?"dg ":"")+(isDone?"done":"")} onClick={()=>isQ?toggleTask(t.id):toggleSpec(t.id)}>{isDone?"✓":""}</button>
           <div style={{flex:1,minWidth:0}}>
             <div style={{display:"flex",alignItems:"center",gap:5}}>
               <div style={{fontSize:13,fontWeight:500,color:isDone?"rgba(255,255,255,0.2)":isQ&&skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.5)":"rgba(255,255,255,0.83)",textDecoration:isDone||(isQ&&skippedTasks2.has(String(t.id)))?"line-through":"none"}}>{t.text}</div>
-              {isQ&&skippedTasks2.has(String(t.id))&&<span style={{fontSize:9,color:"#A1A1AA",fontWeight:700,background:"rgba(161,161,170,0.1)",padding:"1px 5px",borderRadius:5}}>⚡</span>}
+              {isQ&&skippedTasks2.has(String(t.id))&&<span style={{fontSize:9,color:"#A1A1AA",fontWeight:700,background:"rgba(161,161,170,0.1)",padding:"1px 5px",borderRadius:5,display:"inline-flex",alignItems:"center"}}><span className="icon-ban-inline"></span></span>}
             </div>
             {!isExp&&t.subtitle&&<div style={{fontSize:11,color:"rgba(255,255,255,0.25)",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.subtitle}</div>}
           </div>
           <div style={{display:"flex",gap:4,flexShrink:0,alignItems:"center"}}>
-            {isQ&&<button onClick={()=>{setSkippedTasks2(prev=>{const n=new Set(prev);n.has(String(t.id))?n.delete(String(t.id)):n.add(String(t.id));return n;});}} style={{background:skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.4)":"rgba(255,255,255,0.07)"),borderRadius:7,color:skippedTasks2.has(String(t.id))?"#A1A1AA":"rgba(255,255,255,0.22)",fontSize:11,padding:"3px 7px",cursor:"pointer",fontWeight:700}}>⚡</button>}
-            <button onClick={()=>{setEditId(isEd?null:t.id);setExpId(null);}} style={{background:isEd?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isEd?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isEd?"#FFFFFF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✏️</button>
+            {isQ&&<button onClick={()=>{setSkippedTasks2(prev=>{const n=new Set(prev);n.has(String(t.id))?n.delete(String(t.id)):n.add(String(t.id));return n;});}} style={{background:skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.4)":"rgba(255,255,255,0.07)"),borderRadius:7,color:skippedTasks2.has(String(t.id))?"#A1A1AA":"rgba(255,255,255,0.22)",fontSize:11,padding:"3px 7px",cursor:"pointer",fontWeight:700}}>SKIP</button>}
+            <button onClick={()=>{setEditId(isEd?null:t.id);setExpId(null);}} className="icon-edit" style={{background:isEd?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isEd?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isEd?"#FFFFFF":"rgba(255,255,255,0.28)",padding:"3px 8px",cursor:"pointer",minWidth:24,minHeight:20}}></button>
             {!isEd&&<button onClick={()=>{setExpId(isExp?null:t.id);setEditId(null);}} style={{background:isExp?"rgba(255,255,255,0.07)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isExp?"#FFFFFF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer",display:"inline-block",transform:isExp?"rotate(180deg)":"none",transition:"transform .2s"}}>&#9662;</button>}
             {isEd&&<button onClick={()=>isQ?removeTask(t.id):removeSpec(t.id)} style={{background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.14)",borderRadius:7,color:"#FFFFFF",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✕</button>}
           </div>

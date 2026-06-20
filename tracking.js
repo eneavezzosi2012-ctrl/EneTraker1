@@ -152,10 +152,10 @@ function TrackingSection(){
 
       {/* Reset totale */}
       <div style={{marginTop:22,paddingTop:16,borderTop:"1px solid rgba(255,255,255,0.06)"}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:"#F5F5F5",marginBottom:6}}>⚠ ZONA PERICOLOSA</div>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:"#F5F5F5",marginBottom:6}}>⚠︎ ZONA PERICOLOSA</div>
         {!confirmReset?(
-          <button onClick={()=>setConfirmReset(true)} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.06)",color:"#F5F5F5",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>
-            🗑 RESET TOTALE
+          <button onClick={()=>setConfirmReset(true)} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.06)",color:"#F5F5F5",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3,display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+            <span className="icon-trash"></span>RESET TOTALE
           </button>
         ):(
           <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.35)",borderRadius:11,padding:12}}>

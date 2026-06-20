@@ -56,7 +56,7 @@ function StatsAndamento({dailyLogs,td}){
   const barW=Math.max(4,colW-3);
   return(
     <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:14,marginBottom:11}}>
-      <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:11}}>📈 Andamento 30 giorni</div>
+      <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:11,display:"flex",alignItems:"center",gap:6}}><span className="icon-chart"></span>Andamento 30 giorni</div>
       <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
         <svg width={W} height={H} style={{display:"block",minWidth:"100%"}}>
           {/* baseline */}
@@ -113,7 +113,7 @@ function StatsWeekCompare({dailyLogs,td}){
   const barW=Math.min(13,(groupW-6)/2);
   return(
     <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:14,marginBottom:11}}>
-      <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:8}}>📊 Questa settimana vs scorsa</div>
+      <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:8,display:"flex",alignItems:"center",gap:6}}><span className="icon-chart"></span>Questa settimana vs scorsa</div>
       <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:10,fontSize:10,color:"rgba(255,255,255,0.55)"}}>
         <span><span style={{display:"inline-block",width:8,height:8,borderRadius:"50%",background:"#FFFFFF",marginRight:5,verticalAlign:"middle"}}/>Questa settimana</span>
         <span><span style={{display:"inline-block",width:8,height:8,borderRadius:"50%",background:"rgba(255,255,255,0.35)",marginRight:5,verticalAlign:"middle"}}/>Scorsa</span>
@@ -258,7 +258,7 @@ function StatsRecords(){
   return(
     <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:14,marginBottom:11}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11}}>
-        <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)"}}>🏆 Record mensili</div>
+        <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",display:"flex",alignItems:"center",gap:6}}><span className="icon-flag"></span>Record mensili</div>
       </div>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:11,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:11,padding:"6px 10px"}}>
         <button onClick={()=>changeMonth(-1)} style={{background:"transparent",border:"none",color:"rgba(255,255,255,0.55)",fontSize:18,cursor:"pointer",padding:"2px 8px"}}>‹</button>
@@ -267,7 +267,7 @@ function StatsRecords(){
       </div>
       {banner&&(
         <div style={{
-          background:banner.type==="end"?"linear-gradient(135deg,rgba(255,255,255,0.13),rgba(255,255,255,0.06))":"linear-gradient(135deg,rgba(228,228,231,0.13),rgba(77,184,255,0.05))",
+          background:banner.type==="end"?"linear-gradient(135deg,rgba(255,255,255,0.13),rgba(255,255,255,0.06))":"linear-gradient(135deg,rgba(228,228,231,0.13),rgba(212,212,216,0.05))",
           border:"1px solid "+(banner.type==="end"?"rgba(255,255,255,0.32)":"rgba(228,228,231,0.28)"),
           borderRadius:12,padding:"11px 12px",marginBottom:11,
           display:"flex",alignItems:"flex-start",gap:9
@@ -298,9 +298,8 @@ function StatsRecords(){
           )}
           {isCurrent&&(
             <>
-              <button onClick={()=>toggleActive(r.id)} title={r.active?"Disattiva":"Attiva"}
-                style={{background:r.active?"rgba(228,228,231,0.1)":"rgba(255,255,255,0.04)",border:"1px solid "+(r.active?"rgba(228,228,231,0.25)":"rgba(255,255,255,0.07)"),borderRadius:7,color:r.active?"#E4E4E7":"rgba(255,255,255,0.3)",fontSize:12,padding:"4px 7px",cursor:"pointer"}}>
-                {r.active?"👁":"🚫"}
+              <button onClick={()=>toggleActive(r.id)} title={r.active?"Disattiva":"Attiva"} className={r.active?"icon-eye":"icon-ban"}
+                style={{background:r.active?"rgba(228,228,231,0.1)":"rgba(255,255,255,0.04)",border:"1px solid "+(r.active?"rgba(228,228,231,0.25)":"rgba(255,255,255,0.07)"),borderRadius:7,color:r.active?"#E4E4E7":"rgba(255,255,255,0.3)",padding:"4px 7px",cursor:"pointer",minWidth:24,minHeight:22}}>
               </button>
               <button onClick={()=>removeRecord(r.id)} title="Elimina"
                 style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:7,color:"rgba(255,255,255,0.6)",fontSize:11,padding:"4px 7px",cursor:"pointer"}}>✕</button>
@@ -565,8 +564,8 @@ function StatsPartite(){
       <div style={{borderTop:"1px solid rgba(255,255,255,0.05)",marginTop:12,paddingTop:11}}>
         {!seasonConfirm?(
           <button onClick={()=>setSeasonConfirm(true)}
-            style={{width:"100%",padding:"9px",borderRadius:10,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.03)",color:"rgba(255,255,255,0.5)",fontSize:11,fontWeight:600,cursor:"pointer"}}>
-            🏁 Nuova stagione
+            style={{width:"100%",padding:"9px",borderRadius:10,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.03)",color:"rgba(255,255,255,0.5)",fontSize:11,fontWeight:600,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:6}}>
+            <span className="icon-flag"></span>Nuova stagione
           </button>
         ):(
           <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,padding:11}}>

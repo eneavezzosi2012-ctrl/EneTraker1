@@ -131,7 +131,7 @@ function LoginScreen({onLogin}){
 
       {/* ── Error message ── */}
       {error&&(
-        <div style={{background:"rgba(255,69,58,0.08)",border:"1px solid rgba(255,69,58,0.22)",borderRadius:10,padding:"10px 13px",color:"#F5F5F5",fontSize:13,marginBottom:14,fontWeight:500,lineHeight:1.45}}>
+        <div style={{background:"rgba(245,245,245,0.08)",border:"1px solid rgba(245,245,245,0.22)",borderRadius:10,padding:"10px 13px",color:"#F5F5F5",fontSize:13,marginBottom:14,fontWeight:500,lineHeight:1.45}}>
           {error}
         </div>
       )}

@@ -126,8 +126,8 @@ function CalendarTab({calEvents,setCalEvents}){
       {(addModal||editEvt)&&(
         <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,0.7)",zIndex:200,display:"flex",alignItems:"flex-end",justifyContent:"center"}} onClick={()=>{setAddModal(null);setEditEvt(null);}}>
           <div onClick={e=>e.stopPropagation()} style={{background:"#0A0A0A",border:"1px solid rgba(255,255,255,0.1)",borderRadius:"18px 18px 0 0",padding:"20px 16px",width:"100%",maxWidth:430,maxHeight:"85vh",overflowY:"auto"}}>
-            <div style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.8)",marginBottom:12}}>
-              {editEvt?"✏️ Modifica evento":"+ Nuovo evento"}
+            <div style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.8)",marginBottom:12,display:"flex",alignItems:"center",gap:6}}>
+              {editEvt?<><span className="icon-edit"></span>Modifica evento</>:"+ Nuovo evento"}
             </div>
             <input autoFocus value={draftText} onChange={e=>setDraftText(e.target.value)}
               onKeyDown={e=>e.key==="Enter"&&saveEvent()}
@@ -147,7 +147,7 @@ function CalendarTab({calEvents,setCalEvents}){
                 <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,marginBottom:5}}>DURATA</div>
                 <div style={{display:"flex",gap:3,flexDirection:"column"}}>
                   {[1,2,3,4,5,6].map(d=>(
-                    <button key={d} onClick={()=>setDraftDuration(d)} style={{padding:"5px 10px",borderRadius:7,fontSize:11,fontWeight:600,cursor:"pointer",border:"1px solid "+(draftDuration===d?"rgba(0,200,120,0.4)":"rgba(255,255,255,0.08)"),background:draftDuration===d?"rgba(0,200,120,0.12)":"rgba(255,255,255,0.03)",color:draftDuration===d?"#E4E4E7":"rgba(255,255,255,0.35)"}}>
+                    <button key={d} onClick={()=>setDraftDuration(d)} style={{padding:"5px 10px",borderRadius:7,fontSize:11,fontWeight:600,cursor:"pointer",border:"1px solid "+(draftDuration===d?"rgba(228,228,231,0.4)":"rgba(255,255,255,0.08)"),background:draftDuration===d?"rgba(228,228,231,0.12)":"rgba(255,255,255,0.03)",color:draftDuration===d?"#E4E4E7":"rgba(255,255,255,0.35)"}}>
                       {d} {d===1?"ora":"ore"}
                     </button>
                   ))}
@@ -159,12 +159,12 @@ function CalendarTab({calEvents,setCalEvents}){
             <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,letterSpacing:.5,marginBottom:8}}>RIPETI OGNI SETTIMANA (lascia vuoto per evento singolo)</div>
             <div style={{display:"flex",gap:5,marginBottom:14}}>
               {DAYS_IT.map((d,i)=>(
-                <button key={i} onClick={()=>toggleRecurDay(i)} style={{flex:1,padding:"7px 0",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",border:"1px solid "+(draftRecur.includes(i)?"rgba(0,201,126,0.45)":"rgba(255,255,255,0.08)"),background:draftRecur.includes(i)?"rgba(0,201,126,0.15)":"rgba(255,255,255,0.03)",color:draftRecur.includes(i)?"#E4E4E7":"rgba(255,255,255,0.3)"}}>{d}</button>
+                <button key={i} onClick={()=>toggleRecurDay(i)} style={{flex:1,padding:"7px 0",borderRadius:8,fontSize:11,fontWeight:700,cursor:"pointer",border:"1px solid "+(draftRecur.includes(i)?"rgba(228,228,231,0.45)":"rgba(255,255,255,0.08)"),background:draftRecur.includes(i)?"rgba(228,228,231,0.15)":"rgba(255,255,255,0.03)",color:draftRecur.includes(i)?"#E4E4E7":"rgba(255,255,255,0.3)"}}>{d}</button>
               ))}
             </div>
             {draftRecur.length>0&&(
-              <div style={{fontSize:11,color:"#E4E4E7",marginBottom:12,fontWeight:500}}>
-                🔁 Ogni {draftRecur.map(i=>DAYS_FULL[i]).join(", ")}
+              <div style={{fontSize:11,color:"#E4E4E7",marginBottom:12,fontWeight:500,display:"flex",alignItems:"center",gap:5}}>
+                <span className="icon-repeat"></span>Ogni {draftRecur.map(i=>DAYS_FULL[i]).join(", ")}
               </div>
             )}
 
@@ -195,16 +195,16 @@ function CalendarTab({calEvents,setCalEvents}){
                   const isFip=evt.isFipAuto===true;
                   return(
                     <button key={evt.id+"_"+h} onClick={()=>isStart&&!isFip&&openEdit(evt)}
-                      style={{textAlign:"left",background:!isStart?"rgba(255,255,255,0.02)":isFip?"rgba(255,255,255,0.10)":isRecur?"rgba(0,220,130,0.08)":"rgba(255,255,255,0.06)",border:"1px solid "+(!isStart?"rgba(255,255,255,0.04)":isFip?"rgba(255,255,255,0.35)":isRecur?"rgba(0,220,130,0.22)":"rgba(255,255,255,0.09)"),borderRadius:9,padding:"6px 10px",cursor:isStart&&!isFip?"pointer":"default",display:"flex",alignItems:"center",gap:7,width:"100%",opacity:!isStart?0.5:1}}>
-                      {isStart&&isFip&&<span style={{fontSize:9,color:"#FFFFFF",fontWeight:700,background:"rgba(255,255,255,0.18)",padding:"2px 6px",borderRadius:4,flexShrink:0}}>⏱ {dur}h</span>}
-                      {isStart&&!isFip&&dur>1&&<span style={{fontSize:9,color:"#D4D4D8",fontWeight:700,background:"rgba(0,140,255,0.15)",padding:"2px 6px",borderRadius:4,flexShrink:0}}>⏱ {dur}h</span>}
-                      {isStart&&!isFip&&isRecur&&<span style={{fontSize:8,color:"#E4E4E7",fontWeight:700,background:"rgba(0,220,130,0.15)",padding:"2px 5px",borderRadius:4,flexShrink:0}}>🔁</span>}
+                      style={{textAlign:"left",background:!isStart?"rgba(255,255,255,0.02)":isFip?"rgba(255,255,255,0.10)":isRecur?"rgba(228,228,231,0.08)":"rgba(255,255,255,0.06)",border:"1px solid "+(!isStart?"rgba(255,255,255,0.04)":isFip?"rgba(255,255,255,0.35)":isRecur?"rgba(228,228,231,0.22)":"rgba(255,255,255,0.09)"),borderRadius:9,padding:"6px 10px",cursor:isStart&&!isFip?"pointer":"default",display:"flex",alignItems:"center",gap:7,width:"100%",opacity:!isStart?0.5:1}}>
+                      {isStart&&isFip&&<span style={{fontSize:9,color:"#FFFFFF",fontWeight:700,background:"rgba(255,255,255,0.18)",padding:"2px 6px",borderRadius:4,flexShrink:0,display:"flex",alignItems:"center",gap:3}}><span className="icon-clock-inline"></span>{dur}h</span>}
+                      {isStart&&!isFip&&dur>1&&<span style={{fontSize:9,color:"#D4D4D8",fontWeight:700,background:"rgba(255,255,255,0.15)",padding:"2px 6px",borderRadius:4,flexShrink:0,display:"flex",alignItems:"center",gap:3}}><span className="icon-clock-inline"></span>{dur}h</span>}
+                      {isStart&&!isFip&&isRecur&&<span className="icon-repeat" style={{width:9,height:9,background:"rgba(228,228,231,0.15)",padding:3,borderRadius:4,flexShrink:0}}></span>}
                       <div style={{flex:1,textAlign:"left"}}>
                         <div style={{fontSize:12,fontWeight:isStart?600:400,color:isFip?(isStart?"#FFFFFF":"rgba(255,255,255,0.5)"):"rgba(255,255,255,0.6)"}}>{!isStart?"↕ "+evt.text:evt.text}</div>
-                        {isStart&&isFip&&<div style={{fontSize:9,color:"rgba(255,255,255,0.6)",marginTop:1}}>📅 {evt.ora} · calendario FIP</div>}
+                        {isStart&&isFip&&<div style={{fontSize:9,color:"rgba(255,255,255,0.6)",marginTop:1,display:"flex",alignItems:"center",gap:4}}><span className="icon-calendar-inline"></span>{evt.ora} · calendario FIP</div>}
                         {isStart&&!isFip&&isRecur&&<div style={{fontSize:9,color:"rgba(228,228,231,0.6)",marginTop:1}}>{evt.recur.map(i=>DAYS_IT[i]).join(" · ")}</div>}
                       </div>
-                      {isStart&&!isFip&&<span style={{fontSize:10,color:"rgba(255,255,255,0.18)"}}>✏️</span>}
+                      {isStart&&!isFip&&<span className="icon-edit" style={{opacity:.4}}></span>}
                     </button>
                   );
                 })}

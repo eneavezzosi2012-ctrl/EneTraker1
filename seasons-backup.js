@@ -193,7 +193,7 @@ function SeasonsArchive({onClose}){
       <div>
         <button onClick={onClose} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:9,color:"rgba(255,255,255,0.5)",fontSize:12,padding:"6px 12px",cursor:"pointer",marginBottom:16}}>← Indietro</button>
         <div style={{textAlign:"center",padding:"30px 0",color:"rgba(255,255,255,0.25)",fontSize:13}}>
-          <div style={{fontSize:32,marginBottom:10}}>📦</div>
+          <div className="icon-box" style={{width:32,height:32,marginBottom:10,marginLeft:"auto",marginRight:"auto",opacity:.6}}></div>
           <div>Nessuna stagione passata archiviata.</div>
           <div style={{fontSize:11,marginTop:6,lineHeight:1.5}}>Le stagioni vengono salvate automaticamente quando importi un nuovo calendario PDF.</div>
         </div>
@@ -230,11 +230,11 @@ function SeasonsArchive({onClose}){
                 )}
               </div>
               {!isRen&&<div style={{display:"flex",gap:5,flexShrink:0}}>
-                <button onClick={()=>{setRenameId(s.id);setRenameText(s.label||("Stagione "+s.id));}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:7,color:"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 8px",cursor:"pointer"}}>✏️</button>
+                <button onClick={()=>{setRenameId(s.id);setRenameText(s.label||("Stagione "+s.id));}} className="icon-edit" style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:7,color:"rgba(255,255,255,0.35)",padding:"5px 8px",cursor:"pointer",minWidth:24,minHeight:20}}></button>
                 <button onClick={()=>setExpandId(isExp?null:s.id)} style={{background:isExp?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.09)"),borderRadius:7,color:isExp?"#FFFFFF":"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 10px",cursor:"pointer",fontWeight:600}}>
                   {isExp?"▲ Chiudi":"▼ Dettagli"}
                 </button>
-                <button onClick={()=>doDelete(s.id)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:7,color:"#F5F5F5",fontSize:11,padding:"5px 8px",cursor:"pointer"}}>🗑</button>
+                <button onClick={()=>doDelete(s.id)} className="icon-trash" style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:7,padding:"5px 8px",cursor:"pointer"}}></button>
               </div>}
             </div>
 
@@ -244,7 +244,7 @@ function SeasonsArchive({onClose}){
                 {/* Statistiche medie */}
                 {stats?(
                   <>
-                    <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,letterSpacing:.5,marginBottom:8}}>📊 STATISTICHE MEDIE · {stats.total} partite giocate</div>
+                    <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,letterSpacing:.5,marginBottom:8,display:"flex",alignItems:"center",gap:6}}><span className="icon-chart"></span>STATISTICHE MEDIE · {stats.total} partite giocate</div>
                     <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
                       {STAT_KEYS_S.map(k=>(
                         <div key={k} style={{flex:"1 1 80px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
@@ -277,7 +277,7 @@ function SeasonsArchive({onClose}){
                 {/* Partite della stagione */}
                 {Array.isArray(s.matches)&&s.matches.length>0&&(
                   <>
-                    <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,letterSpacing:.5,marginBottom:8}}>📅 PARTITE · {s.matches.length}</div>
+                    <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600,letterSpacing:.5,marginBottom:8,display:"flex",alignItems:"center",gap:6}}><span className="icon-calendar-inline"></span>PARTITE · {s.matches.length}</div>
                     <div style={{maxHeight:260,overflowY:"auto"}}>
                       {s.matches.map((p,i)=>{
                         const games=load("game_stats",[]);
@@ -298,7 +298,7 @@ function SeasonsArchive({onClose}){
                                 ))}
                               </div>
                             )}
-                            {gameEntry?.skipped&&<div style={{fontSize:10,color:"#A1A1AA",marginTop:4}}>⚡ Non sceso in campo</div>}
+                            {gameEntry?.skipped&&<div style={{fontSize:10,color:"#A1A1AA",marginTop:4,display:"flex",alignItems:"center",gap:4}}><span className="icon-ban-inline"></span>Non sceso in campo</div>}
                           </div>
                         );
                       })}
@@ -372,7 +372,7 @@ function PartiteCalendar(){
     // (Statistiche → Partite → "Nuova stagione")
     setPartite(previewMatches);
     setPreviewMatches(null);
-    setImportMsg({ok:true,text:"✓ Calendario sostituito. Per archiviare la stagione vai in Statistiche → Partite → 🏁 Nuova stagione."});
+    setImportMsg({ok:true,text:"✓ Calendario sostituito. Per archiviare la stagione vai in Statistiche → Partite → Nuova stagione."});
   }
   function cancelImport(){
     setPreviewMatches(null);
@@ -388,8 +388,8 @@ function PartiteCalendar(){
           Calendario partite della tua squadra. A fine stagione importa il nuovo PDF FIP.
         </div>
         <button onClick={()=>setShowArchive(true)}
-          style={{flexShrink:0,marginLeft:10,background:"rgba(160,120,255,0.12)",border:"1px solid rgba(160,120,255,0.3)",borderRadius:10,color:"#9F9FA8",fontSize:11,fontWeight:700,padding:"7px 11px",cursor:"pointer",letterSpacing:.2,whiteSpace:"nowrap"}}>
-          🏆 Stagioni passate
+          style={{flexShrink:0,marginLeft:10,background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.18)",borderRadius:10,color:"#D4D4D8",fontSize:11,fontWeight:700,padding:"7px 11px",cursor:"pointer",letterSpacing:.2,whiteSpace:"nowrap",display:"flex",alignItems:"center",gap:5}}>
+          <span className="icon-flag"></span>Stagioni passate
         </button>
       </div>
 
@@ -405,8 +405,8 @@ function PartiteCalendar(){
       {partite.length>0&&!previewMatches&&(
         <div style={{marginBottom:14,textAlign:"right"}}>
           <button onClick={async()=>{if(await window.__appConfirm("Sei sicuro? Il calendario verrà svuotato.",{confirm:"Svuota",cancel:"Annulla"}))setPartite([]);}}
-            style={{background:"transparent",border:"1px solid rgba(255,255,255,0.25)",borderRadius:9,color:"rgba(255,255,255,0.6)",fontSize:11,padding:"5px 12px",cursor:"pointer",fontWeight:600}}>
-            🗑 Svuota calendario
+            style={{background:"transparent",border:"1px solid rgba(255,255,255,0.25)",borderRadius:9,color:"rgba(255,255,255,0.6)",fontSize:11,padding:"5px 12px",cursor:"pointer",fontWeight:600,display:"inline-flex",alignItems:"center",gap:5}}>
+            <span className="icon-trash"></span>Svuota calendario
           </button>
         </div>
       )}
@@ -415,8 +415,8 @@ function PartiteCalendar(){
       <div style={{marginBottom:14}}>
         <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={handleFile} style={{display:"none"}}/>
         <button onClick={()=>fileInputRef.current&&fileInputRef.current.click()} disabled={importing||!teamName.trim()}
-          style={{width:"100%",padding:"12px",borderRadius:11,border:"1px dashed rgba(255,255,255,0.4)",background:"rgba(255,255,255,0.06)",color:"#FFFFFF",fontSize:13,fontWeight:700,cursor:importing||!teamName.trim()?"not-allowed":"pointer",opacity:importing||!teamName.trim()?0.5:1,letterSpacing:.3}}>
-          {importing?"⏳ Lettura PDF…":"📄 Importa calendario FIP da PDF"}
+          style={{width:"100%",padding:"12px",borderRadius:11,border:"1px dashed rgba(255,255,255,0.4)",background:"rgba(255,255,255,0.06)",color:"#FFFFFF",fontSize:13,fontWeight:700,cursor:importing||!teamName.trim()?"not-allowed":"pointer",opacity:importing||!teamName.trim()?0.5:1,letterSpacing:.3,display:"flex",alignItems:"center",justifyContent:"center",gap:7}}>
+          {importing?"Lettura PDF…":<><span className="icon-document"></span>Importa calendario FIP da PDF</>}
         </button>
       </div>
 
@@ -437,7 +437,7 @@ function PartiteCalendar(){
               </div>
             ))}
           </div>
-          <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",marginBottom:10,lineHeight:1.5}}>⚠ Importando, il calendario corrente verrà <b>sostituito</b>. Le statistiche delle partite già giocate non vengono toccate. Per archiviare la stagione, usa "Nuova stagione" da Statistiche.</div>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",marginBottom:10,lineHeight:1.5}}>⚠︎ Importando, il calendario corrente verrà <b>sostituito</b>. Le statistiche delle partite già giocate non vengono toccate. Per archiviare la stagione, usa "Nuova stagione" da Statistiche.</div>
           <div style={{display:"flex",gap:8}}>
             <button onClick={cancelImport} style={{flex:1,padding:"9px",borderRadius:9,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.55)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
             <button onClick={confirmImport} style={{flex:2,padding:"9px",borderRadius:9,border:"none",background:"linear-gradient(135deg,#E4E4E7,#FFFFFF)",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>Sostituisci calendario ✓</button>
@@ -455,10 +455,10 @@ function PartiteCalendar(){
             <div key={p.date+"_"+idx} style={{marginBottom:12,background:isToday2?"rgba(255,255,255,0.08)":isPast?"rgba(255,255,255,0.015)":"rgba(255,255,255,0.03)",border:"1px solid "+(isToday2?"rgba(255,255,255,0.35)":isPast?"rgba(255,255,255,0.04)":"rgba(255,255,255,0.08)"),borderRadius:14,padding:"13px 14px",opacity:isPast?0.55:1}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
                 <div>
-                  <div style={{fontSize:10,color:isToday2?"#FFFFFF":"rgba(255,255,255,0.35)",fontWeight:700,letterSpacing:.5,textTransform:"uppercase",marginBottom:2}}>{p.giornata||""}{isToday2?" · OGGI 🏆":""}</div>
+                  <div style={{fontSize:10,color:isToday2?"#FFFFFF":"rgba(255,255,255,0.35)",fontWeight:700,letterSpacing:.5,textTransform:"uppercase",marginBottom:2,display:"flex",alignItems:"center",gap:4}}>{p.giornata||""}{isToday2?<> · OGGI <span className="icon-flag"></span></>:""}</div>
                   <div style={{fontSize:13,fontWeight:700,color:isPast?"rgba(255,255,255,0.4)":"rgba(255,255,255,0.9)",textTransform:"capitalize"}}>{fmtDate(p.date)}</div>
                 </div>
-                <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:8,background:p.casa?"rgba(0,220,130,0.12)":"rgba(0,140,255,0.12)",color:p.casa?"#E4E4E7":"#D4D4D8",border:"1px solid "+(p.casa?"rgba(0,220,130,0.25)":"rgba(0,140,255,0.25)")}}>
+                <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:8,background:p.casa?"rgba(255,255,255,0.10)":"rgba(255,255,255,0.06)",color:p.casa?"#E4E4E7":"#D4D4D8",border:"1px solid "+(p.casa?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.16)")}}>
                   {p.casa?"🏠 Casa":"✈️ Trasferta"}
                 </span>
               </div>
@@ -486,7 +486,7 @@ function PartiteCalendar(){
                   </div>
                 </div>
               )}
-              {p.luogo&&<div style={{marginTop:8,fontSize:11,color:"rgba(255,255,255,0.5)",fontWeight:500}}>📍 {p.luogo}{p.indirizzo?" — "+p.indirizzo:""}</div>}
+              {p.luogo&&<div style={{marginTop:8,fontSize:11,color:"rgba(255,255,255,0.5)",fontWeight:500,display:"flex",alignItems:"center",gap:5}}><span className="icon-pin-marker"></span>{p.luogo}{p.indirizzo?" — "+p.indirizzo:""}</div>}
             </div>
           );
         })}
@@ -514,8 +514,8 @@ function BackupRestore(){
   }
 
   function copyExport(){
-    if(navigator.clipboard){navigator.clipboard.writeText(exportText).then(()=>setMsg({ok:true,text:"✓ Testo copiato! Incollalo in un file .txt o Notes."})).catch(()=>setMsg({ok:false,text:"⚠ Copia manuale: seleziona tutto il testo qui sopra."}));}
-    else{setMsg({ok:false,text:"⚠ Seleziona tutto il testo e copialo manualmente."});}
+    if(navigator.clipboard){navigator.clipboard.writeText(exportText).then(()=>setMsg({ok:true,text:"✓ Testo copiato! Incollalo in un file .txt o Notes."})).catch(()=>setMsg({ok:false,text:"⚠︎ Copia manuale: seleziona tutto il testo qui sopra."}));}
+    else{setMsg({ok:false,text:"⚠︎ Seleziona tutto il testo e copialo manualmente."});}
   }
 
   // Chiavi di sessione/dispositivo che non vanno ripristinate da un backup
@@ -560,7 +560,7 @@ function BackupRestore(){
       });
     }catch(e){
       setBusy(false);
-      setMsg({ok:false,text:"⚠ Testo non valido. Assicurati di incollare tutto il backup."});
+      setMsg({ok:false,text:"⚠︎ Testo non valido. Assicurati di incollare tutto il backup."});
     }
   }
 
@@ -572,15 +572,15 @@ function BackupRestore(){
         Esporta i tuoi dati come testo, salvalo dove vuoi. Per ripristinarli incollalo qui.
       </div>
       <div style={{display:"flex",gap:8,marginBottom:16}}>
-        <button onClick={doExport} style={tabStyle(mode==="export")}>📤 Esporta</button>
-        <button onClick={()=>{setMode("import");setMsg(null);}} style={tabStyle(mode==="import")}>📥 Importa</button>
+        <button onClick={doExport} style={{...tabStyle(mode==="export"),display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><span className="icon-upload"></span>Esporta</button>
+        <button onClick={()=>{setMode("import");setMsg(null);}} style={{...tabStyle(mode==="import"),display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><span className="icon-download"></span>Importa</button>
       </div>
 
       {mode==="export"&&exportText&&(
         <div>
           <div style={{fontSize:10,color:"rgba(255,255,255,0.28)",marginBottom:6,fontWeight:600}}>COPIA TUTTO QUESTO TESTO E SALVALO:</div>
           <textarea readOnly rows={8} value={exportText} onClick={e=>e.target.select()} style={{fontSize:9,lineHeight:1.4,color:"rgba(255,255,255,0.55)",background:"rgba(0,0,0,0.3)"}}/>
-          <button onClick={copyExport} className="btn-p" style={{width:"100%",marginTop:8,padding:"12px",fontWeight:700}}>📋 COPIA TUTTO ✓</button>
+          <button onClick={copyExport} className="btn-p" style={{width:"100%",marginTop:8,padding:"12px",fontWeight:700,display:"flex",alignItems:"center",justifyContent:"center",gap:6}}><span className="icon-clipboard"></span>COPIA TUTTO ✓</button>
         </div>
       )}
 

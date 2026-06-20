@@ -118,15 +118,15 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
   }
 
   const SECS=[
-    {id:"profile",  icon:"👤",label:"Dati profilo"},
-    {id:"tracking", icon:"▶️",label:"Stato app (inizia / pausa / reset)"},
-    {id:"notes",    icon:"📝",label:"Note"},
-    {id:"training", icon:"💪",label:"Piano allenamento"},
-    {id:"nutrition",icon:"🍽️",label:"Piano alimentare"},
-    {id:"tasks",    icon:"✓", label:"Task quotidiane"},
-    {id:"history",  icon:"📅",label:"Modifica giorni passati"},
-    {id:"partite",  icon:"🏀",label:"Calendario Partite"},
-    {id:"backup",   icon:"💾",label:"Backup / Ripristino dati"},
+    {id:"profile",  icon:"",label:"Dati profilo"},
+    {id:"tracking", icon:"",label:"Stato app (inizia / pausa / reset)"},
+    {id:"notes",    icon:"",label:"Note"},
+    {id:"training", icon:"",label:"Piano allenamento"},
+    {id:"nutrition",icon:"",label:"Piano alimentare"},
+    {id:"tasks",    icon:"", label:"Task quotidiane"},
+    {id:"history",  icon:"",label:"Modifica giorni passati"},
+    {id:"partite",  icon:"",label:"Calendario Partite"},
+    {id:"backup",   icon:"",label:"Backup / Ripristino dati"},
   ];
 
   return(<>
@@ -140,7 +140,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
     {SECS.map(s=>(
       <div key={s.id}>
         <button onClick={()=>setSection(section===s.id?null:s.id)} style={{width:"100%",background:"rgba(255,255,255,0.038)",border:"1px solid "+(section===s.id?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.065)"),borderRadius:14,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",marginBottom:section===s.id?0:8,borderBottomLeftRadius:section===s.id?0:14,borderBottomRightRadius:section===s.id?0:14}}>
-          <span style={{fontSize:20}}>{s.icon}</span>
+          <span className={"sec-icon sec-"+s.id}></span>
           <span style={{flex:1,fontSize:14,fontWeight:600,color:"rgba(255,255,255,0.8)",textAlign:"left"}}>{s.label}</span>
           <span style={{color:"rgba(255,255,255,0.3)",fontSize:13,transform:section===s.id?"rotate(180deg)":"none",transition:"transform .2s",display:"inline-block"}}>▾</span>
         </button>
@@ -230,7 +230,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                         <div style={{display:"flex",gap:5,marginBottom:8,alignItems:"center"}}>
                           <EmojiPicker value={block.icon||"💪"} onChange={v=>setBlockField(bi,"icon",v)}/>
                           <input className="inp" value={block.title||""} onChange={e=>setBlockField(bi,"title",e.target.value)} style={{flex:1,fontSize:14,fontWeight:700,padding:"7px 10px"}} placeholder="Titolo blocco (es. Forza, Tiro, Cardio…)"/>
-                          <button onClick={()=>removeBlock(bi)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#71717A",fontSize:12,padding:"5px 8px",cursor:"pointer"}} title="Elimina blocco">🗑</button>
+                          <button onClick={()=>removeBlock(bi)} className="icon-trash" style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,padding:"5px 8px",cursor:"pointer"}} title="Elimina blocco"></button>
                         </div>
                         {/* Items del blocco */}
                         {(block.items||[]).map((it,ii)=>(
@@ -238,7 +238,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                             <EmojiPicker value={it.icon||block.icon||"💪"} onChange={v=>setItemField(bi,ii,"icon",v)}/>
                             <input className="inp" value={it.name||""} onChange={e=>setItemField(bi,ii,"name",e.target.value)} style={{flex:2,fontSize:14,padding:"7px 9px"}} placeholder="Esercizio"/>
                             <input className="inp" value={it.sets||""} onChange={e=>setItemField(bi,ii,"sets",e.target.value)} style={{flex:1,fontSize:14,padding:"7px 9px",minWidth:0}} placeholder="3x10"/>
-                            <button onClick={()=>replicateItem(bi,ii)} title="Copia su altri giorni" style={{background:"rgba(0,140,255,0.08)",border:"1px solid rgba(0,140,255,0.18)",borderRadius:8,color:"#D4D4D8",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>↗</button>
+                            <button onClick={()=>replicateItem(bi,ii)} title="Copia su altri giorni" style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.18)",borderRadius:8,color:"#D4D4D8",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>↗</button>
                             <button onClick={()=>removeItem(bi,ii)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#FFFFFF",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>✕</button>
                           </div>
                         ))}
@@ -346,7 +346,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
       </button>
     ):(
       <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.4)",borderRadius:12,padding:12}}>
-        <div style={{fontSize:13,color:"#F5F5F5",marginBottom:8,fontWeight:700}}>⚠ Questa azione è irreversibile.</div>
+        <div style={{fontSize:13,color:"#F5F5F5",marginBottom:8,fontWeight:700,display:"flex",alignItems:"center",gap:6}}><span className="icon-warning"></span>Questa azione è irreversibile.</div>
         <div style={{fontSize:11,color:"rgba(255,255,255,0.55)",marginBottom:11,lineHeight:1.5}}>Tutti i tuoi dati verranno eliminati definitivamente da cloud e da questo dispositivo. Non potranno essere recuperati.</div>
         <div style={{display:"flex",gap:8}}>
           <button onClick={()=>setDeleteConfirm(false)} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.7)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
@@ -375,7 +375,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
               const sel=replicate.days.has(String(i));
               return(
                 <button key={i} onClick={()=>{if(isCurrent)return;const nd=new Set(replicate.days);if(nd.has(String(i)))nd.delete(String(i));else nd.add(String(i));setReplicate({...replicate,days:nd});}}
-                  style={{flex:"1 1 calc(33% - 5px)",minWidth:0,padding:"12px 0",borderRadius:9,fontSize:12,fontWeight:700,cursor:isCurrent?"default":"pointer",border:"1px solid "+(isCurrent?"rgba(255,255,255,0.05)":sel?"rgba(0,140,255,0.55)":"rgba(255,255,255,0.1)"),background:isCurrent?"rgba(255,255,255,0.02)":sel?"rgba(0,140,255,0.2)":"rgba(255,255,255,0.05)",color:isCurrent?"rgba(255,255,255,0.15)":sel?"#D4D4D8":"rgba(255,255,255,0.5)"}}>
+                  style={{flex:"1 1 calc(33% - 5px)",minWidth:0,padding:"12px 0",borderRadius:9,fontSize:12,fontWeight:700,cursor:isCurrent?"default":"pointer",border:"1px solid "+(isCurrent?"rgba(255,255,255,0.05)":sel?"rgba(255,255,255,0.55)":"rgba(255,255,255,0.1)"),background:isCurrent?"rgba(255,255,255,0.02)":sel?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.05)",color:isCurrent?"rgba(255,255,255,0.15)":sel?"#D4D4D8":"rgba(255,255,255,0.5)"}}>
                   {d}{isCurrent?" ⓘ":""}
                 </button>
               );

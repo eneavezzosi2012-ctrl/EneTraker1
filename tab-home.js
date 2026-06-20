@@ -144,10 +144,10 @@ function HomeTab({profile,setProfile,
               {bmi!=="—"?<span style={{marginLeft:6,background:"rgba(255,255,255,0.12)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:6,padding:"1px 6px",fontSize:11,color:"#FFFFFF",fontWeight:600}}>BMI {bmi}</span>:null}
             </div>
             <div style={{marginTop:6}}>
-              <span className="pill pb" style={{fontFamily:"'JetBrains Mono'",letterSpacing:.2}}>🔥 {streak}d streak</span>
+              <span className="pill pb" style={{fontFamily:"'JetBrains Mono'",letterSpacing:.2}}>{streak}d streak</span>
             </div>
           </div>
-          <button className="btn-s" onClick={()=>{setDraft({...profile});setEditP(true);}} style={{fontSize:12,padding:"5px 10px",flexShrink:0}}>✏️</button>
+          <button className="btn-s icon-edit" onClick={()=>{setDraft({...profile});setEditP(true);}} style={{padding:"5px 10px",flexShrink:0,minWidth:28,minHeight:24}}></button>
         </div>
       ):(
         <div>
@@ -209,7 +209,7 @@ function HomeTab({profile,setProfile,
           <div style={{fontSize:12,fontWeight:600,color:"rgba(255,255,255,0.58)",marginBottom:5}}>{isToday?"Voto di oggi":"Media · "+periodLabel}</div>
           {overallPct!==null&&<>
             <div className="pbar" style={{height:5}}><div className="pf" style={{width:overallPct+"%",background:scoreToColor(overallPct/100)}}/></div>
-            <div style={{fontSize:10,color:"rgba(255,255,255,0.22)",marginTop:4}}>{overallPct>=80?"Ottimo 🔥":overallPct>=60?"Bene 💪":"Puoi fare di più ⚡"}</div>
+            <div style={{fontSize:10,color:"rgba(255,255,255,0.22)",marginTop:4}}>{overallPct>=80?"Ottimo":overallPct>=60?"Bene":"Puoi fare di più"}</div>
           </>}
         </div>
       </div>

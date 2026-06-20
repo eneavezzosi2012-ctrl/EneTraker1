@@ -175,16 +175,16 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
 
         {/* ── CIBO per pasto ────────────────────── */}
         <div style={{marginBottom:18}}>
-          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9}}>🍽️ CIBO (stelle per ogni pasto)</div>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9,display:"flex",alignItems:"center",gap:6}}><span className="icon-meal-inline"></span>CIBO (stelle per ogni pasto)</div>
           {MEALS_LIST.map((meal,mi)=>{
             const isSkip=draft.skippedMeals.has(meal);
             const star=draft.mstars[meal]||0;
             return(
               <div key={meal} style={{background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:10,padding:"9px 11px",marginBottom:6,opacity:isSkip?0.5:1}}>
                 <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:isSkip?0:7}}>
-                  <span style={{fontSize:16}}>{MEAL_ICONS_LIST[mi]}</span>
+                  <span className={"icon-meal icon-meal-"+mi}></span>
                   <span style={{flex:1,fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.82)",textDecoration:isSkip?"line-through":"none"}}>{meal}</span>
-                  <button onClick={()=>toggleMealSkip(meal)} style={{background:isSkip?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.35)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.3)",fontSize:10,fontWeight:700,padding:"4px 8px",cursor:"pointer"}}>{isSkip?"⚡ SKIP":"⚡"}</button>
+                  <button onClick={()=>toggleMealSkip(meal)} style={{background:isSkip?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.35)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.3)",fontSize:10,fontWeight:700,padding:"4px 8px",cursor:"pointer",display:"inline-flex",alignItems:"center",gap:4,minHeight:18}}><span className="icon-ban-inline"></span>{isSkip?"SKIP":""}</button>
                 </div>
                 {!isSkip&&(
                   <div style={{display:"flex",gap:4}}>
@@ -200,8 +200,8 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
 
         {/* ── ALLENAMENTO per blocco ────────────────────── */}
         <div style={{marginBottom:18}}>
-          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9}}>💪 ALLENAMENTO</div>
-          {isRest&&<div style={{padding:"10px 14px",borderRadius:10,border:"1px solid rgba(255,255,255,0.06)",background:"rgba(255,255,255,0.02)",color:"rgba(255,255,255,0.3)",fontSize:12,textAlign:"center"}}>😴 Riposo — non conta nella media</div>}
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9,display:"flex",alignItems:"center",gap:6}}><span className="icon-dumbbell-inline"></span>ALLENAMENTO</div>
+          {isRest&&<div style={{padding:"10px 14px",borderRadius:10,border:"1px solid rgba(255,255,255,0.06)",background:"rgba(255,255,255,0.02)",color:"rgba(255,255,255,0.3)",fontSize:12,textAlign:"center"}}>Riposo — non conta nella media</div>}
           {!isRest&&histBlocks.length===0&&(
             <div style={{padding:"10px 12px",borderRadius:10,background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.35)",fontSize:12,textAlign:"center"}}>Nessun esercizio per questo giorno</div>
           )}
@@ -214,13 +214,13 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
                 return(
                   <div key={ii} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:9,marginBottom:4,opacity:isSkip?0.5:1}}>
                     {!isSkip&&<button onClick={()=>toggleExItem(it.name)} className={"ck "+(done?"done":"")} style={{width:22,height:22,fontSize:11}}>{done?"✓":""}</button>}
-                    {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
+                    {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center"}}><span className="icon-ban-inline"></span></div>}
                     <span style={{fontSize:14}}>{it.icon||block.icon||"💪"}</span>
                     <div style={{flex:1,minWidth:0}}>
                       <div style={{fontSize:12,fontWeight:600,color:isSkip?"rgba(161,161,170,0.5)":done?"#FFFFFF":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{it.name||"(senza nome)"}</div>
                       {it.sets&&<div style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>{it.sets}</div>}
                     </div>
-                    <button onClick={()=>toggleExSkip(it.name)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
+                    <button onClick={()=>toggleExSkip(it.name)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",padding:"3px 6px",cursor:"pointer",minWidth:20,minHeight:16}}><span className="icon-ban-inline"></span></button>
                   </div>
                 );
               })}
@@ -230,7 +230,7 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
 
         {/* ── TASK per task ────────────────────── */}
         <div style={{marginBottom:18}}>
-          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9}}>✓ TASK</div>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:700,letterSpacing:.5,marginBottom:9}}>TASK</div>
           {draft.dayTasks.length===0&&(
             <div style={{padding:"10px 12px",borderRadius:10,background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",color:"rgba(255,255,255,0.35)",fontSize:12,textAlign:"center"}}>Nessuna task per questo giorno</div>
           )}
@@ -240,9 +240,9 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
             return(
               <div key={t.id} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:9,marginBottom:4,opacity:isSkip?0.5:1}}>
                 {!isSkip&&<button onClick={()=>toggleTaskDone(t.id)} className={"ck dg "+(done?"done":"")} style={{width:22,height:22,fontSize:11}}>{done?"✓":""}</button>}
-                {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
+                {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center"}}><span className="icon-ban-inline"></span></div>}
                 <span style={{flex:1,fontSize:12,fontWeight:500,color:isSkip?"rgba(161,161,170,0.5)":done?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.text}</span>
-                <button onClick={()=>toggleTaskSkip(t.id)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
+                <button onClick={()=>toggleTaskSkip(t.id)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",padding:"3px 6px",cursor:"pointer",minWidth:20,minHeight:16}}><span className="icon-ban-inline"></span></button>
               </div>
             );
           })}
@@ -269,7 +269,7 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
         const _sd=(_cs2&&_cs2[_dow])||SCHEDULE[_dow]||{};
         return(
           <button key={date} onClick={()=>openDay(date)} style={{width:"100%",background:paused?"rgba(140,140,140,0.04)":"rgba(255,255,255,0.03)",border:"1px solid "+(paused?"rgba(140,140,140,0.18)":"rgba(255,255,255,0.07)"),borderRadius:11,padding:"11px 13px",display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:6,textAlign:"left",opacity:paused?0.7:1}}>
-            <div style={{width:36,height:36,borderRadius:9,background:paused?"rgba(140,140,140,0.08)":"rgba(255,255,255,0.08)",border:"1px solid "+(paused?"rgba(140,140,140,0.18)":"rgba(255,255,255,0.15)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{paused?"⏸":(_sd.icon||"💪")}</div>
+            <div className={paused?"icon-pause":""} style={{width:36,height:36,borderRadius:9,background:paused?"rgba(140,140,140,0.08)":"rgba(255,255,255,0.08)",border:"1px solid "+(paused?"rgba(140,140,140,0.18)":"rgba(255,255,255,0.15)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{paused?"":(_sd.icon||"💪")}</div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.8)",textTransform:"capitalize"}}>{fmtDateShort(date)}</div>
               {paused?<div style={{fontSize:10,color:"rgba(161,161,161,0.7)",marginTop:1,fontWeight:600}}>In pausa</div>:_sd.label?<div style={{fontSize:10,color:"rgba(255,255,255,0.7)",marginTop:1,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{_sd.label}</div>:null}
@@ -277,11 +277,11 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
             </div>
             {!paused&&hasData&&<div style={{display:"flex",gap:6,alignItems:"center"}}>
               <div style={{textAlign:"center"}}>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.25)"}}>🍽️</div>
+                <div className="icon-meal-tiny" style={{opacity:.4}}></div>
                 <div style={{fontSize:11,fontWeight:700,color:scoreColor(foodPct)}}>{foodPct}%</div>
               </div>
               <div style={{textAlign:"center"}}>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.25)"}}>💪</div>
+                <div className="icon-dumbbell-tiny" style={{opacity:.4}}></div>
                 <div style={{fontSize:11,fontWeight:700,color:trainOk?"#E4E4E7":"#71717A"}}>{trainOk?"✓":"✕"}</div>
               </div>
               <div style={{textAlign:"center"}}>

@@ -8,7 +8,7 @@ function TrainingTab({sched,exercises,toggleEx,skills,toggleSk,compEx,compSk,tot
         <div className="H" style={{fontSize:38,color:"#FFFFFF",marginTop:10}}>GAME DAY!</div>
         <div style={{fontSize:13,color:"rgba(255,255,255,0.38)",marginTop:7,lineHeight:1.6}}>Warm-up leggero, testa libera.<br/>Vai e divertiti in campo!</div>
         {!trainingDone?<button onClick={markGameDone} className="pulse" style={{marginTop:16,background:"#FFFFFF",border:"none",borderRadius:13,color:"#fff",fontFamily:"'DM Sans'",fontSize:14,fontWeight:700,padding:"12px 30px",cursor:"pointer"}}>HO GIOCATO ✓</button>
-        :<div style={{marginTop:13,background:"rgba(0,201,126,0.09)",border:"1px solid rgba(0,201,126,0.2)",borderRadius:12,padding:10}}><span className="H" style={{fontSize:14,color:"#E4E4E7"}}>PARTITA GIOCATA!</span></div>}
+        :<div style={{marginTop:13,background:"rgba(228,228,231,0.09)",border:"1px solid rgba(228,228,231,0.2)",borderRadius:12,padding:10}}><span className="H" style={{fontSize:14,color:"#E4E4E7"}}>PARTITA GIOCATA!</span></div>}
       </div>
     ):isRest?(
       <div className="card" style={{textAlign:"center",padding:"30px 20px"}}>
@@ -18,9 +18,9 @@ function TrainingTab({sched,exercises,toggleEx,skills,toggleSk,compEx,compSk,tot
       </div>
     ):(total===0&&!isGame&&!isRest?(
       <div className="card" style={{textAlign:"center",padding:"24px 16px"}}>
-        <div style={{fontSize:36}}>📋</div>
+        <div className="icon-clipboard" style={{width:36,height:36,margin:"0 auto",opacity:.5}}></div>
         <div className="H" style={{fontSize:20,marginTop:10,color:"rgba(255,255,255,0.35)"}}>NESSUN PIANO</div>
-        <div style={{fontSize:12,color:"rgba(255,255,255,0.18)",marginTop:6,lineHeight:1.6}}>Vai in ⚙️ Impostazioni → Piano allenamento<br/>per personalizzare ogni giorno.</div>
+        <div style={{fontSize:12,color:"rgba(255,255,255,0.18)",marginTop:6,lineHeight:1.6}}>Vai in Impostazioni → Piano allenamento<br/>per personalizzare ogni giorno.</div>
       </div>
     ):(
       <div className="card co" style={{background:"linear-gradient(135deg,rgba(255,255,255,0.08),rgba(8,9,16,0.96))"}}>
@@ -37,7 +37,7 @@ function TrainingTab({sched,exercises,toggleEx,skills,toggleSk,compEx,compSk,tot
             <div className="pbar" style={{height:5}}><div className="pf" style={{width:pct+"%",background:allDone?"linear-gradient(90deg,#E4E4E7,#E4E4E7)":"linear-gradient(90deg,#FFFFFF,#FFFFFF)"}}/></div>
           </div>
         )}
-        {allDone&&<div style={{marginTop:10,background:"rgba(0,201,126,0.08)",border:"1px solid rgba(0,201,126,0.2)",borderRadius:11,padding:9,textAlign:"center"}}><span className="H" style={{fontSize:14,color:"#E4E4E7"}}>COMPLETATO!</span></div>}
+        {allDone&&<div style={{marginTop:10,background:"rgba(228,228,231,0.08)",border:"1px solid rgba(228,228,231,0.2)",borderRadius:11,padding:9,textAlign:"center"}}><span className="H" style={{fontSize:14,color:"#E4E4E7"}}>COMPLETATO!</span></div>}
       </div>
     ))
     }
@@ -68,13 +68,13 @@ function TrainingTab({sched,exercises,toggleEx,skills,toggleSk,compEx,compSk,tot
             return(
             <div key={itemKey} style={{display:"flex",alignItems:"center",gap:10,marginBottom:10,opacity:isSkipped?0.45:1}}>
               {!isSkipped&&<button className={"ck "+(isDone?"done":"")} onClick={toggleItem}>{isDone?"✓":""}</button>}
-              {isSkipped&&<div style={{width:24,height:24,borderRadius:7,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:11}}>⚡</div>}
+              {isSkipped&&<div style={{width:24,height:24,borderRadius:7,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center"}}><span className="icon-ban-inline"></span></div>}
               <span style={{fontSize:16}}>{it.icon||block.icon||"💪"}</span>
               <div style={{flex:1}}>
                 <div style={{fontSize:13,fontWeight:600,color:isSkipped?"rgba(161,161,170,0.5)":isDone?"#FFFFFF":"rgba(255,255,255,0.8)",textDecoration:isSkipped||isDone?"line-through":"none"}}>{it.name||"(senza nome)"}</div>
                 <div style={{fontSize:11,color:isSkipped?"rgba(161,161,170,0.35)":"rgba(255,255,255,0.22)"}}>{isSkipped?"non conta":it.sets||""}</div>
               </div>
-              <button onClick={toggleSkipItem} style={{background:isSkipped?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkipped?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkipped?"#A1A1AA":"rgba(255,255,255,0.25)",fontSize:11,padding:"3px 7px",cursor:"pointer",fontWeight:700}}>⚡</button>
+              <button onClick={toggleSkipItem} style={{background:isSkipped?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkipped?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkipped?"#A1A1AA":"rgba(255,255,255,0.25)",padding:"3px 7px",cursor:"pointer",minWidth:20,minHeight:16}}><span className="icon-ban-inline"></span></button>
             </div>
             );
           })}

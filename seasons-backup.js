@@ -218,8 +218,8 @@ function SeasonsArchive({onClose}){
                   <div style={{display:"flex",gap:6,alignItems:"center"}}>
                     <input autoFocus value={renameText} onChange={e=>setRenameText(e.target.value)}
                       onKeyDown={e=>{if(e.key==="Enter")doRename(s.id);if(e.key==="Escape"){setRenameId(null);setRenameText("");}}}
-                      style={{flex:1,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(10,132,255,0.35)",borderRadius:8,color:"#fff",padding:"6px 10px",fontSize:13,outline:"none",fontFamily:"inherit"}}/>
-                    <button onClick={()=>doRename(s.id)} style={{background:"rgba(10,132,255,0.15)",border:"1px solid rgba(10,132,255,0.3)",borderRadius:7,color:"#0A84FF",fontSize:11,padding:"5px 10px",cursor:"pointer",fontWeight:700}}>✓</button>
+                      style={{flex:1,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.35)",borderRadius:8,color:"#fff",padding:"6px 10px",fontSize:13,outline:"none",fontFamily:"inherit"}}/>
+                    <button onClick={()=>doRename(s.id)} style={{background:"rgba(255,255,255,0.15)",border:"1px solid rgba(255,255,255,0.3)",borderRadius:7,color:"#FFFFFF",fontSize:11,padding:"5px 10px",cursor:"pointer",fontWeight:700}}>✓</button>
                     <button onClick={()=>{setRenameId(null);setRenameText("");}} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:7,color:"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 10px",cursor:"pointer"}}>✕</button>
                   </div>
                 ):(
@@ -231,10 +231,10 @@ function SeasonsArchive({onClose}){
               </div>
               {!isRen&&<div style={{display:"flex",gap:5,flexShrink:0}}>
                 <button onClick={()=>{setRenameId(s.id);setRenameText(s.label||("Stagione "+s.id));}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.09)",borderRadius:7,color:"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 8px",cursor:"pointer"}}>✏️</button>
-                <button onClick={()=>setExpandId(isExp?null:s.id)} style={{background:isExp?"rgba(10,132,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(10,132,255,0.25)":"rgba(255,255,255,0.09)"),borderRadius:7,color:isExp?"#0A84FF":"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 10px",cursor:"pointer",fontWeight:600}}>
+                <button onClick={()=>setExpandId(isExp?null:s.id)} style={{background:isExp?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(255,255,255,0.25)":"rgba(255,255,255,0.09)"),borderRadius:7,color:isExp?"#FFFFFF":"rgba(255,255,255,0.35)",fontSize:11,padding:"5px 10px",cursor:"pointer",fontWeight:600}}>
                   {isExp?"▲ Chiudi":"▼ Dettagli"}
                 </button>
-                <button onClick={()=>doDelete(s.id)} style={{background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.2)",borderRadius:7,color:"#E03535",fontSize:11,padding:"5px 8px",cursor:"pointer"}}>🗑</button>
+                <button onClick={()=>doDelete(s.id)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:7,color:"#F5F5F5",fontSize:11,padding:"5px 8px",cursor:"pointer"}}>🗑</button>
               </div>}
             </div>
 
@@ -248,20 +248,20 @@ function SeasonsArchive({onClose}){
                     <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
                       {STAT_KEYS_S.map(k=>(
                         <div key={k} style={{flex:"1 1 80px",background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"8px 10px",textAlign:"center"}}>
-                          <div style={{fontSize:18,fontWeight:700,color:"#0A84FF",fontFamily:"'JetBrains Mono'"}}>{stats.avgs[k]}</div>
+                          <div style={{fontSize:18,fontWeight:700,color:"#FFFFFF",fontFamily:"'JetBrains Mono'"}}>{stats.avgs[k]}</div>
                           <div style={{fontSize:9,color:"rgba(255,255,255,0.35)",marginTop:2,fontWeight:600}}>{k.toUpperCase()}</div>
                         </div>
                       ))}
                     </div>
                     {(stats.wins+stats.losses>0)&&(
                       <div style={{display:"flex",gap:8,marginBottom:10}}>
-                        <div style={{flex:1,background:"rgba(0,218,120,0.07)",border:"1px solid rgba(0,218,120,0.18)",borderRadius:10,padding:"8px",textAlign:"center"}}>
-                          <div style={{fontSize:20,fontWeight:700,color:"#1EC96A"}}>{stats.wins}</div>
-                          <div style={{fontSize:9,color:"rgba(0,218,120,0.6)",fontWeight:600}}>VITTORIE</div>
+                        <div style={{flex:1,background:"rgba(228,228,231,0.07)",border:"1px solid rgba(228,228,231,0.18)",borderRadius:10,padding:"8px",textAlign:"center"}}>
+                          <div style={{fontSize:20,fontWeight:700,color:"#E4E4E7"}}>{stats.wins}</div>
+                          <div style={{fontSize:9,color:"rgba(228,228,231,0.6)",fontWeight:600}}>VITTORIE</div>
                         </div>
-                        <div style={{flex:1,background:"rgba(10,132,255,0.07)",border:"1px solid rgba(10,132,255,0.18)",borderRadius:10,padding:"8px",textAlign:"center"}}>
-                          <div style={{fontSize:20,fontWeight:700,color:"#E03535"}}>{stats.losses}</div>
-                          <div style={{fontSize:9,color:"rgba(10,132,255,0.6)",fontWeight:600}}>SCONFITTE</div>
+                        <div style={{flex:1,background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.18)",borderRadius:10,padding:"8px",textAlign:"center"}}>
+                          <div style={{fontSize:20,fontWeight:700,color:"#F5F5F5"}}>{stats.losses}</div>
+                          <div style={{fontSize:9,color:"rgba(255,255,255,0.6)",fontWeight:600}}>SCONFITTE</div>
                         </div>
                         <div style={{flex:1,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:10,padding:"8px",textAlign:"center"}}>
                           <div style={{fontSize:20,fontWeight:700,color:"rgba(255,255,255,0.7)"}}>{stats.total-(stats.wins+stats.losses)}</div>
@@ -286,19 +286,19 @@ function SeasonsArchive({onClose}){
                           <div key={i} style={{padding:"8px 10px",marginBottom:6,background:"rgba(255,255,255,0.02)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:10}}>
                             <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:4}}>
                               <div style={{fontSize:11,color:"rgba(255,255,255,0.55)",fontWeight:600}}>{p.date} · {p.casa?"🏠 Casa":"✈️ Trasferta"}</div>
-                              {gameEntry?.score&&<div style={{fontSize:11,fontWeight:700,color:gameEntry.score.mia>gameEntry.score.avv?"#1EC96A":gameEntry.score.mia<gameEntry.score.avv?"#E03535":"#E09818",fontFamily:"'JetBrains Mono'"}}>{gameEntry.score.mia}–{gameEntry.score.avv}</div>}
+                              {gameEntry?.score&&<div style={{fontSize:11,fontWeight:700,color:gameEntry.score.mia>gameEntry.score.avv?"#E4E4E7":gameEntry.score.mia<gameEntry.score.avv?"#F5F5F5":"#A1A1AA",fontFamily:"'JetBrains Mono'"}}>{gameEntry.score.mia}–{gameEntry.score.avv}</div>}
                             </div>
                             <div style={{fontSize:13,fontWeight:700,color:"rgba(255,255,255,0.8)"}}>vs {p.avversario}</div>
                             {gameEntry&&!gameEntry.skipped&&gameEntry.stats&&(
                               <div style={{display:"flex",gap:8,marginTop:5,flexWrap:"wrap"}}>
                                 {STAT_KEYS_S.filter(k=>gameEntry.stats[k]!==null&&gameEntry.stats[k]!==undefined).map(k=>(
                                   <span key={k} style={{fontSize:10,color:"rgba(255,255,255,0.4)",fontWeight:500}}>
-                                    <span style={{color:"#0A84FF",fontWeight:700}}>{gameEntry.stats[k]}</span> {k}
+                                    <span style={{color:"#FFFFFF",fontWeight:700}}>{gameEntry.stats[k]}</span> {k}
                                   </span>
                                 ))}
                               </div>
                             )}
-                            {gameEntry?.skipped&&<div style={{fontSize:10,color:"#E09818",marginTop:4}}>⚡ Non sceso in campo</div>}
+                            {gameEntry?.skipped&&<div style={{fontSize:10,color:"#A1A1AA",marginTop:4}}>⚡ Non sceso in campo</div>}
                           </div>
                         );
                       })}
@@ -388,7 +388,7 @@ function PartiteCalendar(){
           Calendario partite della tua squadra. A fine stagione importa il nuovo PDF FIP.
         </div>
         <button onClick={()=>setShowArchive(true)}
-          style={{flexShrink:0,marginLeft:10,background:"rgba(160,120,255,0.12)",border:"1px solid rgba(160,120,255,0.3)",borderRadius:10,color:"#9075D4",fontSize:11,fontWeight:700,padding:"7px 11px",cursor:"pointer",letterSpacing:.2,whiteSpace:"nowrap"}}>
+          style={{flexShrink:0,marginLeft:10,background:"rgba(160,120,255,0.12)",border:"1px solid rgba(160,120,255,0.3)",borderRadius:10,color:"#9F9FA8",fontSize:11,fontWeight:700,padding:"7px 11px",cursor:"pointer",letterSpacing:.2,whiteSpace:"nowrap"}}>
           🏆 Stagioni passate
         </button>
       </div>
@@ -405,7 +405,7 @@ function PartiteCalendar(){
       {partite.length>0&&!previewMatches&&(
         <div style={{marginBottom:14,textAlign:"right"}}>
           <button onClick={async()=>{if(await window.__appConfirm("Sei sicuro? Il calendario verrà svuotato.",{confirm:"Svuota",cancel:"Annulla"}))setPartite([]);}}
-            style={{background:"transparent",border:"1px solid rgba(10,132,255,0.25)",borderRadius:9,color:"rgba(10,132,255,0.6)",fontSize:11,padding:"5px 12px",cursor:"pointer",fontWeight:600}}>
+            style={{background:"transparent",border:"1px solid rgba(255,255,255,0.25)",borderRadius:9,color:"rgba(255,255,255,0.6)",fontSize:11,padding:"5px 12px",cursor:"pointer",fontWeight:600}}>
             🗑 Svuota calendario
           </button>
         </div>
@@ -415,32 +415,32 @@ function PartiteCalendar(){
       <div style={{marginBottom:14}}>
         <input ref={fileInputRef} type="file" accept="application/pdf,.pdf" onChange={handleFile} style={{display:"none"}}/>
         <button onClick={()=>fileInputRef.current&&fileInputRef.current.click()} disabled={importing||!teamName.trim()}
-          style={{width:"100%",padding:"12px",borderRadius:11,border:"1px dashed rgba(10,132,255,0.4)",background:"rgba(10,132,255,0.06)",color:"#0A84FF",fontSize:13,fontWeight:700,cursor:importing||!teamName.trim()?"not-allowed":"pointer",opacity:importing||!teamName.trim()?0.5:1,letterSpacing:.3}}>
+          style={{width:"100%",padding:"12px",borderRadius:11,border:"1px dashed rgba(255,255,255,0.4)",background:"rgba(255,255,255,0.06)",color:"#FFFFFF",fontSize:13,fontWeight:700,cursor:importing||!teamName.trim()?"not-allowed":"pointer",opacity:importing||!teamName.trim()?0.5:1,letterSpacing:.3}}>
           {importing?"⏳ Lettura PDF…":"📄 Importa calendario FIP da PDF"}
         </button>
       </div>
 
       {importMsg&&(
-        <div style={{marginBottom:12,padding:"11px 13px",borderRadius:11,background:importMsg.ok?"rgba(0,218,120,0.08)":"rgba(10,132,255,0.08)",border:"1px solid "+(importMsg.ok?"rgba(0,218,120,0.22)":"rgba(10,132,255,0.22)"),color:importMsg.ok?"#1EC96A":"#0A84FF",fontSize:12,fontWeight:600,lineHeight:1.5}}>
+        <div style={{marginBottom:12,padding:"11px 13px",borderRadius:11,background:importMsg.ok?"rgba(228,228,231,0.08)":"rgba(255,255,255,0.08)",border:"1px solid "+(importMsg.ok?"rgba(228,228,231,0.22)":"rgba(255,255,255,0.22)"),color:importMsg.ok?"#E4E4E7":"#FFFFFF",fontSize:12,fontWeight:600,lineHeight:1.5}}>
           {importMsg.text}
         </div>
       )}
 
       {/* Anteprima import */}
       {previewMatches&&(
-        <div style={{marginBottom:14,padding:12,borderRadius:12,background:"rgba(10,132,255,0.05)",border:"1px solid rgba(10,132,255,0.22)"}}>
-          <div style={{fontSize:11,fontWeight:700,color:"#0A84FF",marginBottom:9}}>ANTEPRIMA — {previewMatches.length} partite</div>
+        <div style={{marginBottom:14,padding:12,borderRadius:12,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.22)"}}>
+          <div style={{fontSize:11,fontWeight:700,color:"#FFFFFF",marginBottom:9}}>ANTEPRIMA — {previewMatches.length} partite</div>
           <div style={{maxHeight:180,overflowY:"auto",marginBottom:10}}>
             {previewMatches.map((p,i)=>(
               <div key={i} style={{padding:"6px 0",borderBottom:i<previewMatches.length-1?"1px solid rgba(255,255,255,0.04)":"none",fontSize:11,color:"rgba(255,255,255,0.7)"}}>
-                <span style={{color:"#0A84FF",fontWeight:700}}>{p.date}</span> · {p.casa?"🏠":"✈️"} vs {p.avversario}{p.ora?" · "+p.ora:""}
+                <span style={{color:"#FFFFFF",fontWeight:700}}>{p.date}</span> · {p.casa?"🏠":"✈️"} vs {p.avversario}{p.ora?" · "+p.ora:""}
               </div>
             ))}
           </div>
-          <div style={{fontSize:10,color:"rgba(10,132,255,0.7)",marginBottom:10,lineHeight:1.5}}>⚠ Importando, il calendario corrente verrà <b>sostituito</b>. Le statistiche delle partite già giocate non vengono toccate. Per archiviare la stagione, usa "Nuova stagione" da Statistiche.</div>
+          <div style={{fontSize:10,color:"rgba(255,255,255,0.7)",marginBottom:10,lineHeight:1.5}}>⚠ Importando, il calendario corrente verrà <b>sostituito</b>. Le statistiche delle partite già giocate non vengono toccate. Per archiviare la stagione, usa "Nuova stagione" da Statistiche.</div>
           <div style={{display:"flex",gap:8}}>
             <button onClick={cancelImport} style={{flex:1,padding:"9px",borderRadius:9,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.55)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
-            <button onClick={confirmImport} style={{flex:2,padding:"9px",borderRadius:9,border:"none",background:"linear-gradient(135deg,#0A7AE8,#0A84FF)",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>Sostituisci calendario ✓</button>
+            <button onClick={confirmImport} style={{flex:2,padding:"9px",borderRadius:9,border:"none",background:"linear-gradient(135deg,#E4E4E7,#FFFFFF)",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>Sostituisci calendario ✓</button>
           </div>
         </div>
       )}
@@ -452,35 +452,35 @@ function PartiteCalendar(){
         {partite.map((p,idx)=>{
           const isPast=p.date<today;const isToday2=p.date===today;
           return(
-            <div key={p.date+"_"+idx} style={{marginBottom:12,background:isToday2?"rgba(10,132,255,0.08)":isPast?"rgba(255,255,255,0.015)":"rgba(255,255,255,0.03)",border:"1px solid "+(isToday2?"rgba(10,132,255,0.35)":isPast?"rgba(255,255,255,0.04)":"rgba(255,255,255,0.08)"),borderRadius:14,padding:"13px 14px",opacity:isPast?0.55:1}}>
+            <div key={p.date+"_"+idx} style={{marginBottom:12,background:isToday2?"rgba(255,255,255,0.08)":isPast?"rgba(255,255,255,0.015)":"rgba(255,255,255,0.03)",border:"1px solid "+(isToday2?"rgba(255,255,255,0.35)":isPast?"rgba(255,255,255,0.04)":"rgba(255,255,255,0.08)"),borderRadius:14,padding:"13px 14px",opacity:isPast?0.55:1}}>
               <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:8}}>
                 <div>
-                  <div style={{fontSize:10,color:isToday2?"#0A84FF":"rgba(255,255,255,0.35)",fontWeight:700,letterSpacing:.5,textTransform:"uppercase",marginBottom:2}}>{p.giornata||""}{isToday2?" · OGGI 🏆":""}</div>
+                  <div style={{fontSize:10,color:isToday2?"#FFFFFF":"rgba(255,255,255,0.35)",fontWeight:700,letterSpacing:.5,textTransform:"uppercase",marginBottom:2}}>{p.giornata||""}{isToday2?" · OGGI 🏆":""}</div>
                   <div style={{fontSize:13,fontWeight:700,color:isPast?"rgba(255,255,255,0.4)":"rgba(255,255,255,0.9)",textTransform:"capitalize"}}>{fmtDate(p.date)}</div>
                 </div>
-                <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:8,background:p.casa?"rgba(0,220,130,0.12)":"rgba(0,140,255,0.12)",color:p.casa?"#1EC96A":"#4db8ff",border:"1px solid "+(p.casa?"rgba(0,220,130,0.25)":"rgba(0,140,255,0.25)")}}>
+                <span style={{fontSize:11,fontWeight:700,padding:"3px 10px",borderRadius:8,background:p.casa?"rgba(0,220,130,0.12)":"rgba(0,140,255,0.12)",color:p.casa?"#E4E4E7":"#D4D4D8",border:"1px solid "+(p.casa?"rgba(0,220,130,0.25)":"rgba(0,140,255,0.25)")}}>
                   {p.casa?"🏠 Casa":"✈️ Trasferta"}
                 </span>
               </div>
               <div style={{fontSize:14,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:10}}>vs {p.avversario}</div>
               {p.risultato&&(
-                <div style={{marginBottom:10,padding:"6px 10px",background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.18)",borderRadius:8,fontSize:13,fontWeight:700,color:"#0A84FF",fontFamily:"var(--font-mono)"}}>
+                <div style={{marginBottom:10,padding:"6px 10px",background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.18)",borderRadius:8,fontSize:13,fontWeight:700,color:"#FFFFFF",fontFamily:"var(--font-mono)"}}>
                   Risultato: {p.risultato.mia} - {p.risultato.avv} {p.risultato.mia>p.risultato.avv?"✓":p.risultato.mia<p.risultato.avv?"✗":"="}
                 </div>
               )}
               {p.ora&&(
                 <div style={{display:"flex",flexDirection:"column",gap:5}}>
                   <div style={{display:"flex",alignItems:"center",gap:8}}>
-                    <div style={{width:28,height:28,borderRadius:8,background:"rgba(10,132,255,0.12)",border:"1px solid rgba(10,132,255,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>⏰</div>
+                    <div style={{width:28,height:28,borderRadius:8,background:"rgba(255,255,255,0.12)",border:"1px solid rgba(255,255,255,0.2)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,flexShrink:0}}>⏰</div>
                     <div>
                       <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600}}>PALLA A DUE</div>
-                      <div style={{fontSize:14,fontWeight:700,color:"#0A84FF",fontFamily:"'JetBrains Mono'"}}>{p.ora}</div>
+                      <div style={{fontSize:14,fontWeight:700,color:"#FFFFFF",fontFamily:"'JetBrains Mono'"}}>{p.ora}</div>
                     </div>
                     {getArrivoOra(p.ora)&&<>
                       <div style={{width:1,height:30,background:"rgba(255,255,255,0.07)",margin:"0 4px"}}/>
                       <div>
                         <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",fontWeight:600}}>ESSERE LÌ ALLE</div>
-                        <div style={{fontSize:14,fontWeight:700,color:"#E09818",fontFamily:"'JetBrains Mono'"}}>{getArrivoOra(p.ora)}</div>
+                        <div style={{fontSize:14,fontWeight:700,color:"#A1A1AA",fontFamily:"'JetBrains Mono'"}}>{getArrivoOra(p.ora)}</div>
                       </div>
                     </>}
                   </div>
@@ -564,7 +564,7 @@ function BackupRestore(){
     }
   }
 
-  const tabStyle=(active)=>({flex:1,padding:"10px 0",borderRadius:10,border:"1px solid "+(active?"rgba(10,132,255,0.35)":"rgba(255,255,255,0.08)"),background:active?"rgba(10,132,255,0.12)":"rgba(255,255,255,0.03)",color:active?"#0A84FF":"rgba(255,255,255,0.4)",fontSize:13,fontWeight:700,cursor:"pointer"});
+  const tabStyle=(active)=>({flex:1,padding:"10px 0",borderRadius:10,border:"1px solid "+(active?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.08)"),background:active?"rgba(255,255,255,0.12)":"rgba(255,255,255,0.03)",color:active?"#FFFFFF":"rgba(255,255,255,0.4)",fontSize:13,fontWeight:700,cursor:"pointer"});
 
   return(
     <div>
@@ -593,9 +593,9 @@ function BackupRestore(){
       )}
 
       {msg&&(
-        <div style={{marginTop:12,padding:"12px 15px",borderRadius:12,background:msg.ok?"rgba(0,218,120,0.08)":"rgba(10,132,255,0.08)",border:`1px solid ${msg.ok?"rgba(0,218,120,0.22)":"rgba(10,132,255,0.22)"}`,color:msg.ok?"#1EC96A":"#0A84FF",fontSize:13,fontWeight:600,lineHeight:1.5}}>
+        <div style={{marginTop:12,padding:"12px 15px",borderRadius:12,background:msg.ok?"rgba(228,228,231,0.08)":"rgba(255,255,255,0.08)",border:`1px solid ${msg.ok?"rgba(228,228,231,0.22)":"rgba(255,255,255,0.22)"}`,color:msg.ok?"#E4E4E7":"#FFFFFF",fontSize:13,fontWeight:600,lineHeight:1.5}}>
           {msg.text}
-          {msg.reload&&<button onClick={()=>window.location.reload()} style={{display:"block",marginTop:10,width:"100%",padding:"11px",borderRadius:10,border:"none",background:"#1EC96A",color:"#000",fontWeight:800,cursor:"pointer",fontSize:14}}>RICARICA ORA ↺</button>}
+          {msg.reload&&<button onClick={()=>window.location.reload()} style={{display:"block",marginTop:10,width:"100%",padding:"11px",borderRadius:10,border:"none",background:"#E4E4E7",color:"#000",fontWeight:800,cursor:"pointer",fontSize:14}}>RICARICA ORA ↺</button>}
         </div>
       )}
     </div>

@@ -106,8 +106,8 @@ function TrackingSection(){
       </div>
 
       {/* Stato attuale */}
-      <div style={{background:paused?"rgba(120,120,140,0.08)":startDate?"rgba(0,218,120,0.06)":"rgba(10,132,255,0.06)",border:"1px solid "+(paused?"rgba(120,120,140,0.25)":startDate?"rgba(0,218,120,0.22)":"rgba(10,132,255,0.22)"),borderRadius:12,padding:"12px 14px",marginBottom:14}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:paused?"#a0a0b8":startDate?"#1EC96A":"#0A84FF",marginBottom:5}}>STATO ATTUALE</div>
+      <div style={{background:paused?"rgba(140,140,140,0.08)":startDate?"rgba(228,228,231,0.06)":"rgba(255,255,255,0.06)",border:"1px solid "+(paused?"rgba(140,140,140,0.25)":startDate?"rgba(228,228,231,0.22)":"rgba(255,255,255,0.22)"),borderRadius:12,padding:"12px 14px",marginBottom:14}}>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:paused?"#A1A1AA":startDate?"#E4E4E7":"#FFFFFF",marginBottom:5}}>STATO ATTUALE</div>
         {!startDate&&(
           <div style={{fontSize:13,color:"rgba(255,255,255,0.7)",fontWeight:500}}>○ Tracking non avviato — i dati vengono salvati ma non contano nelle medie e nei grafici</div>
         )}
@@ -127,7 +127,7 @@ function TrackingSection(){
       )}
 
       {startDate&&!paused&&(
-        <button onClick={doPause} style={{width:"100%",padding:"13px",borderRadius:11,border:"1px solid rgba(255,204,0,0.35)",background:"rgba(255,204,0,0.08)",color:"#E09818",fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:8,letterSpacing:.3}}>
+        <button onClick={doPause} style={{width:"100%",padding:"13px",borderRadius:11,border:"1px solid rgba(161,161,170,0.35)",background:"rgba(161,161,170,0.08)",color:"#A1A1AA",fontSize:13,fontWeight:700,cursor:"pointer",marginBottom:8,letterSpacing:.3}}>
           ⏸ METTI IN PAUSA
         </button>
       )}
@@ -144,7 +144,7 @@ function TrackingSection(){
           <div style={{fontSize:10,fontWeight:600,letterSpacing:.5,color:"rgba(255,255,255,0.4)",marginBottom:7}}>STORICO PAUSE ({pausePeriods.length})</div>
           {pausePeriods.map((p,i)=>(
             <div key={i} style={{fontSize:11,color:"rgba(255,255,255,0.55)",marginBottom:3,fontWeight:500}}>
-              • {fmtDate(p.from)} → {p.to?fmtDate(p.to):<span style={{color:"#E09818",fontWeight:600}}>in corso</span>}
+              • {fmtDate(p.from)} → {p.to?fmtDate(p.to):<span style={{color:"#A1A1AA",fontWeight:600}}>in corso</span>}
             </div>
           ))}
         </div>
@@ -152,18 +152,18 @@ function TrackingSection(){
 
       {/* Reset totale */}
       <div style={{marginTop:22,paddingTop:16,borderTop:"1px solid rgba(255,255,255,0.06)"}}>
-        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:"#E03535",marginBottom:6}}>⚠ ZONA PERICOLOSA</div>
+        <div style={{fontSize:10,fontWeight:700,letterSpacing:.6,color:"#F5F5F5",marginBottom:6}}>⚠ ZONA PERICOLOSA</div>
         {!confirmReset?(
-          <button onClick={()=>setConfirmReset(true)} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid rgba(10,132,255,0.3)",background:"rgba(10,132,255,0.06)",color:"#E03535",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>
+          <button onClick={()=>setConfirmReset(true)} style={{width:"100%",padding:"11px",borderRadius:10,border:"1px solid rgba(255,255,255,0.3)",background:"rgba(255,255,255,0.06)",color:"#F5F5F5",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3}}>
             🗑 RESET TOTALE
           </button>
         ):(
-          <div style={{background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.35)",borderRadius:11,padding:12}}>
-            <div style={{fontSize:13,color:"#E03535",marginBottom:6,fontWeight:700}}>Sei sicuro?</div>
+          <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.35)",borderRadius:11,padding:12}}>
+            <div style={{fontSize:13,color:"#F5F5F5",marginBottom:6,fontWeight:700}}>Sei sicuro?</div>
             <div style={{fontSize:11,color:"rgba(255,255,255,0.55)",marginBottom:11,lineHeight:1.5}}>Cancella tutti i dati statistici: log giornalieri, medie, grafici, streak, partite e stagioni. Profilo, schede, piano pasti, task, note e calendario restano intatti. Non recuperabile.</div>
             <div style={{display:"flex",gap:8}}>
               <button onClick={()=>setConfirmReset(false)} style={{flex:1,padding:"10px",borderRadius:9,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.65)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
-              <button onClick={doFullReset} style={{flex:1,padding:"10px",borderRadius:9,border:"none",background:"#E03535",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>Reset</button>
+              <button onClick={doFullReset} style={{flex:1,padding:"10px",borderRadius:9,border:"none",background:"#F5F5F5",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>Reset</button>
             </div>
           </div>
         )}

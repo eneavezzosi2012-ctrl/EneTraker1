@@ -134,7 +134,7 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
     return d.toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"});
   }
 
-  function scoreColor(v){if(v===null||v===undefined)return"rgba(255,255,255,0.2)";if(v>=80)return"#1EC96A";if(v>=50)return"#E09818";return"#3360EE";}
+  function scoreColor(v){if(v===null||v===undefined)return"rgba(255,255,255,0.2)";if(v>=80)return"#E4E4E7";if(v>=50)return"#A1A1AA";return"#71717A";}
 
   // ── VISTA DETTAGLIO ──
   if(selDate&&draft){
@@ -165,10 +165,10 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
       <div>
         <button onClick={()=>{setSelDate(null);setDraft(null);}} style={{background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.1)",borderRadius:9,color:"rgba(255,255,255,0.5)",fontSize:12,padding:"6px 12px",cursor:"pointer",marginBottom:14}}>← Indietro</button>
         <div style={{fontSize:14,fontWeight:700,color:"rgba(255,255,255,0.92)",marginBottom:4,textTransform:"capitalize"}}>{fmtDate(selDate)}</div>
-        <div style={{fontSize:11,color:"rgba(10,132,255,0.7)",fontWeight:600,marginBottom:14}}>{draft.sched.icon||"💪"} {draft.sched.label||""}</div>
+        <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",fontWeight:600,marginBottom:14}}>{draft.sched.icon||"💪"} {draft.sched.label||""}</div>
 
         {isPaused&&(
-          <div style={{padding:"10px 12px",borderRadius:11,background:"rgba(120,120,140,0.1)",border:"1px solid rgba(120,120,140,0.3)",color:"rgba(255,255,255,0.65)",fontSize:12,marginBottom:14,textAlign:"center"}}>
+          <div style={{padding:"10px 12px",borderRadius:11,background:"rgba(140,140,140,0.1)",border:"1px solid rgba(140,140,140,0.3)",color:"rgba(255,255,255,0.65)",fontSize:12,marginBottom:14,textAlign:"center"}}>
             ⏸ Giorno in pausa — le modifiche non influenzano le statistiche
           </div>
         )}
@@ -184,12 +184,12 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
                 <div style={{display:"flex",alignItems:"center",gap:9,marginBottom:isSkip?0:7}}>
                   <span style={{fontSize:16}}>{MEAL_ICONS_LIST[mi]}</span>
                   <span style={{flex:1,fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.82)",textDecoration:isSkip?"line-through":"none"}}>{meal}</span>
-                  <button onClick={()=>toggleMealSkip(meal)} style={{background:isSkip?"rgba(255,204,0,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(255,204,0,0.35)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkip?"#E09818":"rgba(255,255,255,0.3)",fontSize:10,fontWeight:700,padding:"4px 8px",cursor:"pointer"}}>{isSkip?"⚡ SKIP":"⚡"}</button>
+                  <button onClick={()=>toggleMealSkip(meal)} style={{background:isSkip?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.35)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.3)",fontSize:10,fontWeight:700,padding:"4px 8px",cursor:"pointer"}}>{isSkip?"⚡ SKIP":"⚡"}</button>
                 </div>
                 {!isSkip&&(
                   <div style={{display:"flex",gap:4}}>
                     {[1,2,3,4,5].map(s=>(
-                      <button key={s} onClick={()=>setMealStar(meal,star===s?0:s)} style={{flex:1,padding:"7px 0",borderRadius:7,border:"1px solid "+(s<=star?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.06)"),background:s<=star?"rgba(255,204,0,0.13)":"rgba(255,255,255,0.02)",fontSize:14,color:s<=star?"#E09818":"rgba(255,255,255,0.2)",cursor:"pointer"}}>★</button>
+                      <button key={s} onClick={()=>setMealStar(meal,star===s?0:s)} style={{flex:1,padding:"7px 0",borderRadius:7,border:"1px solid "+(s<=star?"rgba(161,161,170,0.4)":"rgba(255,255,255,0.06)"),background:s<=star?"rgba(161,161,170,0.13)":"rgba(255,255,255,0.02)",fontSize:14,color:s<=star?"#A1A1AA":"rgba(255,255,255,0.2)",cursor:"pointer"}}>★</button>
                     ))}
                   </div>
                 )}
@@ -207,20 +207,20 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
           )}
           {!isRest&&histBlocks.map((block,bi)=>(
             <div key={block.id||bi} style={{marginBottom:8}}>
-              <div style={{fontSize:9,color:"rgba(10,132,255,0.7)",fontWeight:600,marginBottom:5,letterSpacing:.4}}>{block.icon||"💪"} {(block.title||"BLOCCO "+(bi+1)).toUpperCase()}</div>
+              <div style={{fontSize:9,color:"rgba(255,255,255,0.7)",fontWeight:600,marginBottom:5,letterSpacing:.4}}>{block.icon||"💪"} {(block.title||"BLOCCO "+(bi+1)).toUpperCase()}</div>
               {(block.items||[]).map((it,ii)=>{
                 const isSkip=draft.skippedEx.has(it.name);
                 const done=!!(draft.exDone[it.name]||draft.skDone[it.name]);
                 return(
                   <div key={ii} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:9,marginBottom:4,opacity:isSkip?0.5:1}}>
                     {!isSkip&&<button onClick={()=>toggleExItem(it.name)} className={"ck "+(done?"done":"")} style={{width:22,height:22,fontSize:11}}>{done?"✓":""}</button>}
-                    {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(255,204,0,0.1)",border:"1px solid rgba(255,204,0,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
+                    {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
                     <span style={{fontSize:14}}>{it.icon||block.icon||"💪"}</span>
                     <div style={{flex:1,minWidth:0}}>
-                      <div style={{fontSize:12,fontWeight:600,color:isSkip?"rgba(255,204,0,0.5)":done?"#0A84FF":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{it.name||"(senza nome)"}</div>
+                      <div style={{fontSize:12,fontWeight:600,color:isSkip?"rgba(161,161,170,0.5)":done?"#FFFFFF":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{it.name||"(senza nome)"}</div>
                       {it.sets&&<div style={{fontSize:10,color:"rgba(255,255,255,0.3)"}}>{it.sets}</div>}
                     </div>
-                    <button onClick={()=>toggleExSkip(it.name)} style={{background:isSkip?"rgba(255,204,0,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(255,204,0,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#E09818":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
+                    <button onClick={()=>toggleExSkip(it.name)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
                   </div>
                 );
               })}
@@ -240,9 +240,9 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
             return(
               <div key={t.id} style={{display:"flex",alignItems:"center",gap:8,padding:"7px 10px",background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.05)",borderRadius:9,marginBottom:4,opacity:isSkip?0.5:1}}>
                 {!isSkip&&<button onClick={()=>toggleTaskDone(t.id)} className={"ck dg "+(done?"done":"")} style={{width:22,height:22,fontSize:11}}>{done?"✓":""}</button>}
-                {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(255,204,0,0.1)",border:"1px solid rgba(255,204,0,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
-                <span style={{flex:1,fontSize:12,fontWeight:500,color:isSkip?"rgba(255,204,0,0.5)":done?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.text}</span>
-                <button onClick={()=>toggleTaskSkip(t.id)} style={{background:isSkip?"rgba(255,204,0,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(255,204,0,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#E09818":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
+                {isSkip&&<div style={{width:22,height:22,borderRadius:6,background:"rgba(161,161,170,0.1)",border:"1px solid rgba(161,161,170,0.3)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:10}}>⚡</div>}
+                <span style={{flex:1,fontSize:12,fontWeight:500,color:isSkip?"rgba(161,161,170,0.5)":done?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.78)",textDecoration:done||isSkip?"line-through":"none",overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.text}</span>
+                <button onClick={()=>toggleTaskSkip(t.id)} style={{background:isSkip?"rgba(161,161,170,0.12)":"rgba(255,255,255,0.04)",border:"1px solid "+(isSkip?"rgba(161,161,170,0.3)":"rgba(255,255,255,0.07)"),borderRadius:6,color:isSkip?"#A1A1AA":"rgba(255,255,255,0.25)",fontSize:10,fontWeight:700,padding:"3px 6px",cursor:"pointer"}}>⚡</button>
               </div>
             );
           })}
@@ -268,11 +268,11 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
         const _cs2=(()=>{try{const d=localStorage.getItem('enea_custom_schedule');return d?JSON.parse(d):null;}catch{return null;}})();
         const _sd=(_cs2&&_cs2[_dow])||SCHEDULE[_dow]||{};
         return(
-          <button key={date} onClick={()=>openDay(date)} style={{width:"100%",background:paused?"rgba(120,120,140,0.04)":"rgba(255,255,255,0.03)",border:"1px solid "+(paused?"rgba(120,120,140,0.18)":"rgba(255,255,255,0.07)"),borderRadius:11,padding:"11px 13px",display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:6,textAlign:"left",opacity:paused?0.7:1}}>
-            <div style={{width:36,height:36,borderRadius:9,background:paused?"rgba(120,120,140,0.08)":"rgba(10,132,255,0.08)",border:"1px solid "+(paused?"rgba(120,120,140,0.18)":"rgba(10,132,255,0.15)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{paused?"⏸":(_sd.icon||"💪")}</div>
+          <button key={date} onClick={()=>openDay(date)} style={{width:"100%",background:paused?"rgba(140,140,140,0.04)":"rgba(255,255,255,0.03)",border:"1px solid "+(paused?"rgba(140,140,140,0.18)":"rgba(255,255,255,0.07)"),borderRadius:11,padding:"11px 13px",display:"flex",alignItems:"center",gap:10,cursor:"pointer",marginBottom:6,textAlign:"left",opacity:paused?0.7:1}}>
+            <div style={{width:36,height:36,borderRadius:9,background:paused?"rgba(140,140,140,0.08)":"rgba(255,255,255,0.08)",border:"1px solid "+(paused?"rgba(140,140,140,0.18)":"rgba(255,255,255,0.15)"),display:"flex",alignItems:"center",justifyContent:"center",fontSize:18,flexShrink:0}}>{paused?"⏸":(_sd.icon||"💪")}</div>
             <div style={{flex:1,minWidth:0}}>
               <div style={{fontSize:13,fontWeight:600,color:"rgba(255,255,255,0.8)",textTransform:"capitalize"}}>{fmtDateShort(date)}</div>
-              {paused?<div style={{fontSize:10,color:"rgba(160,160,180,0.7)",marginTop:1,fontWeight:600}}>In pausa</div>:_sd.label?<div style={{fontSize:10,color:"rgba(10,132,255,0.7)",marginTop:1,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{_sd.label}</div>:null}
+              {paused?<div style={{fontSize:10,color:"rgba(161,161,161,0.7)",marginTop:1,fontWeight:600}}>In pausa</div>:_sd.label?<div style={{fontSize:10,color:"rgba(255,255,255,0.7)",marginTop:1,fontWeight:500,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{_sd.label}</div>:null}
               {!paused&&!hasData&&<div style={{fontSize:11,color:"rgba(255,255,255,0.2)",marginTop:1}}>Nessun dato</div>}
             </div>
             {!paused&&hasData&&<div style={{display:"flex",gap:6,alignItems:"center"}}>
@@ -282,7 +282,7 @@ function HistoryEditor({dailyLogs,setDailyLogs,completedDays,setCompletedDays,se
               </div>
               <div style={{textAlign:"center"}}>
                 <div style={{fontSize:10,color:"rgba(255,255,255,0.25)"}}>💪</div>
-                <div style={{fontSize:11,fontWeight:700,color:trainOk?"#1EC96A":"#3360EE"}}>{trainOk?"✓":"✕"}</div>
+                <div style={{fontSize:11,fontWeight:700,color:trainOk?"#E4E4E7":"#71717A"}}>{trainOk?"✓":"✕"}</div>
               </div>
               <div style={{textAlign:"center"}}>
                 <div style={{fontSize:10,color:"rgba(255,255,255,0.25)"}}>✓</div>

@@ -112,11 +112,11 @@ function HomeTab({profile,setProfile,
     {/* ── SWITCHER GENERALE / STATISTICHE ──────────────────── */}
     <div style={{display:"flex",gap:6,marginBottom:11,padding:3,background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.06)",borderRadius:13}}>
       <button onClick={()=>{if(homeView!=="general"){haptic.light();setHomeView("general");}}}
-        style={{flex:1,padding:"8px 10px",borderRadius:10,border:"none",background:homeView==="general"?"#0A84FF":"transparent",color:homeView==="general"?"#000":"rgba(255,255,255,0.55)",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3,transition:"all .2s var(--ios)"}}>
+        style={{flex:1,padding:"8px 10px",borderRadius:10,border:"none",background:homeView==="general"?"#FFFFFF":"transparent",color:homeView==="general"?"#000":"rgba(255,255,255,0.55)",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3,transition:"all .2s var(--ios)"}}>
         Generale
       </button>
       <button onClick={()=>{if(homeView!=="stats"){haptic.light();setHomeView("stats");}}}
-        style={{flex:1,padding:"8px 10px",borderRadius:10,border:"none",background:homeView==="stats"?"#0A84FF":"transparent",color:homeView==="stats"?"#000":"rgba(255,255,255,0.55)",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3,transition:"all .2s var(--ios)"}}>
+        style={{flex:1,padding:"8px 10px",borderRadius:10,border:"none",background:homeView==="stats"?"#FFFFFF":"transparent",color:homeView==="stats"?"#000":"rgba(255,255,255,0.55)",fontSize:12,fontWeight:700,cursor:"pointer",letterSpacing:.3,transition:"all .2s var(--ios)"}}>
         Statistiche
       </button>
     </div>
@@ -131,17 +131,17 @@ function HomeTab({profile,setProfile,
     ):(<>
 
     {/* ── PROFILO ─────────────────────────────────────────── */}
-    <div className="card co" style={{background:"linear-gradient(135deg,rgba(10,132,255,0.07),rgba(8,9,16,0.95))"}}>
+    <div className="card co" style={{background:"linear-gradient(135deg,rgba(255,255,255,0.07),rgba(8,9,16,0.95))"}}>
       {!editP?(
         <div style={{display:"flex",alignItems:"center",gap:12}}>
-          <div style={{width:50,height:50,borderRadius:13,background:"linear-gradient(135deg,rgba(10,132,255,0.2),rgba(10,132,255,0.05))",border:"1.5px solid rgba(10,132,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>
+          <div style={{width:50,height:50,borderRadius:13,background:"linear-gradient(135deg,rgba(255,255,255,0.2),rgba(255,255,255,0.05))",border:"1.5px solid rgba(255,255,255,0.25)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:22,flexShrink:0}}>
             {profile.name?profile.name[0].toUpperCase():"?"}
           </div>
           <div style={{flex:1}}>
             <div className="H" style={{fontSize:20,letterSpacing:.5}}>{profile.name||"—"}</div>
             <div style={{fontSize:12,color:"rgba(255,255,255,0.38)",marginTop:2}}>
               {profile.weight>0?profile.weight+"kg":""}{profile.weight>0&&profile.height>0?" · ":""}{profile.height>0?profile.height+"cm":""}
-              {bmi!=="—"?<span style={{marginLeft:6,background:"rgba(10,132,255,0.12)",border:"1px solid rgba(10,132,255,0.2)",borderRadius:6,padding:"1px 6px",fontSize:11,color:"#0A84FF",fontWeight:600}}>BMI {bmi}</span>:null}
+              {bmi!=="—"?<span style={{marginLeft:6,background:"rgba(255,255,255,0.12)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:6,padding:"1px 6px",fontSize:11,color:"#FFFFFF",fontWeight:600}}>BMI {bmi}</span>:null}
             </div>
             <div style={{marginTop:6}}>
               <span className="pill pb" style={{fontFamily:"'JetBrains Mono'",letterSpacing:.2}}>🔥 {streak}d streak</span>
@@ -174,7 +174,7 @@ function HomeTab({profile,setProfile,
         <div style={{display:"flex",gap:5,marginBottom:10}}>
           {PTYPES.map((lbl,i)=>(
             <button key={i} onClick={()=>{setPeriodType(i);setPeriodOffset(0);}}
-              style={{flex:1,padding:"7px 0",borderRadius:9,border:"1px solid "+(periodType===i?"rgba(10,132,255,0.35)":"rgba(255,255,255,0.08)"),background:periodType===i?"rgba(10,132,255,0.13)":"rgba(255,255,255,0.04)",color:periodType===i?"#0A84FF":"rgba(255,255,255,0.35)",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:.2}}>
+              style={{flex:1,padding:"7px 0",borderRadius:9,border:"1px solid "+(periodType===i?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.08)"),background:periodType===i?"rgba(255,255,255,0.13)":"rgba(255,255,255,0.04)",color:periodType===i?"#FFFFFF":"rgba(255,255,255,0.35)",fontSize:11,fontWeight:700,cursor:"pointer",letterSpacing:.2}}>
               {lbl}
             </button>
           ))}
@@ -183,7 +183,7 @@ function HomeTab({profile,setProfile,
           <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
             <button className="arr" onClick={()=>setPeriodOffset(o=>o+1)} disabled={!canGoBack}>&#8249;</button>
             <div style={{textAlign:"center",flex:1}}>
-              <div style={{fontSize:12,fontWeight:600,color:periodOffset===0?"#0A84FF":"rgba(255,255,255,0.55)",letterSpacing:.2}}>{periodLabel}</div>
+              <div style={{fontSize:12,fontWeight:600,color:periodOffset===0?"#FFFFFF":"rgba(255,255,255,0.55)",letterSpacing:.2}}>{periodLabel}</div>
             </div>
             <button className="arr" onClick={()=>setPeriodOffset(o=>Math.max(0,o-1))} disabled={!canGoForward}>&#8250;</button>
           </div>
@@ -220,8 +220,8 @@ function HomeTab({profile,setProfile,
       <div style={{fontSize:10,color:"rgba(255,255,255,0.22)",fontWeight:600,letterSpacing:.5,marginBottom:7}}>ULTIMI 14 GIORNI</div>
       <div style={{display:"flex",gap:3}}>
         {last14.map((d,i)=>{
-          const bg=d.paused?"rgba(120,120,140,0.18)":d.done?"rgba(10,132,255,0.75)":"rgba(255,255,255,0.05)";
-          const bd=d.paused?"rgba(120,120,140,0.32)":d.done?"rgba(10,132,255,0.35)":"rgba(255,255,255,0.04)";
+          const bg=d.paused?"rgba(140,140,140,0.18)":d.done?"rgba(255,255,255,0.75)":"rgba(255,255,255,0.05)";
+          const bd=d.paused?"rgba(140,140,140,0.32)":d.done?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.04)";
           return<div key={i} title={d.paused?"In pausa":d.done?"Completato":"Non completato"} style={{flex:1,height:26,borderRadius:5,background:bg,border:"1px solid "+bd,transition:"background .3s",backgroundImage:d.paused?"repeating-linear-gradient(45deg,transparent,transparent 3px,rgba(255,255,255,0.04) 3px,rgba(255,255,255,0.04) 6px)":"none"}}/>;
         })}
       </div>
@@ -261,16 +261,16 @@ function HomeTab({profile,setProfile,
       const upcomingMatches=visibleMatches.filter(m=>m.date>=td).slice(0,todayMatch?1:2);
       if(!upcomingMatches.length)return null;
       return(
-        <div className="card" style={{background:"linear-gradient(135deg,rgba(10,132,255,0.08),rgba(0,0,0,0.98))",border:"1px solid rgba(10,132,255,0.25)",marginBottom:11}}>
-          <div style={{fontSize:10,color:"#0A84FF",fontWeight:700,letterSpacing:.7,marginBottom:10}}>🏀 PROSSIME PARTITE</div>
+        <div className="card" style={{background:"linear-gradient(135deg,rgba(255,255,255,0.08),rgba(0,0,0,0.98))",border:"1px solid rgba(255,255,255,0.25)",marginBottom:11}}>
+          <div style={{fontSize:10,color:"#FFFFFF",fontWeight:700,letterSpacing:.7,marginBottom:10}}>🏀 PROSSIME PARTITE</div>
           {upcomingMatches.map(m=>{
             const isToday2=m.date===td;
             const daysUntil=Math.ceil((new Date(m.date+"T12:00:00")-new Date())/864e5);
             const when=isToday2?"OGGI":daysUntil===1?"Domani":new Date(m.date+"T12:00:00").toLocaleDateString("it-IT",{weekday:"short",day:"numeric",month:"short"});
             return(
               <div key={m.date} style={{display:"flex",alignItems:"center",gap:11,marginBottom:upcomingMatches.indexOf(m)<upcomingMatches.length-1?10:0}}>
-                <div style={{width:42,height:42,borderRadius:11,background:isToday2?"rgba(10,132,255,0.2)":"rgba(10,132,255,0.1)",border:"1px solid rgba(10,132,255,0.3)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                  <div style={{fontSize:isToday2?9:8,fontWeight:700,color:"#0A84FF",letterSpacing:.2}}>{isToday2?"OGGI":when.split(" ")[0].toUpperCase()}</div>
+                <div style={{width:42,height:42,borderRadius:11,background:isToday2?"rgba(255,255,255,0.2)":"rgba(255,255,255,0.1)",border:"1px solid rgba(255,255,255,0.3)",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",flexShrink:0}}>
+                  <div style={{fontSize:isToday2?9:8,fontWeight:700,color:"#FFFFFF",letterSpacing:.2}}>{isToday2?"OGGI":when.split(" ")[0].toUpperCase()}</div>
                   {!isToday2&&<div style={{fontSize:13,fontWeight:700,color:"#fff",lineHeight:1}}>{when.split(" ")[1]}</div>}
                   {isToday2&&<div style={{fontSize:16}}>🏆</div>}
                 </div>

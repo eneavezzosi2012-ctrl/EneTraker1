@@ -1,1313 +1,742 @@
 /* ═══════════════════════════════════════════════════════════════════
-   ENEA · TRACKER — Design System v7.0
-   Pro Dark Mono — Linear · Vercel · Raycast
-   100% monocromatico (anche --red), zero keyframe "vivaci"
-   (.fl / pulse / checkPop / shimmer rimossi per sempre), nav bar
-   agganciata alle 5 tab reali dell'app (Home·Cibo·Train·Piano·Task)
-   con fallback posizionale + classi .ic-*, transizioni secche e
-   iOS-safe (-webkit-mask-image sempre accoppiato a mask-image,
-   zero "#" nei data-URI SVG — vedi nota in fondo al file).
+   ENEA · TRACKER — Design System v5.0
+   Pro Dark — Monochrome / Linear-inspired
    ═══════════════════════════════════════════════════════════════════ */
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&display=swap');
+:root{
+  /* ── Accent (monocromatico: bianco / argento) ── */
+  --accent:#FFFFFF;
+  --accent-2:#E4E4E7;
+  --accent-soft:rgba(255,255,255,0.08);
+  --accent-border:rgba(255,255,255,0.22);
 
-/* ═══════════════════════════════════════
-   DESIGN TOKENS
-   ═══════════════════════════════════════ */
-:root {
+  /* ── "System colors" → varianti monocromatiche coerenti ──
+     Mantenute per compatibilità con le classi .pill/.card usate in app.js
+     ma rimappate su una scala di grigi, niente tinte cromatiche. */
+  --green:#D4D4D8;
+  --blue:#A1A1AA;
+  --purple:#9F9FA8;
+  --yellow:#E4E4E7;
+  --orange:#C7C7CC;
+  --red:#F5F5F5;
 
-  /* ── Accent — monocromatico puro ────────────────────────────────
-     Unico "accento" del sistema: bianco. Nessuna tinta, nessuna hue.
-  ─────────────────────────────────────────────────────────────── */
-  --accent:        #ffffff;
-  --accent-2:      rgba(255,255,255,0.64);
-  --accent-soft:   rgba(255,255,255,0.04);
-  --accent-border: rgba(255,255,255,0.10);
+  /* ── Backgrounds ── */
+  --bg:#000000;
+  --bg-2:#161616;
+  --bg-3:#1F1F1F;
+  --bg-4:#2A2A2A;
 
-  /* ── "System colors" — token storici mantenuti per compatibilità
-     (alcuni file JS non visibili da qui potrebbero referenziarli via
-     var(--blue) ecc.). I NOMI restano, i VALORI sono tutti bianco a
-     opacità diversa: zero hue, incluso --red. La differenziazione
-     semantica (es. "azione distruttiva") passa da peso/contrasto,
-     non da colore.
-  ─────────────────────────────────────────────────────────────── */
-  --green:  rgba(255,255,255,0.82);
-  --blue:   rgba(255,255,255,0.68);
-  --purple: rgba(255,255,255,0.52);
-  --yellow: rgba(255,255,255,0.60);
-  --orange: rgba(255,255,255,0.72);
-  --red:    rgba(255,255,255,0.78);
+  /* ── Labels ── */
+  --lbl-1:#FFFFFF;
+  --lbl-2:rgba(235,235,235,.60);
+  --lbl-3:rgba(235,235,235,.32);
+  --lbl-4:rgba(235,235,235,.16);
 
-  /* ── Superfici ── */
-  --bg:   #000000;
-  --bg-2: #0a0a0a;
-  --bg-3: #111111;
-  --bg-4: #161616;
+  /* ── Fills ── */
+  --fill-1:rgba(140,140,140,.32);
+  --fill-2:rgba(140,140,140,.20);
+  --fill-3:rgba(140,140,140,.14);
+  --fill-4:rgba(140,140,140,.10);
 
-  /* ── Testo ── */
-  --lbl-1: #ffffff;
-  --lbl-2: rgba(255,255,255,0.55);
-  --lbl-3: rgba(255,255,255,0.28);
-  --lbl-4: rgba(255,255,255,0.13);
-
-  /* ── Fill ── */
-  --fill-1: rgba(255,255,255,0.08);
-  --fill-2: rgba(255,255,255,0.05);
-  --fill-3: rgba(255,255,255,0.03);
-  --fill-4: rgba(255,255,255,0.02);
-
-  /* ── Bordi ── */
-  --sep:        #1a1a1a;
-  --sep-strong: #242424;
+  /* ── Separators ── */
+  --sep:rgba(255,255,255,.08);
+  --sep-strong:rgba(255,255,255,.14);
 
   /* ── Card ── */
-  --card-bg:     #0a0a0a;
-  --card-border: #1a1a1a;
+  --card-bg:#141414;
+  --card-border:rgba(255,255,255,.07);
 
-  /* ── Tipografia ── */
-  --font-sys:     'Inter', system-ui, -apple-system, sans-serif;
-  --font-mono:    'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
-  --font-display: 'Inter', system-ui, sans-serif;
+  /* ── Typography ── */
+  --font-sys:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display',system-ui,'Inter','Helvetica Neue',Arial,sans-serif;
+  --font-mono:'SF Mono','JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+  --font-display:'Bebas Neue',var(--font-sys);
 
-  /* ── Numeri display (.bignum) ── */
-  --bignum-weight:   800;
-  --bignum-tracking: -2px;
+  /* ── Radii — sharp, ridotti rispetto alla v4 ── */
+  --r-xs:4px;
+  --r-sm:6px;
+  --r-md:8px;
+  --r-lg:10px;
+  --r-xl:12px;
 
-  /* ── Raggi — sharp, niente morbido ── */
-  --r-xs: 4px;
-  --r-sm: 5px;
-  --r-md: 6px;
-  --r-lg: 8px;
-  --r-xl: 8px;
-
-  /* ── Motion — un'unica curva decisa, zero overshoot/bounce ───────
-     --spring, --ios, --smooth restano tre nomi distinti SOLO per
-     retro-compatibilità: app.js e altri file JS non toccati da questo
-     redesign referenziano var(--ios)/var(--spring) direttamente nei
-     loro stili inline. Cambiare qui il VALORE basta a "spegnere" ogni
-     rimbalzo in tutta l'app senza dover modificare una riga di JS.
-  ─────────────────────────────────────────────────────────────── */
-  --spring: cubic-bezier(.4,0,.2,1);
-  --ios:    cubic-bezier(.4,0,.2,1);
-  --smooth: cubic-bezier(.4,0,.2,1);
-
-  /* ══════════════════════════════════════════════════════════════
-     SVG ICON LIBRARY — Lucide 0.383 (stroke-based, URL-encoded)
-     Utilizzo: -webkit-mask-image: var(--svg-*);
-               mask-image:         var(--svg-*);
-               background-color:   currentColor;
-     Il colore dell'icona è controllato da `color` sul genitore.
-     NOTA iOS: ogni colore qui dentro è un nome CSS ('black'/'none'),
-     mai un hex con "#" — così non serve nessun escaping a %23 e
-     Safari su iPhone non mostra quadrati grigi vuoti.
-  ══════════════════════════════════════════════════════════════ */
-
-  --svg-check:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
-
-  --svg-home:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z'/%3E%3Cpolyline points='9 22 9 12 15 12 15 22'/%3E%3C/svg%3E");
-
-  --svg-activity:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='22 12 18 12 15 21 9 3 6 12 2 12'/%3E%3C/svg%3E");
-
-  --svg-droplet:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z'/%3E%3C/svg%3E");
-
-  --svg-notes:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z'/%3E%3Cpolyline points='14 2 14 8 20 8'/%3E%3Cline x1='16' y1='13' x2='8' y2='13'/%3E%3Cline x1='16' y1='17' x2='8' y2='17'/%3E%3C/svg%3E");
-
-  --svg-settings:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='4' y1='21' x2='4' y2='14'/%3E%3Cline x1='4' y1='10' x2='4' y2='3'/%3E%3Cline x1='12' y1='21' x2='12' y2='12'/%3E%3Cline x1='12' y1='8' x2='12' y2='3'/%3E%3Cline x1='20' y1='21' x2='20' y2='16'/%3E%3Cline x1='20' y1='12' x2='20' y2='3'/%3E%3Cline x1='1' y1='14' x2='7' y2='14'/%3E%3Cline x1='9' y1='8' x2='15' y2='8'/%3E%3Cline x1='17' y1='16' x2='23' y2='16'/%3E%3C/svg%3E");
-
-  --svg-search:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3C/svg%3E");
-
-  --svg-pin:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='17' x2='12' y2='22'/%3E%3Cpath d='M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24z'/%3E%3C/svg%3E");
-
-  --svg-trash:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6'/%3E%3Cpath d='M10 11v6'/%3E%3Cpath d='M14 11v6'/%3E%3Cpath d='M9 6V4h6v2'/%3E%3C/svg%3E");
-
-  --svg-plus:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
-
-  --svg-chevron-l:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='15 18 9 12 15 6'/%3E%3C/svg%3E");
-
-  --svg-chevron-r:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='9 18 15 12 9 6'/%3E%3C/svg%3E");
-
-  --svg-star:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
-
-  --svg-star-filled:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='black' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2'/%3E%3C/svg%3E");
-
-  --svg-x:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' y1='6' x2='6' y2='18'/%3E%3Cline x1='6' y1='6' x2='18' y2='18'/%3E%3C/svg%3E");
-
-  --svg-bold:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 4h8a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'/%3E%3Cpath d='M6 12h9a4 4 0 0 1 4 4 4 4 0 0 1-4 4H6z'/%3E%3C/svg%3E");
-
-  --svg-italic:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='19' y1='4' x2='10' y2='4'/%3E%3Cline x1='14' y1='20' x2='5' y2='20'/%3E%3Cline x1='15' y1='4' x2='9' y2='20'/%3E%3C/svg%3E");
-
-  --svg-list:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='8' y1='6' x2='21' y2='6'/%3E%3Cline x1='8' y1='12' x2='21' y2='12'/%3E%3Cline x1='8' y1='18' x2='21' y2='18'/%3E%3Cline x1='3' y1='6' x2='3.01' y2='6'/%3E%3Cline x1='3' y1='12' x2='3.01' y2='12'/%3E%3Cline x1='3' y1='18' x2='3.01' y2='18'/%3E%3C/svg%3E");
-
-  --svg-heading:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h16'/%3E%3Cpath d='M4 6h16'/%3E%3Cpath d='M12 6v12'/%3E%3C/svg%3E");
-
-  /* ── Nuove icone (v7.0) — servono alla nav bar reale dell'app:
-     Home · Cibo · Train · Piano · Task. "Train" usa --svg-activity
-     già esistente; "Task" riusa --svg-check. ─────────────────── */
-  --svg-utensils:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2'/%3E%3Cpath d='M7 2v20'/%3E%3Cpath d='M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7'/%3E%3C/svg%3E");
-
-  --svg-calendar:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='4' width='18' height='18' rx='2' ry='2'/%3E%3Cline x1='16' y1='2' x2='16' y2='6'/%3E%3Cline x1='8' y1='2' x2='8' y2='6'/%3E%3Cline x1='3' y1='10' x2='21' y2='10'/%3E%3C/svg%3E");
+  /* ── Motion — istantaneo / micro-dissolvenze secche ── */
+  --spring:cubic-bezier(.2,.2,.2,1);
+  --ios:cubic-bezier(.2,.2,.2,1);
+  --smooth:cubic-bezier(.2,.2,.2,1);
 }
 
 /* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html, body {
-  background: #000000;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{
+  background:var(--bg);
+  overscroll-behavior:none;
+  -webkit-overflow-scrolling:touch;
 }
-::-webkit-scrollbar { width: 1px; }
-::-webkit-scrollbar-thumb { background: #1a1a1a; border-radius: 1px; }
+::-webkit-scrollbar{width:2px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.14);border-radius:2px;}
 
 /* ── APP SHELL ── */
-.app {
-  font-family: var(--font-sys);
-  background: #000000;
-  min-height: 100vh;
-  color: #ffffff;
-  max-width: 430px;
-  margin: 0 auto;
-  position: relative;
-  isolation: isolate;
+.app{
+  font-family:var(--font-sys);
+  background:var(--bg);
+  min-height:100vh;
+  color:#fff;
+  max-width:430px;
+  margin:0 auto;
+  position:relative;
+  isolation:isolate;
 }
-.app::before { display: none; }
-
-.H    { font-weight: 800; letter-spacing: -0.5px; }
-.MONO { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-
-/* ── AREA DI SCROLL ── */
-.tc {
-  padding: 12px 16px 120px;
-  overflow-y: auto;
-  height: calc(100vh - 64px);
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+/* Top glow rimosso: nessuna tinta, superficie piatta e neutra */
+.app::before{
+  content:"";
+  position:fixed;
+  top:0;left:0;right:0;
+  height:220px;
+  pointer-events:none;
+  z-index:-1;
+  background:linear-gradient(180deg,rgba(255,255,255,0.035) 0%,transparent 100%);
 }
 
-/* ═══════════════════════════════════════
-   CARD — flat, dark, sharp
-   ═══════════════════════════════════════ */
-.card {
-  background: #0a0a0a;
-  border-radius: var(--r-lg);
-  padding: 16px;
-  margin-bottom: 8px;
-  border: 1px solid #1a1a1a;
-  transition: border-color .12s var(--smooth);
-  position: relative;
-  overflow: hidden;
-}
-.card::before, .card::after { display: none; }
-/* Varianti storiche (arancio/blu/verde/viola) — oggi tutte allo
-   stesso grigio neutro: nessuna distinzione cromatica per categoria. */
-.co, .cb, .cg, .cp { border-color: #242424; }
+.H{font-family:var(--font-display);letter-spacing:.5px;}
+.MONO{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
 
-/* ═══════════════════════════════════════
-   PILL — monocromatiche
-   ═══════════════════════════════════════ */
-.pill {
-  display: inline-flex;
-  align-items: center;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: .2px;
-}
-.po, .pg, .pb, .pp {
-  background: rgba(255,255,255,0.05);
-  color: rgba(255,255,255,0.45);
-  border: 1px solid #1a1a1a;
+/* ── SCROLLABLE CONTENT AREA ── */
+.tc{
+  padding:12px 16px 112px;
+  overflow-y:auto;
+  height:calc(100vh - 64px);
+  scroll-behavior:auto;
+  -webkit-overflow-scrolling:touch;
 }
 
 /* ═══════════════════════════════════════
-   BARRE DI PROGRESSO
+   CARDS — sharp, flat, no gloss
    ═══════════════════════════════════════ */
-.pbar {
-  height: 3px;
-  background: #1a1a1a;
-  border-radius: 2px;
-  overflow: hidden;
-  position: relative;
+.card{
+  background:var(--card-bg);
+  border-radius:var(--r-lg);
+  padding:16px;
+  margin-bottom:10px;
+  border:1px solid var(--card-border);
+  transition:border-color .1s linear;
+  position:relative;
+  overflow:hidden;
 }
-.pf {
-  height: 100%;
-  border-radius: 2px;
-  background: #ffffff;
-  transition: width .35s var(--smooth);
-  position: relative;
-  overflow: hidden;
+
+/* Shimmer di vetro in cima rimosso: superficie piatta, nessun effetto gloss */
+.card::after{
+  content:none;
 }
-/* Shimmer da caricamento: disattivato — niente onde luminose */
-.pf.shimmer::after { display: none; }
+
+/* Stripe laterale d'accento — monocromatica, sottile, non vistosa */
+.card::before{
+  content:"";
+  position:absolute;
+  top:14px;bottom:14px;left:0;
+  width:2px;
+  border-radius:0;
+  opacity:0;
+  background:#FFFFFF;
+}
+.co{border-color:rgba(255,255,255,.14);}
+.co::before{background:#FFFFFF;opacity:.9;}
+.cb{border-color:rgba(255,255,255,.11);}
+.cb::before{background:#D4D4D8;opacity:.7;}
+.cg{border-color:rgba(255,255,255,.11);}
+.cg::before{background:#D4D4D8;opacity:.7;}
+.cp{border-color:rgba(255,255,255,.11);}
+.cp::before{background:#A1A1AA;opacity:.6;}
 
 /* ═══════════════════════════════════════
-   INPUT — focus neutro, zero blu
+   PILLS — monocromatiche
    ═══════════════════════════════════════ */
-.inp, .inp-date, textarea {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-md);
-  color: #ffffff;
-  padding: 10px 13px;
-  font-family: var(--font-sys);
-  font-size: 15px;
-  outline: none;
-  width: 100%;
-  transition: border-color .12s var(--smooth), box-shadow .12s var(--smooth);
-  -webkit-appearance: none;
-  appearance: none;
+.pill{
+  display:inline-flex;align-items:center;
+  padding:3px 10px;border-radius:var(--r-sm);
+  font-size:11px;font-weight:600;letter-spacing:.2px;
 }
-textarea { resize: none; line-height: 1.55; }
+.po{background:rgba(255,255,255,.10);color:#FFFFFF;border:1px solid rgba(255,255,255,.18);}
+.pg{background:rgba(255,255,255,.08);color:#E4E4E7;border:1px solid rgba(255,255,255,.16);}
+.pb{background:rgba(255,255,255,.08);color:#D4D4D8;border:1px solid rgba(255,255,255,.14);}
+.pp{background:rgba(255,255,255,.07);color:#C7C7CC;border:1px solid rgba(255,255,255,.13);}
 
-/* Focus: bordo bianco low-opacity — pulito, niente alone blu */
-.inp:focus,
-.inp-date:focus,
-textarea:focus {
-  border-color: rgba(255,255,255,0.20);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+/* ═══════════════════════════════════════
+   PROGRESS BARS — nessuno shimmer
+   ═══════════════════════════════════════ */
+.pbar{
+  height:4px;
+  background:var(--fill-3);
+  border-radius:var(--r-xs);
+  overflow:hidden;
+  position:relative;
 }
-
-.inp::placeholder,
-.inp-date::placeholder,
-textarea::placeholder {
-  color: rgba(255,255,255,0.25);
+.pf{
+  height:100%;
+  border-radius:var(--r-xs);
+  transition:width .15s linear;
+  position:relative;
+  overflow:hidden;
+  background:#FFFFFF;
+}
+/* Shimmer eliminato completamente: nessuna animazione sul caricamento */
+.pf.shimmer::after{
+  content:none;
 }
 
 /* ═══════════════════════════════════════
-   BOTTONI
+   INPUTS — focus pulito, nessun alone colorato
    ═══════════════════════════════════════ */
-
-/* Primario: bianco su nero */
-.btn-p {
-  background: #ffffff;
-  border: none;
-  border-radius: var(--r-md);
-  color: #000000;
-  padding: 11px 18px;
-  font-family: var(--font-sys);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: -.1px;
-  cursor: pointer;
-  transition: opacity .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+.inp,.inp-date,textarea{
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-md);
+  color:#fff;
+  padding:11px 14px;
+  font-family:var(--font-sys);
+  font-size:16px;
+  outline:none;
+  width:100%;
+  transition:border-color .1s linear, background .1s linear;
+  -webkit-appearance:none;
+  appearance:none;
 }
-/* Feedback solo via opacità: niente scale/translate "gommosi" */
-.btn-p:active {
-  opacity: .82;
+textarea{resize:none;line-height:1.55;}
+.inp:focus,.inp-date:focus,textarea:focus{
+  border-color:rgba(255,255,255,.36);
+  background:rgba(255,255,255,.045);
+  box-shadow:none;
 }
-
-/* Secondario: bordo sottile */
-.btn-s {
-  background: transparent;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-md);
-  color: rgba(255,255,255,0.52);
-  padding: 10px 14px;
-  font-family: var(--font-sys);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity .1s var(--smooth), background .1s var(--smooth), border-color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+.inp::placeholder,.inp-date::placeholder,textarea::placeholder{
+  color:var(--lbl-3);
 }
-.btn-s:active {
-  background: #0a0a0a;
-  border-color: #282828;
-  opacity: .8;
-}
-
-/* Ghost */
-.btn-g {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.28);
-  cursor: pointer;
-  padding: 4px;
-  transition: color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
-}
-.btn-g:active { color: rgba(255,255,255,0.55); }
 
 /* ═══════════════════════════════════════
-   CHECKBOX — SVG Lucide check, zero bounce
-   ───────────────────────────────────────
-   Nessun testo/emoji nel markup: il check appare via ::after
-   solo quando è presente .done. Nero su bianco, nessun rimbalzo.
+   BUTTONS — sharp, decisi, transizioni secche
    ═══════════════════════════════════════ */
-.ck {
-  width: 22px;
-  height: 22px;
-  border-radius: 5px;
-  border: 1.5px solid #2c2c2c;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0;           /* sopprime emoji/testo — icona via ::after */
-  flex-shrink: 0;
-  position: relative;
-  transition: background .1s var(--smooth),
-              border-color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+.btn-p{
+  background:var(--accent);
+  border:none;
+  border-radius:var(--r-md);
+  color:#000;
+  padding:12px 18px;
+  font-family:var(--font-sys);
+  font-size:15px;
+  font-weight:600;
+  letter-spacing:-.1px;
+  cursor:pointer;
+  box-shadow:none;
+  transition:background .1s linear, opacity .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
+.btn-p:active{
+  transform:none;
+  background:var(--accent-2);
+  opacity:.85;
+  box-shadow:none;
+}
+.btn-s{
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-md);
+  color:var(--lbl-2);
+  padding:11px 14px;
+  font-family:var(--font-sys);
+  font-size:14px;
+  font-weight:500;
+  cursor:pointer;
+  transition:background .1s linear, border-color .1s linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-s:active{transform:none;background:var(--fill-2);}
+.btn-g{
+  background:none;border:none;
+  color:var(--lbl-3);cursor:pointer;
+  padding:4px;
+  transition:color .1s linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.btn-g:active{color:var(--lbl-2);}
 
-/* SVG checkmark via mask — visibile solo su .ck.done */
-.ck::after {
-  content: '';
-  display: block;
-  position: absolute;
-  width: 12px;
-  height: 12px;
-  background-color: transparent;   /* nascosto di default */
-  -webkit-mask-image: var(--svg-check);
-  mask-image:         var(--svg-check);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  transition: background-color .1s var(--smooth);
+/* ═══════════════════════════════════════
+   CHECKBOX / TASK — icona check via mask CSS
+   (sostituisce il glifo "✓" generato dal JS senza toccare la logica)
+   ═══════════════════════════════════════ */
+.ck{
+  width:24px;height:24px;
+  border-radius:var(--r-xs);
+  border:1.5px solid var(--fill-1);
+  background:transparent;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:0;flex-shrink:0;color:transparent;
+  transition:background .1s linear, border-color .1s linear;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
 }
-
-/* Completato: sfondo bianco, check nero — nessun bounce */
-.ck.done {
-  background: #ffffff;
-  border-color: #ffffff;
+.ck.done{
+  background:var(--accent);
+  border-color:var(--accent);
 }
-.ck.done::after {
-  background-color: #000000;  /* check nero su bianco */
+.ck.done::after{
+  content:"";
+  position:absolute;
+  width:13px;height:13px;
+  background-color:#000;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4.5%2012.5l5%205%2010-10.5%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%222.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4.5%2012.5l5%205%2010-10.5%22/%3E%3C/svg%3E");
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
 }
-
-/* Variante dark-ghost */
-.ck.dg.done {
-  background: #ffffff;
-  border-color: #ffffff;
+.ck.dg.done{
+  background:var(--green);
+  border-color:var(--green);
 }
-.ck.dg.done::after {
-  background-color: #000000;
-}
+.ck.dg.done::after{background-color:#000;}
 
 /* ── TAG ── */
-.tag {
-  padding: 5px 11px;
-  border-radius: 5px;
-  border: 1px solid #1a1a1a;
-  background: transparent;
-  color: rgba(255,255,255,0.28);
-  font-family: var(--font-sys);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: opacity .1s var(--smooth),
-              background .1s var(--smooth),
-              border-color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+.tag{
+  padding:5px 12px;border-radius:var(--r-sm);
+  border:1px solid var(--sep);
+  background:transparent;color:var(--lbl-3);
+  font-family:var(--font-sys);font-size:13px;font-weight:500;
+  cursor:pointer;
+  transition:background .1s linear,color .1s linear,border-color .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
-.tag:active {
-  opacity: .7;
-  background: rgba(255,255,255,0.03);
-}
+.tag:active{transform:none;background:var(--fill-3);}
 
 /* ═══════════════════════════════════════
-   ICON SYSTEM — Lucide SVG Mask
-   ───────────────────────────────────────
-   Utilizzo HTML:
-     <span class="ic ic-home"></span>
-     <span class="ic ic-search" style="--ic-size:16px"></span>
-
-   Il colore è ereditato da `color` del genitore.
-   Variante size: imposta --ic-size sul elemento.
-
-   Per la nav bar:
-     <button class="nb active">
-       <span class="nb-icon ic-home"></span>
-       <span class="nb-label">Home</span>
-     </button>
-   (la classe .ic-* è opzionale in nav: vedi fallback posizionale
-   nella sezione BOTTOM NAV BAR più sotto)
-
-   NOTA: gli emoji negli esercizi e blocchi della sezione
-   "train" sono ESCLUSI — vanno mantenuti nell'HTML, non sono
-   gestiti da questo file.
+   BOTTOM NAV BAR — icone via mask CSS
+   Ordine fisso dei tab (definito in app.js → TABS):
+   1 Home · 2 Cibo · 3 Train · 4 Piano · 5 Task
    ═══════════════════════════════════════ */
-.ic {
-  display: inline-block;
-  width: var(--ic-size, 20px);
-  height: var(--ic-size, 20px);
-  background-color: currentColor;
-  flex-shrink: 0;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+.nav{
+  position:fixed;
+  bottom:0;left:50%;
+  transform:translateX(-50%);
+  width:100%;max-width:430px;
+  background:rgba(10,10,10,.92);
+  backdrop-filter:blur(20px) saturate(120%);
+  -webkit-backdrop-filter:blur(20px) saturate(120%);
+  border-top:.5px solid rgba(255,255,255,.08);
+  display:flex;
+  padding:4px 0 calc(6px + env(safe-area-inset-bottom,0px));
+  z-index:100;
+}
+.nb{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  cursor:pointer;flex:1;
+  padding:8px 4px 4px;
+  background:transparent;border:none;
+  color:var(--lbl-3);
+  position:relative;
+  transition:color .1s linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.nb-icon{
+  font-size:0;line-height:1;
+  display:inline-block;
+  width:21px;height:21px;
+  color:transparent;
+  transition:none;
+  position:relative;
+}
+.nb-icon::before{
+  content:"";
+  position:absolute;inset:0;
+  background-color:var(--lbl-3);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  transition:background-color .1s linear;
+}
+.nb.active .nb-icon::before{background-color:#FFFFFF;}
+
+/* Tab 1 — Home */
+.nb:nth-child(1) .nb-icon::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2011.5L12%204l9%207.5%22/%3E%3Cpath%20d%3D%22M5.5%209.5V19a1%201%200%200%200%201%201H9a1%201%200%200%200%201-1v-4a1%201%200%200%201%201-1h2a1%201%200%200%201%201%201v4a1%201%200%200%200%201%201h2.5a1%201%200%200%200%201-1V9.5%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M3%2011.5L12%204l9%207.5%22/%3E%3Cpath%20d%3D%22M5.5%209.5V19a1%201%200%200%200%201%201H9a1%201%200%200%200%201-1v-4a1%201%200%200%201%201-1h2a1%201%200%200%201%201%201v4a1%201%200%200%200%201%201h2.5a1%201%200%200%200%201-1V9.5%22/%3E%3C/svg%3E");
+}
+/* Tab 2 — Cibo / Nutrition */
+.nb:nth-child(2) .nb-icon::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%228.25%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%228.25%22/%3E%3Ccircle%20cx%3D%2212%22%20cy%3D%2212%22%20r%3D%222.5%22/%3E%3C/svg%3E");
+}
+/* Tab 3 — Train */
+.nb:nth-child(3) .nb-icon::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%208v8%22/%3E%3Cpath%20d%3D%22M3%2010v4%22/%3E%3Cpath%20d%3D%22M19%208v8%22/%3E%3Cpath%20d%3D%22M21%2010v4%22/%3E%3Cpath%20d%3D%22M8%2012h8%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%208v8%22/%3E%3Cpath%20d%3D%22M3%2010v4%22/%3E%3Cpath%20d%3D%22M19%208v8%22/%3E%3Cpath%20d%3D%22M21%2010v4%22/%3E%3Cpath%20d%3D%22M8%2012h8%22/%3E%3C/svg%3E");
+}
+/* Tab 4 — Piano / Calendar */
+.nb:nth-child(4) .nb-icon::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%225%22%20width%3D%2217%22%20height%3D%2215.5%22%20rx%3D%222%22/%3E%3Cpath%20d%3D%22M3.5%209.5h17%22/%3E%3Cpath%20d%3D%22M8%203v3.5%22/%3E%3Cpath%20d%3D%22M16%203v3.5%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.75%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%225%22%20width%3D%2217%22%20height%3D%2215.5%22%20rx%3D%222%22/%3E%3Cpath%20d%3D%22M3.5%209.5h17%22/%3E%3Cpath%20d%3D%22M8%203v3.5%22/%3E%3Cpath%20d%3D%22M16%203v3.5%22/%3E%3C/svg%3E");
+}
+/* Tab 5 — Task */
+.nb:nth-child(5) .nb-icon::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%223.5%22%20width%3D%2217%22%20height%3D%2217%22%20rx%3D%223.5%22/%3E%3Cpath%20d%3D%22M7.5%2012.2l2.8%202.8%206.2-6.2%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%223.5%22%20width%3D%2217%22%20height%3D%2217%22%20rx%3D%223.5%22/%3E%3Cpath%20d%3D%22M7.5%2012.2l2.8%202.8%206.2-6.2%22/%3E%3C/svg%3E");
 }
 
-/* ── Icone navigazione ── */
-.ic-home     { -webkit-mask-image: var(--svg-home);     mask-image: var(--svg-home);     }
-.ic-activity { -webkit-mask-image: var(--svg-activity); mask-image: var(--svg-activity); }
-.ic-droplet  { -webkit-mask-image: var(--svg-droplet);  mask-image: var(--svg-droplet);  }
-.ic-notes    { -webkit-mask-image: var(--svg-notes);    mask-image: var(--svg-notes);    }
-.ic-settings { -webkit-mask-image: var(--svg-settings); mask-image: var(--svg-settings); }
-.ic-utensils { -webkit-mask-image: var(--svg-utensils); mask-image: var(--svg-utensils); }
-.ic-calendar { -webkit-mask-image: var(--svg-calendar); mask-image: var(--svg-calendar); }
-.ic-check    { -webkit-mask-image: var(--svg-check);    mask-image: var(--svg-check);    }
-
-/* ── Icone azioni ── */
-.ic-search   { -webkit-mask-image: var(--svg-search);    mask-image: var(--svg-search);    }
-.ic-pin      { -webkit-mask-image: var(--svg-pin);       mask-image: var(--svg-pin);       }
-.ic-trash    { -webkit-mask-image: var(--svg-trash);     mask-image: var(--svg-trash);     }
-.ic-plus     { -webkit-mask-image: var(--svg-plus);      mask-image: var(--svg-plus);      }
-.ic-x        { -webkit-mask-image: var(--svg-x);         mask-image: var(--svg-x);         }
-.ic-star     { -webkit-mask-image: var(--svg-star);      mask-image: var(--svg-star);      }
-.ic-star-f   { -webkit-mask-image: var(--svg-star-filled); mask-image: var(--svg-star-filled); }
-.ic-chev-l   { -webkit-mask-image: var(--svg-chevron-l); mask-image: var(--svg-chevron-l); }
-.ic-chev-r   { -webkit-mask-image: var(--svg-chevron-r); mask-image: var(--svg-chevron-r); }
-
-/* ── Icone editor note ── */
-.ic-bold     { -webkit-mask-image: var(--svg-bold);    mask-image: var(--svg-bold);    }
-.ic-italic   { -webkit-mask-image: var(--svg-italic);  mask-image: var(--svg-italic);  }
-.ic-list     { -webkit-mask-image: var(--svg-list);    mask-image: var(--svg-list);    }
-.ic-heading  { -webkit-mask-image: var(--svg-heading); mask-image: var(--svg-heading); }
-
-/* ═══════════════════════════════════════
-   BOTTOM NAV BAR
-   ───────────────────────────────────────
-   .nb-icon è il contenitore mask (size/posizione). Il font-size:0
-   sopprime qualunque testo/emoji ricevuto da JSX (oggi app.js passa
-   ancora il glifo "⌂ ◎ ◈ ▦ ✓" come contenuto testuale di .nb-icon,
-   senza classi .ic-*: vedi nota di migrazione in fondo al file).
-
-   Per garantire che l'icona corretta compaia comunque, sotto è
-   definita una mappatura POSIZIONALE basata sull'ordine reale delle
-   tab in app.js (TABS = Home, Cibo, Train, Piano, Task): funziona
-   subito, senza toccare il JS. Se in futuro l'HTML aggiunge classi
-   .ic-* esplicite su .nb-icon, queste convivono senza conflitti.
-   ═══════════════════════════════════════ */
-.nav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  max-width: 430px;
-  background: rgba(0,0,0,0.95);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-top: 1px solid #1a1a1a;
-  display: flex;
-  padding: 4px 0 calc(6px + env(safe-area-inset-bottom,0px));
-  z-index: 100;
+.nb-label{
+  font-family:var(--font-sys);
+  font-size:10px;font-weight:500;
+  letter-spacing:.1px;
 }
-
-.nb {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  cursor: pointer;
-  flex: 1;
-  padding: 8px 4px 4px;
-  background: transparent;
-  border: none;
-  color: rgba(255,255,255,0.28);
-  position: relative;
-  transition: color .12s var(--smooth), opacity .1s;
-  -webkit-tap-highlight-color: transparent;
+.nb-dot{
+  position:absolute;top:3px;left:50%;
+  width:4px;height:4px;border-radius:50%;
+  background:var(--accent);
+  transform:translateX(-50%) scale(0);
+  transition:transform .1s linear;
 }
+.nb.active{color:var(--accent);}
+.nb.active .nb-icon{transform:none;}
+.nb.active .nb-dot{transform:translateX(-50%) scale(1);}
+.nb:active{transform:none;opacity:.7;}
 
-/* nb-icon: SVG mask container — replica le proprietà di .ic */
-.nb-icon {
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  background-color: currentColor;
-  flex-shrink: 0;
-  font-size: 0;            /* sopprime qualunque glifo/emoji testuale */
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  transition: opacity .12s var(--smooth);
+/* ── WATER BUTTON — monocromatico ── */
+.wb{
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-sm);
+  color:#fff;
+  padding:8px 14px;
+  font-family:var(--font-sys);font-size:16px;font-weight:600;
+  cursor:pointer;
+  transition:background .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
-
-/* Fallback posizionale — 1:1 con l'array TABS di app.js */
-.nav .nb:nth-child(1) .nb-icon { -webkit-mask-image: var(--svg-home);     mask-image: var(--svg-home);     } /* Home */
-.nav .nb:nth-child(2) .nb-icon { -webkit-mask-image: var(--svg-utensils); mask-image: var(--svg-utensils); } /* Cibo */
-.nav .nb:nth-child(3) .nb-icon { -webkit-mask-image: var(--svg-activity); mask-image: var(--svg-activity); } /* Train */
-.nav .nb:nth-child(4) .nb-icon { -webkit-mask-image: var(--svg-calendar); mask-image: var(--svg-calendar); } /* Piano */
-.nav .nb:nth-child(5) .nb-icon { -webkit-mask-image: var(--svg-check);    mask-image: var(--svg-check);    } /* Task */
-
-.nb-label {
-  font-family: var(--font-sys);
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: .1px;
-}
-
-/* Dot indicator — flat, no spring */
-.nb-dot {
-  position: absolute;
-  top: 3px;
-  left: 50%;
-  width: 3px;
-  height: 3px;
-  border-radius: 50%;
-  background: #ffffff;
-  transform: translateX(-50%) scale(0);
-  transition: transform .15s var(--smooth);
-}
-
-/* Active: bianco pieno — nessun transform sull'icona, solo colore */
-.nb.active         { color: #ffffff; }
-.nb.active .nb-dot { transform: translateX(-50%) scale(1); }
-
-/* Tap feedback: opacity invece di scale */
-.nb:active { opacity: .6; }
-
-/* ── WATER BUTTON ── */
-.wb {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-sm);
-  color: rgba(255,255,255,0.52);
-  padding: 8px 14px;
-  font-family: var(--font-sys);
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity .1s var(--smooth),
-              background .1s var(--smooth),
-              border-color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
-}
-.wb:active {
-  background: #111111;
-  border-color: #242424;
-  opacity: .8;
-}
+.wb:active{transform:none;background:var(--fill-2);}
 
 /* ── STAT CONTAINER ── */
-.sc {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-md);
-  padding: 11px 12px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.sc{
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-md);
+  padding:11px 12px;
+  display:flex;align-items:center;gap:10px;
 }
 
-/* ═══════════════════════════════════════
-   FRECCE — SVG chevron, zero emoji
-   ───────────────────────────────────────
-   HTML: aggiungere .r per freccia destra
-     <button class="arr">   ← default: sinistra
-     <button class="arr r"> ← destra
-   ═══════════════════════════════════════ */
-.arr {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-xs);
-  color: rgba(255,255,255,0.30);
-  font-size: 0;           /* nasconde ‹ › o qualsiasi testo */
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  position: relative;
-  transition: opacity .1s var(--smooth),
-              background .1s var(--smooth),
-              color .1s var(--smooth),
-              border-color .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+/* ── ARROW BUTTONS — icone via mask CSS ── */
+.arr{
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-xs);
+  color:transparent;font-size:0;
+  width:32px;height:32px;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:background .1s linear, border-color .1s linear;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;
 }
-
-/* SVG chevron via ::after */
-.arr::after {
-  content: '';
-  display: block;
-  width: 14px;
-  height: 14px;
-  background-color: currentColor;
-  -webkit-mask-image: var(--svg-chevron-l);  /* default: sinistra */
-  mask-image:         var(--svg-chevron-l);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+.arr::before{
+  content:"";
+  position:absolute;
+  width:14px;height:14px;
+  background-color:var(--lbl-3);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%205l7%207-7%207%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M9%205l7%207-7%207%22/%3E%3C/svg%3E");
+  transition:background-color .1s linear;
 }
-.arr.r::after {
-  -webkit-mask-image: var(--svg-chevron-r);
-  mask-image:         var(--svg-chevron-r);
+.arr.left::before,.arr:first-of-type::before{
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M15%205l-7%207%207%207%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.9%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M15%205l-7%207%207%207%22/%3E%3C/svg%3E");
 }
-
-.arr:disabled { color: rgba(255,255,255,0.10); cursor: default; }
-.arr:not(:disabled):active {
-  background: #111111;
-  color: #ffffff;
-  border-color: #303030;
+.arr:disabled{color:transparent;cursor:default;}
+.arr:disabled::before{background-color:var(--lbl-4);}
+.arr:not(:disabled):active{
+  background:rgba(255,255,255,.10);
+  border-color:rgba(255,255,255,.22);
+  transform:none;
 }
+.arr:not(:disabled):active::before{background-color:#FFFFFF;}
 
 /* ── DONUT ── */
-.donut-svg circle:nth-child(2) { filter: none; }
+.donut-svg circle:nth-child(2){filter:none;}
+
+/* ── STAR RATING — rimane a glifo "★" gestito da JS (fuori scope train),
+     ma neutralizziamo qualsiasi micro-interazione gommosa ── */
+.starbtn{
+  background:none;border:none;cursor:pointer;padding:0;line-height:1;
+  transition:opacity .1s linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.starbtn.on{
+  transform:none;filter:none;
+}
+.starbtn:active{transform:none;opacity:.6;}
 
 /* ═══════════════════════════════════════
-   STELLE — SVG mask, zero bounce
+   ANIMAZIONI — drasticamente ridotte
+   Rimossi: fl, pulse, checkPop, shimmer.
+   Mantenuta solo "su" come dissolvenza d'ingresso sobria.
    ═══════════════════════════════════════ */
-.starbtn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-size: 0;           /* nasconde eventuale emoji */
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  color: rgba(255,255,255,0.18);
-  transition: color .1s var(--smooth), opacity .1s;
-  -webkit-tap-highlight-color: transparent;
-  flex-shrink: 0;
+@keyframes su{
+  from{opacity:0;}
+  to{opacity:1;}
 }
-.starbtn::before {
-  content: '';
-  display: block;
-  width: 17px;
-  height: 17px;
-  background-color: currentColor;
-  -webkit-mask-image: var(--svg-star);
-  mask-image:         var(--svg-star);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  transition: -webkit-mask-image .1s, mask-image .1s;
-}
-.starbtn.on {
-  color: #ffffff !important;  /* bianco puro — monocromatico */
-}
-.starbtn.on::before {
-  -webkit-mask-image: var(--svg-star-filled);
-  mask-image:         var(--svg-star-filled);
-}
-.starbtn:active { opacity: .6; }
-
-/* ═══════════════════════════════════════
-   ANIMAZIONI
-   ───────────────────────────────────────
-   Rimasta solo l'animazione d'ingresso dei contenuti (.su) e quella
-   dei modali a comparsa dal basso (sheetUp/overlayIn): sono cue
-   funzionali di "qualcosa è apparso", non micro-interazioni gommose.
-   .fl, pulse, checkPop e qualunque shimmer da caricamento sono stati
-   rimossi per intero — nessuna keyframe residua in questo file.
-   ═══════════════════════════════════════ */
-
-/* slideUp — ingresso contenuti, secco e breve */
-@keyframes su {
-  from { transform: translateY(6px); opacity: 0; }
-  to   { transform: translateY(0);   opacity: 1; }
-}
-.su { animation: su .16s var(--smooth) both; }
-.tc.su > * { animation: su .18s var(--smooth) both; }
-.tc.su > *:nth-child(1)   { animation-delay: .02s; }
-.tc.su > *:nth-child(2)   { animation-delay: .05s; }
-.tc.su > *:nth-child(3)   { animation-delay: .08s; }
-.tc.su > *:nth-child(4)   { animation-delay: .11s; }
-.tc.su > *:nth-child(5)   { animation-delay: .14s; }
-.tc.su > *:nth-child(6)   { animation-delay: .17s; }
-.tc.su > *:nth-child(n+7) { animation-delay: .20s; }
+.su{animation:su .12s linear both;}
+.tc.su>*{animation:su .12s linear both;}
 
 /* ── REDUCED MOTION ── */
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation-duration: .001s !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .001s !important;
-    scroll-behavior: auto !important;
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{
+    animation-duration:.001s !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.001s !important;
+    scroll-behavior:auto !important;
   }
 }
 
 /* ═══════════════════════════════════════
-   TIPOGRAFIA UTILITY
+   TYPOGRAPHY UTILITIES
    ═══════════════════════════════════════ */
-.sechdr {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .9px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.26);
+.sechdr{
+  font-size:11px;font-weight:700;
+  letter-spacing:.7px;text-transform:uppercase;
+  color:var(--lbl-3);
 }
-
-/* Numeri grandi: Inter Black, tracking aggressivo */
-.bignum {
-  font-family: var(--font-sys);
-  font-weight: var(--bignum-weight);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: var(--bignum-tracking);
+.bignum{
+  font-family:var(--font-display);
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:-1px;
+  text-shadow:none;
 }
-
-.title-app {
-  color: #ffffff;
-  -webkit-text-fill-color: #ffffff;
-  background: none;
+.title-app{
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+  background:none;
 }
 
 /* ═══════════════════════════════════════
-   NOTE LIST
+   NOTE LIST — minimal, icone via mask CSS
    ═══════════════════════════════════════ */
-.note-row {
-  display: flex;
-  align-items: flex-start;
-  gap: 11px;
-  padding: 12px 13px;
-  background: transparent;
-  border: none;
-  border-radius: var(--r-md);
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  position: relative;
-  margin-bottom: 2px;
-  transition: background .1s var(--smooth), opacity .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+.note-row{
+  display:flex;align-items:flex-start;gap:11px;
+  padding:11px 13px;
+  background:transparent;border:none;
+  border-radius:var(--r-md);
+  cursor:pointer;width:100%;text-align:left;
+  position:relative;margin-bottom:2px;
+  transition:background .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
-.note-row:active {
-  opacity: .8;
-  background: rgba(255,255,255,0.02);
+.note-row:active{transform:none;background:var(--fill-4);}
+.note-row + .note-row::before{
+  content:"";
+  position:absolute;top:-1px;left:58px;right:13px;
+  height:.5px;background:var(--sep);
 }
-.note-row + .note-row::before {
-  content: "";
-  position: absolute;
-  top: -1px; left: 58px; right: 13px;
-  height: 1px;
-  background: #1a1a1a;
+.note-row.pinned{
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.10);
 }
-.note-row.pinned {
-  background: rgba(255,255,255,0.02);
-  border: 1px solid #242424;
-}
-.note-row.pinned + .note-row::before        { display: none; }
-.note-row.pinned + .note-row.pinned::before { display: block; }
+.note-row.pinned + .note-row::before{display:none;}
+.note-row.pinned + .note-row.pinned::before{display:block;}
 
-/* ── Note icon: SVG mask, zero emoji ────────────────────────────
-   HTML: <div class="note-icon"></div>
-   ────────────────────────────────────────────────────────────── */
-.note-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 7px;
-  background: #111111;
-  border: 1px solid #1a1a1a;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0;           /* sopprime emoji */
-  flex-shrink: 0;
-  color: rgba(255,255,255,0.45);
-  position: relative;
+/* Icona nota: niente cerchietti colorati di sfondo, superficie neutra */
+.note-icon{
+  width:38px;height:38px;border-radius:var(--r-md);
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  display:flex;align-items:center;justify-content:center;
+  font-size:0;color:transparent;flex-shrink:0;
+  position:relative;
 }
-/* Icona default: file-text */
-.note-icon::after {
-  content: '';
-  display: block;
-  width: 16px;
-  height: 16px;
-  background-color: currentColor;
-  -webkit-mask-image: var(--svg-notes);
-  mask-image:         var(--svg-notes);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+.note-icon::before{
+  content:"";
+  position:absolute;
+  width:17px;height:17px;
+  background-color:var(--lbl-2);
+  -webkit-mask-size:contain;mask-size:contain;
+  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+  -webkit-mask-position:center;mask-position:center;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
 }
-/* Pinned: icona pin */
-.note-row.pinned .note-icon {
-  background: #161616;
-  border-color: #242424;
-  color: rgba(255,255,255,0.65);
+.note-row.pinned .note-icon{
+  background:rgba(255,255,255,.08);
+  border-color:rgba(255,255,255,.18);
 }
-.note-row.pinned .note-icon::after {
-  -webkit-mask-image: var(--svg-pin);
-  mask-image:         var(--svg-pin);
+.note-row.pinned .note-icon::before{
+  background-color:#FFFFFF;
+  width:15px;height:15px;
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22%20fill%3D%22black%22%20stroke%3D%22black%22/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22%20fill%3D%22black%22%20stroke%3D%22black%22/%3E%3C/svg%3E");
 }
+.note-title{
+  font-size:14px;font-weight:600;
+  color:rgba(255,255,255,.92);
+  letter-spacing:-.1px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.note-snippet{
+  font-size:12px;color:var(--lbl-2);
+  line-height:1.45;margin-top:2px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.note-meta{
+  font-size:11px;color:var(--lbl-3);
+  margin-top:3px;font-weight:400;
+}
+.note-section-hdr{
+  font-size:11px;font-weight:700;letter-spacing:.6px;
+  text-transform:uppercase;color:var(--lbl-3);
+  margin:6px 4px 8px;
+  display:flex;align-items:center;gap:6px;
+}
+.note-section-hdr.gray{color:var(--lbl-3);}
 
-.note-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: rgba(255,255,255,0.88);
-  letter-spacing: -.1px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+/* ── NOTE SEARCH ── */
+.note-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--fill-4);
+  border:1px solid var(--sep);
+  border-radius:var(--r-md);
+  padding:9px 12px;margin-bottom:14px;
+  transition:border-color .1s linear,background .1s linear;
 }
-.note-snippet {
-  font-size: 12px;
-  color: rgba(255,255,255,0.40);
-  line-height: 1.45;
-  margin-top: 2px;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.note-search:focus-within{
+  border-color:rgba(255,255,255,.32);
+  background:rgba(255,255,255,.045);
 }
-.note-meta {
-  font-size: 11px;
-  color: rgba(255,255,255,0.23);
-  margin-top: 3px;
-  font-weight: 400;
+.note-search input{
+  flex:1;background:transparent;border:none;outline:none;
+  color:#fff;font-size:15px;font-family:var(--font-sys);
 }
-.note-section-hdr {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: .9px;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.26);
-  margin: 8px 4px 8px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.note-section-hdr.gray { color: rgba(255,255,255,0.26); }
-
-/* Icona sezione note — classe da aggiungere in HTML:
-   <span class="note-section-icon ic ic-pin"></span>  (per Pinned)
-   <span class="note-section-icon ic ic-notes"></span> (per Tutte) */
-.note-section-icon {
-  --ic-size: 12px;
-  opacity: .7;
-}
-
-/* ── RICERCA NOTE — focus neutro, icona SVG ─────────────────────
-   HTML suggerito:
-   <div class="note-search">
-     <span class="note-search-icon ic ic-search"></span>
-     <input placeholder="Cerca note...">
-   </div>
-   ─────────────────────────────────────────────────────────────── */
-.note-search {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-radius: var(--r-md);
-  padding: 9px 12px;
-  margin-bottom: 14px;
-  transition: border-color .12s var(--smooth);
-}
-.note-search:focus-within {
-  border-color: rgba(255,255,255,0.18);
-}
-/* Icona search nella barra: classe helper */
-.note-search-icon {
-  --ic-size: 15px;
-  color: rgba(255,255,255,0.28);
-  flex-shrink: 0;
-}
-.note-search input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-size: 14px;
-  font-family: var(--font-sys);
-}
-.note-search input::placeholder { color: rgba(255,255,255,0.26); }
+.note-search input::placeholder{color:var(--lbl-3);}
 
 /* ═══════════════════════════════════════
-   NOTE SHEET — bottom drawer
+   NOTE SHEET EDITOR — bottom sheet
+   Animazioni ridotte a dissolvenze rapide e secche
    ═══════════════════════════════════════ */
-@keyframes sheetUp {
-  from { transform: translateY(100%); opacity: .4; }
-  to   { transform: translateY(0);    opacity: 1;  }
+@keyframes sheetUp{
+  from{opacity:0;}
+  to{opacity:1;}
 }
-@keyframes overlayIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+@keyframes overlayIn{
+  from{opacity:0;}
+  to{opacity:1;}
 }
+.note-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.7);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  z-index:9999;
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:overlayIn .1s linear;
+  overscroll-behavior:contain;
+}
+.note-sheet{
+  background:#0A0A0A;
+  border:1px solid rgba(255,255,255,.08);
+  border-bottom:none;
+  border-radius:var(--r-xl) var(--r-xl) 0 0;
+  width:100%;max-width:430px;height:94vh;
+  display:flex;flex-direction:column;overflow:hidden;
+  position:relative;
+  animation:sheetUp .12s linear;
+  box-shadow:none;
+}
+.note-drag{
+  display:flex;justify-content:center;
+  padding:8px 0 4px;flex-shrink:0;
+}
+.note-drag-bar{
+  width:36px;height:4px;border-radius:2px;
+  background:rgba(255,255,255,.18);
+}
+.note-sheet-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:6px 14px 10px;flex-shrink:0;
+  border-bottom:.5px solid var(--sep);
+}
+.note-hdr-btn{
+  background:none;border:none;color:var(--accent);
+  font-family:var(--font-sys);font-size:16px;font-weight:500;
+  cursor:pointer;padding:4px 6px;
+  transition:opacity .1s linear;
+  -webkit-tap-highlight-color:transparent;
+}
+.note-hdr-btn:active{opacity:.5;}
+.note-hdr-btn.bold{font-weight:700;}
+.note-hdr-btn.icon{
+  width:34px;height:34px;
+  display:flex;align-items:center;justify-content:center;
+  border-radius:50%;background:var(--fill-4);font-size:15px;
+}
+.note-hdr-btn.icon.danger{background:rgba(255,255,255,.10);color:#FFFFFF;}
+.note-hdr-btn.icon.pinned{background:rgba(255,255,255,.14);color:#FFFFFF;}
 
-.note-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.82);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 9999;
-  display: flex;
-  align-items: flex-end;
-  justify-content: center;
-  animation: overlayIn .15s var(--smooth);
-  overscroll-behavior: contain;
+.note-meta-bar{
+  text-align:center;font-size:11px;color:var(--lbl-3);
+  font-weight:400;letter-spacing:.1px;
+  padding:4px 14px 8px;flex-shrink:0;
 }
-.note-sheet {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
-  border-bottom: none;
-  border-radius: 8px 8px 0 0;
-  width: 100%;
-  max-width: 430px;
-  height: 94vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  animation: sheetUp .18s var(--smooth);
-  box-shadow: 0 -2px 32px rgba(0,0,0,0.96);
+.note-title-input{
+  background:transparent;border:none;outline:none;
+  color:#fff;font-family:var(--font-sys);
+  font-size:22px;font-weight:700;letter-spacing:-.4px;
+  padding:8px 18px 4px;width:100%;
+  -webkit-user-select:text;user-select:text;
 }
-.note-drag {
-  display: flex;
-  justify-content: center;
-  padding: 10px 0 4px;
-  flex-shrink: 0;
+.note-title-input::placeholder{color:var(--lbl-4);font-weight:600;}
+.note-body{
+  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:6px 18px 100px;
+  color:rgba(255,255,255,.9);
+  font-family:var(--font-sys);font-size:17px;line-height:1.55;
+  outline:none;-webkit-user-select:text;user-select:text;
 }
-.note-drag-bar {
-  width: 32px;
-  height: 3px;
-  border-radius: 2px;
-  background: #242424;
+.note-body:empty::before,.note-body.is-empty::before{
+  content:attr(data-placeholder);color:var(--lbl-4);
+  pointer-events:none;display:block;
 }
-.note-sheet-hdr {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 6px 14px 10px;
-  flex-shrink: 0;
-  border-bottom: 1px solid #1a1a1a;
-}
+.note-body h3{font-size:20px;font-weight:700;margin:8px 0 4px;letter-spacing:-.2px;}
+.note-body ul,.note-body ol{padding-left:24px;margin:6px 0;}
+.note-body li{margin-bottom:4px;}
+.note-body b,.note-body strong{font-weight:700;color:#fff;}
 
-/* ── Note header buttons ─────────────────────────────────────────
-   I bottoni testo (es. "Annulla", "Salva") mantengono font-size.
-   ─────────────────────────────────────────────────────────────── */
-.note-hdr-btn {
-  background: none;
-  border: none;
-  color: rgba(255,255,255,0.52);
-  font-family: var(--font-sys);
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  padding: 4px 6px;
-  transition: opacity .1s var(--smooth);
-  -webkit-tap-highlight-color: transparent;
+/* ── NOTE TOOLBAR ── */
+.note-toolbar{
+  position:absolute;bottom:0;left:0;right:0;
+  background:rgba(10,10,10,.96);
+  backdrop-filter:blur(16px) saturate(120%);
+  -webkit-backdrop-filter:blur(16px) saturate(120%);
+  border-top:.5px solid var(--sep);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
+  display:flex;align-items:center;gap:3px;flex-shrink:0;
 }
-.note-hdr-btn:active { opacity: .5; }
-.note-hdr-btn.bold { font-weight: 700; color: #ffffff; }
-
-/* Icon buttons nel header: SVG mask via ::after */
-.note-hdr-btn.icon {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  background: #111111;
-  border: 1px solid #1a1a1a;
-  font-size: 0;           /* nasconde eventuale emoji */
-  color: rgba(255,255,255,0.52);
-  position: relative;
-  padding: 0;
+.note-tb-btn{
+  flex:1;height:36px;
+  background:transparent;border:none;border-radius:var(--r-xs);
+  color:rgba(255,255,255,.72);
+  font-family:var(--font-sys);font-size:15px;font-weight:600;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
-/* SVG icon via ::after — default: X (chiudi) */
-.note-hdr-btn.icon::after {
-  content: '';
-  display: block;
-  width: 15px;
-  height: 15px;
-  background-color: currentColor;
-  -webkit-mask-image: var(--svg-x);
-  mask-image:         var(--svg-x);
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
+.note-tb-btn:active{background:var(--fill-2);transform:none;}
+.note-tb-btn.bold{font-weight:900;}
+.note-tb-btn.italic{font-style:italic;}
+.note-tb-btn.under{text-decoration:underline;}
+.note-tb-btn.title{font-family:var(--font-display);font-size:18px;}
+.note-tb-divider{
+  width:.5px;height:20px;
+  background:var(--sep);margin:0 2px;flex-shrink:0;
 }
-/* Azione distruttiva: stessa logica monocromatica, niente rosso —
-   la differenza è di peso/contrasto, non di tinta. */
-.note-hdr-btn.icon.danger {
-  background: rgba(255,255,255,0.05);
-  color: var(--red);
-  border-color: rgba(255,255,255,0.16);
+.note-tb-hint{
+  position:absolute;bottom:calc(100% + 6px);left:0;right:0;
+  text-align:center;font-size:10px;color:var(--lbl-3);pointer-events:none;
 }
-.note-hdr-btn.icon.danger::after {
-  -webkit-mask-image: var(--svg-trash);
-  mask-image:         var(--svg-trash);
-}
-/* Pinnata: icona pin, bianco */
-.note-hdr-btn.icon.pinned {
-  background: #161616;
-  color: #ffffff;
-  border-color: #303030;
-}
-.note-hdr-btn.icon.pinned::after {
-  -webkit-mask-image: var(--svg-pin);
-  mask-image:         var(--svg-pin);
-}
-
-.note-meta-bar {
-  text-align: center;
-  font-size: 11px;
-  color: rgba(255,255,255,0.23);
-  font-weight: 400;
-  letter-spacing: .1px;
-  padding: 4px 14px 8px;
-  flex-shrink: 0;
-}
-.note-title-input {
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: var(--font-sys);
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: -.5px;
-  padding: 8px 18px 4px;
-  width: 100%;
-  -webkit-user-select: text;
-  user-select: text;
-}
-.note-title-input::placeholder {
-  color: rgba(255,255,255,0.13);
-  font-weight: 600;
-}
-.note-body {
-  flex: 1;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  padding: 6px 18px 100px;
-  color: rgba(255,255,255,0.82);
-  font-family: var(--font-sys);
-  font-size: 16px;
-  line-height: 1.62;
-  outline: none;
-  -webkit-user-select: text;
-  user-select: text;
-}
-.note-body:empty::before,
-.note-body.is-empty::before {
-  content: attr(data-placeholder);
-  color: rgba(255,255,255,0.13);
-  pointer-events: none;
-  display: block;
-}
-.note-body h3 {
-  font-size: 18px;
-  font-weight: 700;
-  margin: 8px 0 4px;
-  letter-spacing: -.3px;
-}
-.note-body ul,
-.note-body ol { padding-left: 24px; margin: 6px 0; }
-.note-body li { margin-bottom: 4px; }
-.note-body b,
-.note-body strong { font-weight: 700; color: #ffffff; }
-
-/* ── TOOLBAR NOTE ─────────────────────────────────────────────────
-   I pulsanti B / I / U / H mantengono il testo come indicatori di
-   formattazione — sono simboli tipografici, non emoji. Per icone
-   SVG pure: classe .note-tb-btn.svg-icon (helper sotto).
-   ─────────────────────────────────────────────────────────────── */
-.note-toolbar {
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  background: rgba(8,8,8,0.98);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-top: 1px solid #1a1a1a;
-  padding: 8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-  display: flex;
-  align-items: center;
-  gap: 3px;
-  flex-shrink: 0;
-}
-.note-tb-btn {
-  flex: 1;
-  height: 34px;
-  background: transparent;
-  border: none;
-  border-radius: 4px;
-  color: rgba(255,255,255,0.52);
-  font-family: var(--font-sys);
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background .1s var(--smooth), opacity .1s;
-  -webkit-tap-highlight-color: transparent;
-}
-.note-tb-btn:active {
-  background: rgba(255,255,255,0.06);
-  opacity: .7;
-}
-
-/* Stili testo per bottoni formattazione (testo) */
-.note-tb-btn.bold   { font-weight: 900; }
-.note-tb-btn.italic { font-style: italic; }
-.note-tb-btn.under  { text-decoration: underline; }
-.note-tb-btn.title  { font-size: 17px; font-weight: 800; }
-
-/* Helper: pulsante toolbar con SVG icon anziché testo
-   HTML: <button class="note-tb-btn svg-icon ic-bold"></button> */
-.note-tb-btn.svg-icon {
-  font-size: 0;
-  position: relative;
-}
-.note-tb-btn.svg-icon::before {
-  content: '';
-  display: block;
-  width: 16px;
-  height: 16px;
-  background-color: currentColor;
-  -webkit-mask-size: contain;
-  mask-size: contain;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-}
-/* Associazione SVG per ogni bottone toolbar */
-.note-tb-btn.svg-icon.ic-bold::before    { -webkit-mask-image: var(--svg-bold);    mask-image: var(--svg-bold);    }
-.note-tb-btn.svg-icon.ic-italic::before  { -webkit-mask-image: var(--svg-italic);  mask-image: var(--svg-italic);  }
-.note-tb-btn.svg-icon.ic-list::before    { -webkit-mask-image: var(--svg-list);    mask-image: var(--svg-list);    }
-.note-tb-btn.svg-icon.ic-heading::before { -webkit-mask-image: var(--svg-heading); mask-image: var(--svg-heading); }
-
-.note-tb-divider {
-  width: 1px;
-  height: 18px;
-  background: #1a1a1a;
-  margin: 0 2px;
-  flex-shrink: 0;
-}
-.note-tb-hint {
-  position: absolute;
-  bottom: calc(100% + 6px);
-  left: 0; right: 0;
-  text-align: center;
-  font-size: 10px;
-  color: rgba(255,255,255,0.26);
-  pointer-events: none;
-}
-
-/* ═══════════════════════════════════════
-   DRAG AND DROP
-   ═══════════════════════════════════════ */
-[draggable=true]        { cursor: grab; }
-[draggable=true]:active { cursor: grabbing; }
-.dragging {
-  opacity: 0.28;
-  border-color: #303030 !important;
-}
-.drag-over-top    { box-shadow: 0 -2px 0 0 rgba(255,255,255,0.50); }
-.drag-over-bottom { box-shadow: 0  2px 0 0 rgba(255,255,255,0.50); }
-
-/* ═══════════════════════════════════════════════════════════════════
-   NOTE DI MIGRAZIONE HTML — leggere prima di modificare i file JS
-   ═══════════════════════════════════════════════════════════════════
-
-   1. NAV BAR (già funzionante anche senza modifiche al JS)
-      app.js oggi rende ogni tab così:
-        <span className="nb-icon">{t.icon}</span>   // t.icon = "⌂" ecc.
-      Questo CSS sopprime quel glifo (font-size:0 su .nb-icon) e mostra
-      l'icona corretta tramite mappatura POSIZIONALE (nth-child),
-      allineata all'ordine reale dell'array TABS in app.js:
-        1° Home → ic-home   2° Cibo → ic-utensils  3° Train → ic-activity
-        4° Piano → ic-calendar   5° Task → ic-check
-      Per maggiore chiarezza futura (consigliato, non obbligatorio),
-      si può aggiornare app.js così:
-        <span className="nb-icon ic-home"></span>      ← Home
-        <span className="nb-icon ic-utensils"></span>  ← Cibo
-        <span className="nb-icon ic-activity"></span>  ← Train
-        <span className="nb-icon ic-calendar"></span>  ← Piano
-        <span className="nb-icon ic-check"></span>     ← Task
-      ECCEZIONE: le emoji negli esercizi e nei blocchi di "train"
-      sono MANTENUTE — non toccarle, non sono gestite da questo CSS.
-
-   2. CHECKBOX
-      Il .ck non deve contenere testo/emoji. Il check appare via
-      ::after quando .done è presente. Nessuna azione richiesta se
-      il JS già usa solo il toggle della classe "done".
-
-   3. NOTE ICONS
-      La .note-icon non deve contenere emoji: l'icona SVG arriva
-      automaticamente via ::after. Per icone custom per tipo nota:
-        .note-icon.ic-pin    → usa var(--svg-pin)
-        .note-icon.ic-notes  → usa var(--svg-notes) (default)
-
-   4. FRECCE (.arr)
-      <button class="arr">   ← freccia sinistra (default)
-      <button class="arr r"> ← freccia destra
-      Nessun ‹ › o ← → nel contenuto testuale.
-
-   5. STELLE (.starbtn)
-      Nessun ★ ☆ o emoji nel contenuto testuale: l'icona arriva via
-      ::before. Usare .on per stella attiva/piena.
-
-   6. RICERCA NOTE
-      Sostituire l'emoji 🔍 con:
-        <span class="note-search-icon ic ic-search"></span>
-
-   7. ICON SYSTEM GENERALE
-      Per qualsiasi altra icona:
-        <span class="ic ic-[nome]"></span>
-      Disponibili: ic-home, ic-activity, ic-droplet, ic-notes,
-      ic-settings, ic-utensils, ic-calendar, ic-check, ic-search,
-      ic-pin, ic-trash, ic-plus, ic-x, ic-star, ic-star-f, ic-chev-l,
-      ic-chev-r, ic-bold, ic-italic, ic-list, ic-heading.
-      Nuovo SVG → aggiungi --svg-[nome] in :root + classe .ic-[nome].
-
-   8. RESIDUI BLU FUORI DA QUESTO FILE (da correggere nel JS, non qui)
-      Due punti in app.js usano colore blu HARDCODED in stile inline
-      (non una var CSS, quindi questo file non può intervenire):
-        - bottone impostazioni "⚙" → background/border/color con
-          rgba(10,132,255,…) e #0A84FF quando editMode è attivo
-        - numero STREAK in header → color:"#0A84FF"
-      Per renderli monocromatici, in app.js sostituire questi valori
-      con bianco/grigio (es. "#ffffff" o "rgba(255,255,255,0.85)"),
-      oppure con var(--accent)/var(--red) se lo stile inline viene
-      convertito a className.
-
-   ═══════════════════════════════════════════════════════════════════ */

@@ -172,7 +172,7 @@ function daysUntil(dateStr){
 window.__daysUntil=daysUntil;
 function fileToB64(f){return new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(",")[1]);fr.readAsDataURL(f);});}
 function starsToScore(s){return s>0?(s-1)/4:null;}
-function scoreToColor(s){if(s===null||s===undefined)return"rgba(255,255,255,0.12)";if(s>=0.8)return"#1EC96A";if(s>=0.5)return"#E09818";return"#3360EE";}
+function scoreToColor(s){if(s===null||s===undefined)return"rgba(255,255,255,0.12)";if(s>=0.8)return"#E4E4E7";if(s>=0.5)return"#A1A1AA";return"#71717A";}
 function foodScoreLabel(s){if(s===null)return"-";if(s>=0.85)return"Ottimo";if(s>=0.7)return"Bene";if(s>=0.5)return"Normale";if(s>=0.3)return"Male";return"Pessimo";}
 
 // ── TRACKING STATE: data inizio + periodi di pausa ────────────────────────
@@ -280,7 +280,7 @@ function ConfirmModal(){
         <div style={{fontSize:15,fontWeight:600,color:"#fff",lineHeight:1.45,marginBottom:18,textAlign:"center"}}>{state.msg}</div>
         <div style={{display:"flex",gap:10}}>
           <button onClick={()=>resolve(false)} style={{flex:1,padding:"12px",borderRadius:12,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(118,118,128,0.18)",color:"rgba(235,235,245,0.75)",fontSize:15,fontWeight:500,cursor:"pointer"}}>{state.cancelLabel||"Annulla"}</button>
-          <button onClick={()=>resolve(true)} style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"#0A84FF",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer"}}>{state.confirmLabel||"Elimina"}</button>
+          <button onClick={()=>resolve(true)} style={{flex:1,padding:"12px",borderRadius:12,border:"none",background:"#FFFFFF",color:"#fff",fontSize:15,fontWeight:600,cursor:"pointer"}}>{state.confirmLabel||"Elimina"}</button>
         </div>
       </div>
     </div>,

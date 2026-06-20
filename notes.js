@@ -63,7 +63,7 @@ function NoteCard({notes,setNotes}){
     const snippet=txt.length>120?txt.slice(0,120)+"…":txt;
     return(
       <button key={n.id} onClick={()=>openExisting(n)} className={"note-row"+(n.pinned?" pinned":"")}>
-        <div className="note-icon">{n.pinned?"📌":"📝"}</div>
+        <div className="note-icon"></div>
         <div style={{flex:1,minWidth:0}}>
           <div className="note-title">{n.title||"Senza titolo"}</div>
           {snippet&&<div className="note-snippet">{snippet}</div>}
@@ -76,13 +76,13 @@ function NoteCard({notes,setNotes}){
   return(
     <div className="card">
       <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
-        <div className="sechdr" style={{color:"rgba(255,204,0,0.6)"}}>📝 NOTE {notes&&notes.length>0?<span style={{color:"rgba(255,255,255,0.25)",marginLeft:4}}>· {notes.length}</span>:null}</div>
-        <button onClick={openNew} style={{background:"linear-gradient(135deg,rgba(255,204,0,0.18),rgba(10,132,255,0.1))",border:"1px solid rgba(255,204,0,0.32)",borderRadius:9,color:"#E09818",fontSize:12,padding:"5px 12px",cursor:"pointer",fontWeight:700,letterSpacing:.2,boxShadow:"0 2px 8px rgba(255,204,0,0.15)"}}>＋ Nuova</button>
+        <div className="sechdr" style={{color:"rgba(161,161,170,0.6)"}}>📝 NOTE {notes&&notes.length>0?<span style={{color:"rgba(255,255,255,0.25)",marginLeft:4}}>· {notes.length}</span>:null}</div>
+        <button onClick={openNew} style={{background:"linear-gradient(135deg,rgba(161,161,170,0.18),rgba(255,255,255,0.1))",border:"1px solid rgba(161,161,170,0.32)",borderRadius:9,color:"#A1A1AA",fontSize:12,padding:"5px 12px",cursor:"pointer",fontWeight:700,letterSpacing:.2,boxShadow:"0 2px 8px rgba(161,161,170,0.15)"}}>＋ Nuova</button>
       </div>
       {preview.length===0?(
         <div style={{fontSize:13,color:"rgba(255,255,255,0.3)",padding:"18px 0",textAlign:"center",lineHeight:1.5}}>
           <div style={{fontSize:32,marginBottom:6,opacity:.5}}>📝</div>
-          Nessuna nota.<br/>Tocca <span style={{color:"#E09818",fontWeight:700}}>＋ Nuova</span> per crearne una.
+          Nessuna nota.<br/>Tocca <span style={{color:"#A1A1AA",fontWeight:700}}>＋ Nuova</span> per crearne una.
         </div>
       ):(<>
         {pinned.length>0&&<div className="note-section-hdr">📌 In alto</div>}
@@ -143,7 +143,7 @@ function NotesArchive({notes,setNotes}){
     const snippet=txt.length>140?txt.slice(0,140)+"…":txt;
     return(
       <button key={n.id} onClick={()=>openExisting(n)} className={"note-row"+(n.pinned?" pinned":"")}>
-        <div className="note-icon">{n.pinned?"📌":"📝"}</div>
+        <div className="note-icon"></div>
         <div style={{flex:1,minWidth:0}}>
           <div className="note-title">{n.title||"Senza titolo"}</div>
           {snippet&&<div className="note-snippet">{snippet}</div>}
@@ -371,7 +371,7 @@ function StarRating({value,onChange,size=19}){
   return(
     <div style={{display:"flex",gap:2}}>
       {[1,2,3,4,5].map(s=>(
-        <button key={s} onClick={()=>{haptic.light();onChange(value===s?0:s);}} className={"starbtn "+(s<=value?"on":"")} style={{fontSize:size,lineHeight:1,color:s<=value?"#E09818":"rgba(255,255,255,0.1)"}}>★</button>
+        <button key={s} onClick={()=>{haptic.light();onChange(value===s?0:s);}} className={"starbtn "+(s<=value?"on":"")} style={{fontSize:size,lineHeight:1,color:s<=value?"#A1A1AA":"rgba(255,255,255,0.1)"}}>★</button>
       ))}
     </div>
   );

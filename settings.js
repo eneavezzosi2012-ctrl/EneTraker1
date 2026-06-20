@@ -18,9 +18,9 @@ function EmojiPicker({value,onChange,list,size=44}){
         {value||"💪"}
       </button>
       {open&&(
-        <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,zIndex:50,background:"#0A0A0A",border:"1px solid rgba(10,132,255,0.3)",borderRadius:12,padding:8,boxShadow:"0 8px 24px rgba(0,0,0,0.6)",display:"grid",gridTemplateColumns:"repeat(6, 32px)",gap:4,width:6*32+10*2}}>
+        <div style={{position:"absolute",top:"calc(100% + 4px)",left:0,zIndex:50,background:"#0A0A0A",border:"1px solid rgba(255,255,255,0.3)",borderRadius:12,padding:8,boxShadow:"0 8px 24px rgba(0,0,0,0.6)",display:"grid",gridTemplateColumns:"repeat(6, 32px)",gap:4,width:6*32+10*2}}>
           {emojis.map(e=>(
-            <button key={e} type="button" onClick={()=>{onChange(e);setOpen(false);}} style={{fontSize:18,width:32,height:32,borderRadius:7,border:"1px solid "+(value===e?"rgba(10,132,255,0.5)":"rgba(255,255,255,0.05)"),background:value===e?"rgba(10,132,255,0.15)":"rgba(255,255,255,0.03)",cursor:"pointer",padding:0}}>{e}</button>
+            <button key={e} type="button" onClick={()=>{onChange(e);setOpen(false);}} style={{fontSize:18,width:32,height:32,borderRadius:7,border:"1px solid "+(value===e?"rgba(255,255,255,0.5)":"rgba(255,255,255,0.05)"),background:value===e?"rgba(255,255,255,0.15)":"rgba(255,255,255,0.03)",cursor:"pointer",padding:0}}>{e}</button>
           ))}
         </div>
       )}
@@ -130,7 +130,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
   ];
 
   return(<>
-    <div className="card" style={{background:"rgba(10,132,255,0.06)",borderColor:"rgba(10,132,255,0.2)",marginBottom:10}}>
+    <div className="card" style={{background:"rgba(255,255,255,0.06)",borderColor:"rgba(255,255,255,0.2)",marginBottom:10}}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"space-between"}}>
         <div><div className="H" style={{fontSize:20,letterSpacing:.3}}>Impostazioni</div><div style={{fontSize:11,color:"rgba(255,255,255,0.3)",marginTop:2}}>Modifica e salva tutto</div></div>
         <button onClick={saveAll} className="btn-p" style={{padding:"8px 16px",fontSize:13}}>SALVA</button>
@@ -139,13 +139,13 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
 
     {SECS.map(s=>(
       <div key={s.id}>
-        <button onClick={()=>setSection(section===s.id?null:s.id)} style={{width:"100%",background:"rgba(255,255,255,0.038)",border:"1px solid "+(section===s.id?"rgba(10,132,255,0.3)":"rgba(255,255,255,0.065)"),borderRadius:14,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",marginBottom:section===s.id?0:8,borderBottomLeftRadius:section===s.id?0:14,borderBottomRightRadius:section===s.id?0:14}}>
+        <button onClick={()=>setSection(section===s.id?null:s.id)} style={{width:"100%",background:"rgba(255,255,255,0.038)",border:"1px solid "+(section===s.id?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.065)"),borderRadius:14,padding:"13px 15px",display:"flex",alignItems:"center",gap:12,cursor:"pointer",marginBottom:section===s.id?0:8,borderBottomLeftRadius:section===s.id?0:14,borderBottomRightRadius:section===s.id?0:14}}>
           <span style={{fontSize:20}}>{s.icon}</span>
           <span style={{flex:1,fontSize:14,fontWeight:600,color:"rgba(255,255,255,0.8)",textAlign:"left"}}>{s.label}</span>
           <span style={{color:"rgba(255,255,255,0.3)",fontSize:13,transform:section===s.id?"rotate(180deg)":"none",transition:"transform .2s",display:"inline-block"}}>▾</span>
         </button>
         {section===s.id&&(
-          <div style={{background:"rgba(255,255,255,0.025)",border:"1px solid rgba(10,132,255,0.2)",borderTop:"none",borderBottomLeftRadius:14,borderBottomRightRadius:14,padding:"14px",marginBottom:8}}>
+          <div style={{background:"rgba(255,255,255,0.025)",border:"1px solid rgba(255,255,255,0.2)",borderTop:"none",borderBottomLeftRadius:14,borderBottomRightRadius:14,padding:"14px",marginBottom:8}}>
             {s.id==="profile"&&(
               <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:9}}>
                 {[{l:"Nome",k:"name",t:"text"},{l:"Eta",k:"age",t:"number"},{l:"Peso kg",k:"weight",t:"number"},{l:"Altezza cm",k:"height",t:"number"}].map(f=>(
@@ -202,7 +202,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
 
                   return(
                   <div key={di} style={{marginBottom:20,paddingBottom:14,borderBottom:"1px solid rgba(255,255,255,0.05)"}}>
-                    <div style={{fontSize:11,color:"#0A84FF",fontWeight:700,letterSpacing:.5,marginBottom:8}}>{DAYS_SHORT[di]}</div>
+                    <div style={{fontSize:11,color:"#FFFFFF",fontWeight:700,letterSpacing:.5,marginBottom:8}}>{DAYS_SHORT[di]}</div>
                     {/* Label giorno */}
                     <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",marginBottom:3,fontWeight:600}}>NOME DEL GIORNO</div>
                     <input className="inp" value={day.label||""} onChange={e=>{const s=JSON.parse(JSON.stringify(schedDraft));s[di].label=e.target.value;setSchedDraft(s);}} style={{marginBottom:8,fontSize:15,padding:"7px 10px"}} placeholder={DAYS_SHORT[di]}/>
@@ -230,7 +230,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                         <div style={{display:"flex",gap:5,marginBottom:8,alignItems:"center"}}>
                           <EmojiPicker value={block.icon||"💪"} onChange={v=>setBlockField(bi,"icon",v)}/>
                           <input className="inp" value={block.title||""} onChange={e=>setBlockField(bi,"title",e.target.value)} style={{flex:1,fontSize:14,fontWeight:700,padding:"7px 10px"}} placeholder="Titolo blocco (es. Forza, Tiro, Cardio…)"/>
-                          <button onClick={()=>removeBlock(bi)} style={{background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.15)",borderRadius:8,color:"#3360EE",fontSize:12,padding:"5px 8px",cursor:"pointer"}} title="Elimina blocco">🗑</button>
+                          <button onClick={()=>removeBlock(bi)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#71717A",fontSize:12,padding:"5px 8px",cursor:"pointer"}} title="Elimina blocco">🗑</button>
                         </div>
                         {/* Items del blocco */}
                         {(block.items||[]).map((it,ii)=>(
@@ -238,15 +238,15 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                             <EmojiPicker value={it.icon||block.icon||"💪"} onChange={v=>setItemField(bi,ii,"icon",v)}/>
                             <input className="inp" value={it.name||""} onChange={e=>setItemField(bi,ii,"name",e.target.value)} style={{flex:2,fontSize:14,padding:"7px 9px"}} placeholder="Esercizio"/>
                             <input className="inp" value={it.sets||""} onChange={e=>setItemField(bi,ii,"sets",e.target.value)} style={{flex:1,fontSize:14,padding:"7px 9px",minWidth:0}} placeholder="3x10"/>
-                            <button onClick={()=>replicateItem(bi,ii)} title="Copia su altri giorni" style={{background:"rgba(0,140,255,0.08)",border:"1px solid rgba(0,140,255,0.18)",borderRadius:8,color:"#4db8ff",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>↗</button>
-                            <button onClick={()=>removeItem(bi,ii)} style={{background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.15)",borderRadius:8,color:"#0A84FF",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>✕</button>
+                            <button onClick={()=>replicateItem(bi,ii)} title="Copia su altri giorni" style={{background:"rgba(0,140,255,0.08)",border:"1px solid rgba(0,140,255,0.18)",borderRadius:8,color:"#D4D4D8",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>↗</button>
+                            <button onClick={()=>removeItem(bi,ii)} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#FFFFFF",fontSize:12,padding:"5px 7px",cursor:"pointer"}}>✕</button>
                           </div>
                         ))}
                         <button onClick={()=>addItem(bi)} style={{background:"rgba(255,255,255,0.03)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:8,color:"rgba(255,255,255,0.3)",fontSize:11,padding:"5px 10px",cursor:"pointer",width:"100%",marginTop:3}}>+ Esercizio</button>
                       </div>
                     ))}
 
-                    <button onClick={addBlock} style={{background:"rgba(10,132,255,0.05)",border:"1px dashed rgba(10,132,255,0.25)",borderRadius:10,color:"rgba(10,132,255,0.7)",fontSize:12,fontWeight:700,padding:"9px 14px",cursor:"pointer",width:"100%",marginBottom:10}}>+ Aggiungi blocco allenamento</button>
+                    <button onClick={addBlock} style={{background:"rgba(255,255,255,0.05)",border:"1px dashed rgba(255,255,255,0.25)",borderRadius:10,color:"rgba(255,255,255,0.7)",fontSize:12,fontWeight:700,padding:"9px 14px",cursor:"pointer",width:"100%",marginBottom:10}}>+ Aggiungi blocco allenamento</button>
 
                     {/* Nota */}
                     <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",marginBottom:3,fontWeight:600}}>NOTA</div>
@@ -260,12 +260,12 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
               <div>
                 {Object.entries(mealDraft).map(([meal,plan])=>(
                   <div key={meal} style={{marginBottom:14}}>
-                    <div style={{fontSize:11,color:"#0A84FF",fontWeight:700,letterSpacing:.5,marginBottom:6}}>{meal.toUpperCase()}</div>
+                    <div style={{fontSize:11,color:"#FFFFFF",fontWeight:700,letterSpacing:.5,marginBottom:6}}>{meal.toUpperCase()}</div>
                     <input className="inp" value={plan.target} onChange={e=>{const m={...mealDraft,[meal]:{...mealDraft[meal],target:e.target.value}};setMealDraft(m);}} style={{marginBottom:7,fontSize:16}}/>
                     {plan.examples.map((ex,i)=>(
                       <div key={i} style={{display:"flex",gap:6,marginBottom:5}}>
                         <input className="inp" value={ex} onChange={e=>{const m=JSON.parse(JSON.stringify(mealDraft));m[meal].examples[i]=e.target.value;setMealDraft(m);}} style={{flex:1,fontSize:16,padding:"7px 10px"}}/>
-                        <button onClick={()=>{const m=JSON.parse(JSON.stringify(mealDraft));m[meal].examples.splice(i,1);setMealDraft(m);}} style={{background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.15)",borderRadius:8,color:"#0A84FF",fontSize:13,padding:"6px 8px",cursor:"pointer"}}>✕</button>
+                        <button onClick={()=>{const m=JSON.parse(JSON.stringify(mealDraft));m[meal].examples.splice(i,1);setMealDraft(m);}} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#FFFFFF",fontSize:13,padding:"6px 8px",cursor:"pointer"}}>✕</button>
                       </div>
                     ))}
                     <button onClick={()=>{const m=JSON.parse(JSON.stringify(mealDraft));m[meal].examples.push("");setMealDraft(m);}} style={{background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:8,color:"rgba(255,255,255,0.3)",fontSize:12,padding:"6px 12px",cursor:"pointer",width:"100%",marginTop:2,marginBottom:6}}>+ Esempio</button>
@@ -275,22 +275,22 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
             )}
             {s.id==="tasks"&&(
               <div>
-                <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",marginBottom:8,lineHeight:1.5}}>Tocca <span style={{color:"#0A84FF",fontWeight:700}}>+</span> tra una task e l'altra per inserirla in mezzo.</div>
+                <div style={{fontSize:10,color:"rgba(255,255,255,0.3)",marginBottom:8,lineHeight:1.5}}>Tocca <span style={{color:"#FFFFFF",fontWeight:700}}>+</span> tra una task e l'altra per inserirla in mezzo.</div>
                 {taskDraft.map((t,i)=>(<React.Fragment key={t.id}>
                   <div style={{marginBottom:5,padding:"10px",background:"rgba(255,255,255,0.03)",borderRadius:11,border:"1px solid rgba(255,255,255,0.07)"}}>
                     <div style={{display:"flex",gap:6,marginBottom:6}}>
                       <input className="inp" value={t.text} onChange={e=>{const d=[...taskDraft];d[i]={...d[i],text:e.target.value};setTaskDraft(d);}} style={{flex:1,fontSize:16}} placeholder="Nome task"/>
-                      <button onClick={()=>setTaskDraft(p=>p.filter((_,j)=>j!==i))} style={{background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.15)",borderRadius:8,color:"#0A84FF",fontSize:13,padding:"6px 8px",cursor:"pointer"}}>✕</button>
+                      <button onClick={()=>setTaskDraft(p=>p.filter((_,j)=>j!==i))} style={{background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:8,color:"#FFFFFF",fontSize:13,padding:"6px 8px",cursor:"pointer"}}>✕</button>
                     </div>
                     <input className="inp" value={t.subtitle||""} onChange={e=>{const d=[...taskDraft];d[i]={...d[i],subtitle:e.target.value};setTaskDraft(d);}} style={{marginBottom:7,fontSize:16}} placeholder="Sottotitolo opzionale"/>
                     <div style={{display:"flex",gap:3,marginBottom:4}}>
-                      {DAYS_LETTER.map((dl,j)=>{const days=t.days||[0,1,2,3,4,5,6];const active=days.includes(j);return <button key={j} onClick={()=>{const nd=active?days.filter(x=>x!==j):[...days,j].sort();const dr=[...taskDraft];dr[i]={...dr[i],days:nd};setTaskDraft(dr);}} style={{flex:1,padding:"5px 0",borderRadius:7,border:"1px solid "+(active?"rgba(10,132,255,0.35)":"rgba(255,255,255,0.08)"),background:active?"rgba(10,132,255,0.13)":"rgba(255,255,255,0.04)",color:active?"#0A84FF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:600,cursor:"pointer"}}>{dl}</button>;})}
+                      {DAYS_LETTER.map((dl,j)=>{const days=t.days||[0,1,2,3,4,5,6];const active=days.includes(j);return <button key={j} onClick={()=>{const nd=active?days.filter(x=>x!==j):[...days,j].sort();const dr=[...taskDraft];dr[i]={...dr[i],days:nd};setTaskDraft(dr);}} style={{flex:1,padding:"5px 0",borderRadius:7,border:"1px solid "+(active?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.08)"),background:active?"rgba(255,255,255,0.13)":"rgba(255,255,255,0.04)",color:active?"#FFFFFF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:600,cursor:"pointer"}}>{dl}</button>;})}
                     </div>
-                    {(()=>{const days=t.days||[0,1,2,3,4,5,6];const active=days.includes(7);return <button onClick={()=>{const nd=active?days.filter(x=>x!==7):[...days,7].sort();const dr=[...taskDraft];dr[i]={...dr[i],days:nd};setTaskDraft(dr);}} style={{width:"100%",padding:"5px 0",borderRadius:7,border:"1px solid "+(active?"rgba(10,132,255,0.4)":"rgba(255,255,255,0.08)"),background:active?"rgba(10,132,255,0.15)":"rgba(255,255,255,0.04)",color:active?"#0A84FF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:700,cursor:"pointer"}}>🏀 Solo Game Day</button>;})()}
+                    {(()=>{const days=t.days||[0,1,2,3,4,5,6];const active=days.includes(7);return <button onClick={()=>{const nd=active?days.filter(x=>x!==7):[...days,7].sort();const dr=[...taskDraft];dr[i]={...dr[i],days:nd};setTaskDraft(dr);}} style={{width:"100%",padding:"5px 0",borderRadius:7,border:"1px solid "+(active?"rgba(255,255,255,0.4)":"rgba(255,255,255,0.08)"),background:active?"rgba(255,255,255,0.15)":"rgba(255,255,255,0.04)",color:active?"#FFFFFF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:700,cursor:"pointer"}}>🏀 Solo Game Day</button>;})()}
                   </div>
                   {/* Pulsante "+" inline (fix v22 #3) */}
                   {insertAfterIdx===i?(
-                    <div style={{background:"rgba(10,132,255,0.04)",border:"1px solid rgba(10,132,255,0.2)",borderRadius:11,padding:"9px 10px",marginBottom:5}}>
+                    <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.2)",borderRadius:11,padding:"9px 10px",marginBottom:5}}>
                       <input autoFocus className="inp" placeholder="Nome nuova task..." value={insertText} onChange={e=>setInsertText(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")confirmInsertSettings(i);if(e.key==="Escape"){setInsertAfterIdx(null);setInsertText("");setInsertSub("");}}} style={{marginBottom:6,fontSize:15}}/>
                       <input className="inp" placeholder="Sottotitolo opzionale..." value={insertSub} onChange={e=>setInsertSub(e.target.value)} onKeyDown={e=>{if(e.key==="Enter")confirmInsertSettings(i);}} style={{marginBottom:8,fontSize:14}}/>
                       <div style={{display:"flex",gap:6}}>
@@ -300,7 +300,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                     </div>
                   ):(
                     <button onClick={()=>{setInsertAfterIdx(i);setInsertText("");setInsertSub("");}} style={{width:"100%",background:"transparent",border:"none",padding:"1px 0 5px",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",gap:4,color:"rgba(255,255,255,0.18)",fontSize:13,fontWeight:600}}>
-                      <span style={{display:"inline-block",width:18,height:18,borderRadius:"50%",background:"rgba(10,132,255,0.08)",border:"1px solid rgba(10,132,255,0.18)",lineHeight:"16px",fontSize:13,color:"#0A84FF"}}>+</span>
+                      <span style={{display:"inline-block",width:18,height:18,borderRadius:"50%",background:"rgba(255,255,255,0.08)",border:"1px solid rgba(255,255,255,0.18)",lineHeight:"16px",fontSize:13,color:"#FFFFFF"}}>+</span>
                     </button>
                   )}
                 </React.Fragment>))}
@@ -322,20 +322,20 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
     {/* ── ACCOUNT: Disconnetti / Elimina account ──────────────────────── */}
     <div style={{marginTop:30,marginBottom:8,fontSize:10,color:"rgba(255,255,255,0.28)",fontWeight:600,letterSpacing:.8}}>ACCOUNT</div>
     {(()=>{const cu=(typeof window!=="undefined")&&localStorage.getItem("enea_current_user");return cu?(
-      <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:10}}>Loggato come <span style={{color:"#0A84FF",fontWeight:600}}>{cu}</span></div>
+      <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:10}}>Loggato come <span style={{color:"#FFFFFF",fontWeight:600}}>{cu}</span></div>
     ):null;})()}
     {!logoutConfirm?(
       <button onClick={()=>setLogoutConfirm(true)} disabled={accountBusy}
-        style={{width:"100%",padding:"12px",borderRadius:11,border:"1px solid rgba(10,132,255,0.35)",background:"rgba(10,132,255,0.08)",color:"#E03535",fontSize:13,fontWeight:700,cursor:"pointer",letterSpacing:.3,marginBottom:8}}>
+        style={{width:"100%",padding:"12px",borderRadius:11,border:"1px solid rgba(255,255,255,0.35)",background:"rgba(255,255,255,0.08)",color:"#F5F5F5",fontSize:13,fontWeight:700,cursor:"pointer",letterSpacing:.3,marginBottom:8}}>
         Disconnetti
       </button>
     ):(
-      <div style={{background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.25)",borderRadius:12,padding:12,marginBottom:8}}>
+      <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.25)",borderRadius:12,padding:12,marginBottom:8}}>
         <div style={{fontSize:13,color:"rgba(255,255,255,0.85)",marginBottom:9,fontWeight:600}}>Sei sicuro di voler uscire?</div>
         <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginBottom:10,lineHeight:1.5}}>I tuoi dati restano salvati su cloud. Al prossimo login li ritrovi tutti.</div>
         <div style={{display:"flex",gap:8}}>
           <button onClick={()=>setLogoutConfirm(false)} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.6)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
-          <button onClick={doLogout} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:"#E03535",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>Disconnetti</button>
+          <button onClick={doLogout} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:"#F5F5F5",color:"#fff",fontSize:12,fontWeight:700,cursor:"pointer"}}>Disconnetti</button>
         </div>
       </div>
     )}
@@ -345,12 +345,12 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
         Elimina account
       </button>
     ):(
-      <div style={{background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.4)",borderRadius:12,padding:12}}>
-        <div style={{fontSize:13,color:"#E03535",marginBottom:8,fontWeight:700}}>⚠ Questa azione è irreversibile.</div>
+      <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.4)",borderRadius:12,padding:12}}>
+        <div style={{fontSize:13,color:"#F5F5F5",marginBottom:8,fontWeight:700}}>⚠ Questa azione è irreversibile.</div>
         <div style={{fontSize:11,color:"rgba(255,255,255,0.55)",marginBottom:11,lineHeight:1.5}}>Tutti i tuoi dati verranno eliminati definitivamente da cloud e da questo dispositivo. Non potranno essere recuperati.</div>
         <div style={{display:"flex",gap:8}}>
           <button onClick={()=>setDeleteConfirm(false)} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"1px solid rgba(255,255,255,0.1)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.7)",fontSize:12,cursor:"pointer",fontWeight:600}}>Annulla</button>
-          <button onClick={doDeleteAccount} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:"#E03535",color:"#fff",fontSize:12,fontWeight:700,cursor:accountBusy?"wait":"pointer",opacity:accountBusy?0.6:1}}>{accountBusy?"…":"Elimina"}</button>
+          <button onClick={doDeleteAccount} disabled={accountBusy} style={{flex:1,padding:"10px",borderRadius:10,border:"none",background:"#F5F5F5",color:"#fff",fontSize:12,fontWeight:700,cursor:accountBusy?"wait":"pointer",opacity:accountBusy?0.6:1}}>{accountBusy?"…":"Elimina"}</button>
         </div>
       </div>
     )}
@@ -375,7 +375,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
               const sel=replicate.days.has(String(i));
               return(
                 <button key={i} onClick={()=>{if(isCurrent)return;const nd=new Set(replicate.days);if(nd.has(String(i)))nd.delete(String(i));else nd.add(String(i));setReplicate({...replicate,days:nd});}}
-                  style={{flex:"1 1 calc(33% - 5px)",minWidth:0,padding:"12px 0",borderRadius:9,fontSize:12,fontWeight:700,cursor:isCurrent?"default":"pointer",border:"1px solid "+(isCurrent?"rgba(255,255,255,0.05)":sel?"rgba(0,140,255,0.55)":"rgba(255,255,255,0.1)"),background:isCurrent?"rgba(255,255,255,0.02)":sel?"rgba(0,140,255,0.2)":"rgba(255,255,255,0.05)",color:isCurrent?"rgba(255,255,255,0.15)":sel?"#4db8ff":"rgba(255,255,255,0.5)"}}>
+                  style={{flex:"1 1 calc(33% - 5px)",minWidth:0,padding:"12px 0",borderRadius:9,fontSize:12,fontWeight:700,cursor:isCurrent?"default":"pointer",border:"1px solid "+(isCurrent?"rgba(255,255,255,0.05)":sel?"rgba(0,140,255,0.55)":"rgba(255,255,255,0.1)"),background:isCurrent?"rgba(255,255,255,0.02)":sel?"rgba(0,140,255,0.2)":"rgba(255,255,255,0.05)",color:isCurrent?"rgba(255,255,255,0.15)":sel?"#D4D4D8":"rgba(255,255,255,0.5)"}}>
                   {d}{isCurrent?" ⓘ":""}
                 </button>
               );
@@ -383,7 +383,7 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
           </div>
           <div style={{display:"flex",gap:8}}>
             <button onClick={()=>setReplicate(null)} style={{flex:1,padding:"13px",borderRadius:10,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.4)",fontSize:13,cursor:"pointer"}}>Annulla</button>
-            <button onClick={applyReplicate} disabled={replicate.days.size===0} style={{flex:2,padding:"13px",borderRadius:10,border:"none",background:replicate.days.size===0?"rgba(255,255,255,0.06)":"linear-gradient(135deg,#0A84FF,#64D2FF)",color:replicate.days.size===0?"rgba(255,255,255,0.25)":"#fff",fontSize:13,fontWeight:700,cursor:replicate.days.size===0?"not-allowed":"pointer"}}>COPIA SU {replicate.days.size} GIORNI ✓</button>
+            <button onClick={applyReplicate} disabled={replicate.days.size===0} style={{flex:2,padding:"13px",borderRadius:10,border:"none",background:replicate.days.size===0?"rgba(255,255,255,0.06)":"linear-gradient(135deg,#FFFFFF,#D4D4D8)",color:replicate.days.size===0?"rgba(255,255,255,0.25)":"#fff",fontSize:13,fontWeight:700,cursor:replicate.days.size===0?"not-allowed":"pointer"}}>COPIA SU {replicate.days.size} GIORNI ✓</button>
           </div>
         </div>
       </div>,

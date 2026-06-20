@@ -31,16 +31,16 @@ function TasksTab({tasks,setTasks,todayTasks,taskDone,toggleTask,addTask,newTask
           <button className={"ck "+(isQ?"dg ":"")+(isDone?"done":"")} onClick={()=>isQ?toggleTask(t.id):toggleSpec(t.id)}>{isDone?"✓":""}</button>
           <div style={{flex:1,minWidth:0}}>
             <div style={{display:"flex",alignItems:"center",gap:5}}>
-              <div style={{fontSize:13,fontWeight:500,color:isDone?"rgba(255,255,255,0.2)":isQ&&skippedTasks2.has(String(t.id))?"rgba(255,204,0,0.5)":"rgba(255,255,255,0.83)",textDecoration:isDone||(isQ&&skippedTasks2.has(String(t.id)))?"line-through":"none"}}>{t.text}</div>
-              {isQ&&skippedTasks2.has(String(t.id))&&<span style={{fontSize:9,color:"#E09818",fontWeight:700,background:"rgba(255,204,0,0.1)",padding:"1px 5px",borderRadius:5}}>⚡</span>}
+              <div style={{fontSize:13,fontWeight:500,color:isDone?"rgba(255,255,255,0.2)":isQ&&skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.5)":"rgba(255,255,255,0.83)",textDecoration:isDone||(isQ&&skippedTasks2.has(String(t.id)))?"line-through":"none"}}>{t.text}</div>
+              {isQ&&skippedTasks2.has(String(t.id))&&<span style={{fontSize:9,color:"#A1A1AA",fontWeight:700,background:"rgba(161,161,170,0.1)",padding:"1px 5px",borderRadius:5}}>⚡</span>}
             </div>
             {!isExp&&t.subtitle&&<div style={{fontSize:11,color:"rgba(255,255,255,0.25)",marginTop:1,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{t.subtitle}</div>}
           </div>
           <div style={{display:"flex",gap:4,flexShrink:0,alignItems:"center"}}>
-            {isQ&&<button onClick={()=>{setSkippedTasks2(prev=>{const n=new Set(prev);n.has(String(t.id))?n.delete(String(t.id)):n.add(String(t.id));return n;});}} style={{background:skippedTasks2.has(String(t.id))?"rgba(255,204,0,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(skippedTasks2.has(String(t.id))?"rgba(255,204,0,0.4)":"rgba(255,255,255,0.07)"),borderRadius:7,color:skippedTasks2.has(String(t.id))?"#E09818":"rgba(255,255,255,0.22)",fontSize:11,padding:"3px 7px",cursor:"pointer",fontWeight:700}}>⚡</button>}
-            <button onClick={()=>{setEditId(isEd?null:t.id);setExpId(null);}} style={{background:isEd?"rgba(10,132,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isEd?"rgba(10,132,255,0.22)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isEd?"#0A84FF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✏️</button>
-            {!isEd&&<button onClick={()=>{setExpId(isExp?null:t.id);setEditId(null);}} style={{background:isExp?"rgba(10,132,255,0.07)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(10,132,255,0.18)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isExp?"#0A84FF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer",display:"inline-block",transform:isExp?"rotate(180deg)":"none",transition:"transform .2s"}}>&#9662;</button>}
-            {isEd&&<button onClick={()=>isQ?removeTask(t.id):removeSpec(t.id)} style={{background:"rgba(10,132,255,0.07)",border:"1px solid rgba(10,132,255,0.14)",borderRadius:7,color:"#0A84FF",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✕</button>}
+            {isQ&&<button onClick={()=>{setSkippedTasks2(prev=>{const n=new Set(prev);n.has(String(t.id))?n.delete(String(t.id)):n.add(String(t.id));return n;});}} style={{background:skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.15)":"rgba(255,255,255,0.04)",border:"1px solid "+(skippedTasks2.has(String(t.id))?"rgba(161,161,170,0.4)":"rgba(255,255,255,0.07)"),borderRadius:7,color:skippedTasks2.has(String(t.id))?"#A1A1AA":"rgba(255,255,255,0.22)",fontSize:11,padding:"3px 7px",cursor:"pointer",fontWeight:700}}>⚡</button>}
+            <button onClick={()=>{setEditId(isEd?null:t.id);setExpId(null);}} style={{background:isEd?"rgba(255,255,255,0.1)":"rgba(255,255,255,0.05)",border:"1px solid "+(isEd?"rgba(255,255,255,0.22)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isEd?"#FFFFFF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✏️</button>
+            {!isEd&&<button onClick={()=>{setExpId(isExp?null:t.id);setEditId(null);}} style={{background:isExp?"rgba(255,255,255,0.07)":"rgba(255,255,255,0.05)",border:"1px solid "+(isExp?"rgba(255,255,255,0.18)":"rgba(255,255,255,0.07)"),borderRadius:7,color:isExp?"#FFFFFF":"rgba(255,255,255,0.28)",fontSize:11,padding:"3px 8px",cursor:"pointer",display:"inline-block",transform:isExp?"rotate(180deg)":"none",transition:"transform .2s"}}>&#9662;</button>}
+            {isEd&&<button onClick={()=>isQ?removeTask(t.id):removeSpec(t.id)} style={{background:"rgba(255,255,255,0.07)",border:"1px solid rgba(255,255,255,0.14)",borderRadius:7,color:"#FFFFFF",fontSize:11,padding:"3px 8px",cursor:"pointer"}}>✕</button>}
           </div>
         </div>
         {isExp&&!isEd&&t.subtitle&&(
@@ -57,7 +57,7 @@ function TasksTab({tasks,setTasks,todayTasks,taskDone,toggleTask,addTask,newTask
             {isQ&&<>
               <div style={{fontSize:10,color:"rgba(255,255,255,0.25)",fontWeight:600,letterSpacing:.5,marginBottom:7}}>GIORNI</div>
               <div style={{display:"flex",gap:3,marginBottom:4}}>
-                {DAYS_LETTER.map((d,i)=><button key={i} onClick={()=>toggleDay(t.id,i)} style={{flex:1,padding:"6px 0",borderRadius:8,border:"1px solid "+(days.includes(i)?"rgba(10,132,255,0.35)":"rgba(255,255,255,0.08)"),background:days.includes(i)?"rgba(10,132,255,0.13)":"rgba(255,255,255,0.04)",color:days.includes(i)?"#0A84FF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:600,cursor:"pointer"}}>{d}</button>)}
+                {DAYS_LETTER.map((d,i)=><button key={i} onClick={()=>toggleDay(t.id,i)} style={{flex:1,padding:"6px 0",borderRadius:8,border:"1px solid "+(days.includes(i)?"rgba(255,255,255,0.35)":"rgba(255,255,255,0.08)"),background:days.includes(i)?"rgba(255,255,255,0.13)":"rgba(255,255,255,0.04)",color:days.includes(i)?"#FFFFFF":"rgba(255,255,255,0.25)",fontSize:11,fontWeight:600,cursor:"pointer"}}>{d}</button>)}
               </div>
             </>}
             <button onClick={()=>setEditId(null)} className="btn-p" style={{width:"100%",marginTop:10}}>FATTO ✓</button>
@@ -77,7 +77,7 @@ function TasksTab({tasks,setTasks,todayTasks,taskDone,toggleTask,addTask,newTask
         </div>
         <span className="pill pg">{compDaily}/{todayTasks.length}</span>
       </div>
-      <div className="pbar" style={{marginBottom:10,height:4}}><div className="pf" style={{width:(todayTasks.length?Math.round((compDaily/todayTasks.length)*100):0)+"%",background:"linear-gradient(90deg,#1EC96A,#1EC96A)"}}/></div>
+      <div className="pbar" style={{marginBottom:10,height:4}}><div className="pf" style={{width:(todayTasks.length?Math.round((compDaily/todayTasks.length)*100):0)+"%",background:"linear-gradient(90deg,#E4E4E7,#E4E4E7)"}}/></div>
       <div>
         {todayTasks.map(t=><TaskRow key={t.id} t={t} isQ={true}/>)}
       </div>
@@ -99,7 +99,7 @@ function TasksTab({tasks,setTasks,todayTasks,taskDone,toggleTask,addTask,newTask
       </div>
       <div style={{display:"flex",gap:7,marginTop:activeSpec.length>0?10:4}}>
         <input className="inp" placeholder="Aggiungi to-do speciale..." value={newSpec} onChange={e=>setNewSpec(e.target.value)} onKeyDown={e=>e.key==="Enter"&&addSpec()}/>
-        <button className="btn-p" onClick={addSpec} style={{padding:"10px 14px",fontSize:18,background:"linear-gradient(135deg,#9075D4,#8866dd)"}}>+</button>
+        <button className="btn-p" onClick={addSpec} style={{padding:"10px 14px",fontSize:18,background:"linear-gradient(135deg,#9F9FA8,#9F9FA8)"}}>+</button>
       </div>
       {doneSpec.length>0&&(
         <div style={{marginTop:13,borderTop:"1px solid rgba(255,255,255,0.05)",paddingTop:10}}>

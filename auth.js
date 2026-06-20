@@ -102,7 +102,7 @@ function LoginScreen({onLogin}){
             {localAccounts.map(a=>(
               <button key={a} disabled={loading} onClick={()=>quickLogin(a)}
                 style={{background:"#1C1C1E",border:"1px solid rgba(255,255,255,0.06)",borderRadius:14,padding:"14px 16px",color:"#fff",fontSize:15,fontWeight:600,cursor:loading?"wait":"pointer",textAlign:"left",display:"flex",alignItems:"center",gap:12,opacity:loading?0.5:1,transition:"background .18s"}}>
-                <div style={{width:36,height:36,borderRadius:9,background:"rgba(10,132,255,0.14)",border:"1px solid rgba(10,132,255,0.22)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:"#0A84FF",flexShrink:0}}>
+                <div style={{width:36,height:36,borderRadius:9,background:"rgba(255,255,255,0.14)",border:"1px solid rgba(255,255,255,0.22)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:15,fontWeight:700,color:"#FFFFFF",flexShrink:0}}>
                   {a[0].toUpperCase()}
                 </div>
                 <span style={{flex:1}}>{a}</span>
@@ -131,7 +131,7 @@ function LoginScreen({onLogin}){
 
       {/* ── Error message ── */}
       {error&&(
-        <div style={{background:"rgba(255,69,58,0.08)",border:"1px solid rgba(255,69,58,0.22)",borderRadius:10,padding:"10px 13px",color:"#FF453A",fontSize:13,marginBottom:14,fontWeight:500,lineHeight:1.45}}>
+        <div style={{background:"rgba(255,69,58,0.08)",border:"1px solid rgba(255,69,58,0.22)",borderRadius:10,padding:"10px 13px",color:"#F5F5F5",fontSize:13,marginBottom:14,fontWeight:500,lineHeight:1.45}}>
           {error}
         </div>
       )}
@@ -139,7 +139,7 @@ function LoginScreen({onLogin}){
       {/* ── Actions ── */}
       <div style={{display:"flex",gap:10,flexDirection:"column"}}>
         <button onClick={()=>doLogin(username,"login")} disabled={loading||!username.trim()}
-          style={{padding:"14px 18px",borderRadius:12,border:"none",background:loading||!username.trim()?"rgba(118,118,128,0.18)":"#0A84FF",color:loading||!username.trim()?"rgba(235,235,245,0.28)":"#fff",fontSize:16,fontWeight:600,cursor:loading?"wait":"pointer",letterSpacing:-.1,transition:"background .15s, transform .12s",boxShadow:loading||!username.trim()?"none":"0 4px 16px rgba(10,132,255,0.22)"}}>
+          style={{padding:"14px 18px",borderRadius:12,border:"none",background:loading||!username.trim()?"rgba(118,118,128,0.18)":"#FFFFFF",color:loading||!username.trim()?"rgba(235,235,245,0.28)":"#fff",fontSize:16,fontWeight:600,cursor:loading?"wait":"pointer",letterSpacing:-.1,transition:"background .15s, transform .12s",boxShadow:loading||!username.trim()?"none":"0 4px 16px rgba(255,255,255,0.22)"}}>
           {loading?"Caricamento…":"Accedi"}
         </button>
         <button onClick={()=>doLogin(username,"create")} disabled={loading||!username.trim()}
@@ -159,7 +159,7 @@ function LoginScreen({onLogin}){
 function LoadingScreen({label}){
   return(
     <div style={{minHeight:"100vh",background:"#000000",color:"#fff",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:16}}>
-      <div style={{width:36,height:36,border:"2.5px solid rgba(10,132,255,0.14)",borderTopColor:"#0A84FF",borderRadius:"50%",animation:"spin 0.75s linear infinite"}}/>
+      <div style={{width:36,height:36,border:"2.5px solid rgba(255,255,255,0.14)",borderTopColor:"#FFFFFF",borderRadius:"50%",animation:"spin 0.75s linear infinite"}}/>
       <div style={{fontSize:13,color:"rgba(235,235,245,0.42)",fontWeight:500,letterSpacing:.2}}>{label||"Caricamento…"}</div>
     </div>
   );
@@ -180,7 +180,7 @@ function OfflineBanner(){
   },[]);
   if(online)return null;
   return(
-    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:10000,background:"rgba(10,132,255,0.96)",color:"#fff",padding:"8px 16px",fontSize:12,fontWeight:600,textAlign:"center",letterSpacing:.2,boxShadow:"0 1px 0 rgba(0,0,0,0.3)"}}>
+    <div style={{position:"fixed",top:0,left:0,right:0,zIndex:10000,background:"rgba(255,255,255,0.96)",color:"#fff",padding:"8px 16px",fontSize:12,fontWeight:600,textAlign:"center",letterSpacing:.2,boxShadow:"0 1px 0 rgba(0,0,0,0.3)"}}>
       Sei offline — i dati non si stanno sincronizzando
     </div>
   );

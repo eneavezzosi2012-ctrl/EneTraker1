@@ -1,11 +1,11 @@
 // ── STATISTICHE: helper condivisi ─────────────────────────────────────────
 const STAT_KEYS=["Punti","Assist","Rimbalzi","Palle rubate","Falli"];
 const STAT_COLORS={
-  "Punti":"#0A84FF",
-  "Assist":"#4db8ff",
-  "Rimbalzi":"#1EC96A",
-  "Palle rubate":"#E09818",
-  "Falli":"#8055CC",
+  "Punti":"#FFFFFF",
+  "Assist":"#D4D4D8",
+  "Rimbalzi":"#E4E4E7",
+  "Palle rubate":"#A1A1AA",
+  "Falli":"#9F9FA8",
 };
 const MONTHS_IT=["Gennaio","Febbraio","Marzo","Aprile","Maggio","Giugno","Luglio","Agosto","Settembre","Ottobre","Novembre","Dicembre"];
 
@@ -66,13 +66,13 @@ function StatsAndamento({dailyLogs,td}){
             const hasData=d.score!==null;
             const h=hasData?Math.max(2,d.score*innerH):3;
             const y=padT+innerH-h;
-            const fill=d.paused?"rgba(120,120,140,0.4)":hasData?scoreToColor(d.score):"rgba(255,255,255,0.08)";
+            const fill=d.paused?"rgba(140,140,140,0.4)":hasData?scoreToColor(d.score):"rgba(255,255,255,0.08)";
             const isToday=d.date===td;
             return(
               <g key={d.date}>
                 <rect x={x} y={y} width={barW} height={h} rx="2" fill={fill} opacity={d.paused?0.55:hasData?(isToday?1:0.92):0.5}/>
                 {(i%5===0||i===days.length-1)&&(
-                  <text x={x+barW/2} y={H-6} textAnchor="middle" fontSize="9" fill={isToday?"#0A84FF":"rgba(255,255,255,0.4)"} fontWeight={isToday?700:500}>
+                  <text x={x+barW/2} y={H-6} textAnchor="middle" fontSize="9" fill={isToday?"#FFFFFF":"rgba(255,255,255,0.4)"} fontWeight={isToday?700:500}>
                     {isToday?"oggi":d.dom}
                   </text>
                 )}
@@ -115,7 +115,7 @@ function StatsWeekCompare({dailyLogs,td}){
     <div style={{background:"rgba(255,255,255,0.03)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:14,padding:14,marginBottom:11}}>
       <div style={{fontSize:12,fontWeight:700,color:"rgba(255,255,255,0.85)",marginBottom:8}}>📊 Questa settimana vs scorsa</div>
       <div style={{display:"flex",alignItems:"center",gap:11,marginBottom:10,fontSize:10,color:"rgba(255,255,255,0.55)"}}>
-        <span><span style={{display:"inline-block",width:8,height:8,borderRadius:"50%",background:"#0A84FF",marginRight:5,verticalAlign:"middle"}}/>Questa settimana</span>
+        <span><span style={{display:"inline-block",width:8,height:8,borderRadius:"50%",background:"#FFFFFF",marginRight:5,verticalAlign:"middle"}}/>Questa settimana</span>
         <span><span style={{display:"inline-block",width:8,height:8,borderRadius:"50%",background:"rgba(255,255,255,0.35)",marginRight:5,verticalAlign:"middle"}}/>Scorsa</span>
       </div>
       <div style={{overflowX:"auto",WebkitOverflowScrolling:"touch"}}>
@@ -129,7 +129,7 @@ function StatsWeekCompare({dailyLogs,td}){
             const xLast=cx+1.5;
             return(
               <g key={it.i}>
-                {hThis>0&&<rect x={xThis} y={padT+innerH-hThis} width={barW} height={hThis} rx="2" fill="#0A84FF"/>}
+                {hThis>0&&<rect x={xThis} y={padT+innerH-hThis} width={barW} height={hThis} rx="2" fill="#FFFFFF"/>}
                 {hLast>0&&<rect x={xLast} y={padT+innerH-hLast} width={barW} height={hLast} rx="2" fill="rgba(255,255,255,0.22)"/>}
                 <text x={cx} y={H-7} textAnchor="middle" fontSize="11" fill={it.i===dowToday?"#fff":"rgba(255,255,255,0.4)"} fontWeight={it.i===dowToday?700:500}>{it.letter}</text>
               </g>
@@ -267,13 +267,13 @@ function StatsRecords(){
       </div>
       {banner&&(
         <div style={{
-          background:banner.type==="end"?"linear-gradient(135deg,rgba(10,132,255,0.13),rgba(10,132,255,0.06))":"linear-gradient(135deg,rgba(0,218,120,0.13),rgba(77,184,255,0.05))",
-          border:"1px solid "+(banner.type==="end"?"rgba(10,132,255,0.32)":"rgba(0,218,120,0.28)"),
+          background:banner.type==="end"?"linear-gradient(135deg,rgba(255,255,255,0.13),rgba(255,255,255,0.06))":"linear-gradient(135deg,rgba(228,228,231,0.13),rgba(77,184,255,0.05))",
+          border:"1px solid "+(banner.type==="end"?"rgba(255,255,255,0.32)":"rgba(228,228,231,0.28)"),
           borderRadius:12,padding:"11px 12px",marginBottom:11,
           display:"flex",alignItems:"flex-start",gap:9
         }}>
           <div style={{flex:1,minWidth:0}}>
-            <div style={{fontSize:12,fontWeight:700,color:banner.type==="end"?"#0A84FF":"#1EC96A",marginBottom:3}}>{banner.title}</div>
+            <div style={{fontSize:12,fontWeight:700,color:banner.type==="end"?"#FFFFFF":"#E4E4E7",marginBottom:3}}>{banner.title}</div>
             <div style={{fontSize:11,color:"rgba(255,255,255,0.7)",lineHeight:1.4}}>{banner.text}</div>
           </div>
           <button onClick={()=>setBannerDismissed(p=>({...p,[banner.key]:true}))}
@@ -292,18 +292,18 @@ function StatsRecords(){
           </div>
           {isCurrent?(
             <input type="number" value={r.value||""} onChange={e=>updateValue(r.id,e.target.value)} placeholder="0"
-              style={{width:70,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,color:"#0A84FF",padding:"6px 8px",fontSize:13,fontWeight:700,outline:"none",textAlign:"right",fontFamily:"var(--font-mono)"}}/>
+              style={{width:70,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:8,color:"#FFFFFF",padding:"6px 8px",fontSize:13,fontWeight:700,outline:"none",textAlign:"right",fontFamily:"var(--font-mono)"}}/>
           ):(
-            <div style={{fontSize:14,fontWeight:700,color:r.active?"#0A84FF":"rgba(255,255,255,0.4)",fontFamily:"var(--font-mono)",minWidth:50,textAlign:"right"}}>{r.value||0}</div>
+            <div style={{fontSize:14,fontWeight:700,color:r.active?"#FFFFFF":"rgba(255,255,255,0.4)",fontFamily:"var(--font-mono)",minWidth:50,textAlign:"right"}}>{r.value||0}</div>
           )}
           {isCurrent&&(
             <>
               <button onClick={()=>toggleActive(r.id)} title={r.active?"Disattiva":"Attiva"}
-                style={{background:r.active?"rgba(0,218,120,0.1)":"rgba(255,255,255,0.04)",border:"1px solid "+(r.active?"rgba(0,218,120,0.25)":"rgba(255,255,255,0.07)"),borderRadius:7,color:r.active?"#1EC96A":"rgba(255,255,255,0.3)",fontSize:12,padding:"4px 7px",cursor:"pointer"}}>
+                style={{background:r.active?"rgba(228,228,231,0.1)":"rgba(255,255,255,0.04)",border:"1px solid "+(r.active?"rgba(228,228,231,0.25)":"rgba(255,255,255,0.07)"),borderRadius:7,color:r.active?"#E4E4E7":"rgba(255,255,255,0.3)",fontSize:12,padding:"4px 7px",cursor:"pointer"}}>
                 {r.active?"👁":"🚫"}
               </button>
               <button onClick={()=>removeRecord(r.id)} title="Elimina"
-                style={{background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.15)",borderRadius:7,color:"rgba(10,132,255,0.6)",fontSize:11,padding:"4px 7px",cursor:"pointer"}}>✕</button>
+                style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.15)",borderRadius:7,color:"rgba(255,255,255,0.6)",fontSize:11,padding:"4px 7px",cursor:"pointer"}}>✕</button>
             </>
           )}
         </div>
@@ -314,11 +314,11 @@ function StatsRecords(){
             onKeyDown={e=>e.key==="Enter"&&addRecord()}
             placeholder="es. Max push-ups"
             style={{flex:1,background:"rgba(255,255,255,0.05)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:9,color:"#fff",padding:"8px 11px",fontSize:13,outline:"none"}}/>
-          <button onClick={addRecord} style={{background:"linear-gradient(135deg,#0A7AE8,#0A84FF)",border:"none",borderRadius:9,color:"#fff",fontSize:12,fontWeight:700,padding:"8px 14px",cursor:"pointer"}}>OK</button>
+          <button onClick={addRecord} style={{background:"linear-gradient(135deg,#E4E4E7,#FFFFFF)",border:"none",borderRadius:9,color:"#fff",fontSize:12,fontWeight:700,padding:"8px 14px",cursor:"pointer"}}>OK</button>
           <button onClick={()=>{setAdding(false);setNewLabel("");}} style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.08)",borderRadius:9,color:"rgba(255,255,255,0.45)",fontSize:12,padding:"8px 11px",cursor:"pointer"}}>✕</button>
         </div>
       ):(
-        <button onClick={()=>setAdding(true)} style={{marginTop:10,width:"100%",background:"rgba(10,132,255,0.05)",border:"1px dashed rgba(10,132,255,0.25)",borderRadius:9,color:"#0A84FF",fontSize:12,fontWeight:600,padding:"8px",cursor:"pointer"}}>+ Aggiungi record</button>
+        <button onClick={()=>setAdding(true)} style={{marginTop:10,width:"100%",background:"rgba(255,255,255,0.05)",border:"1px dashed rgba(255,255,255,0.25)",borderRadius:9,color:"#FFFFFF",fontSize:12,fontWeight:600,padding:"8px",cursor:"pointer"}}>+ Aggiungi record</button>
       ))}
     </div>
   );
@@ -459,15 +459,15 @@ function StatsPartite(){
 
         {/* tabella o banner skipped */}
         {cur&&cur.skipped?(
-          <div style={{background:"rgba(255,204,0,0.06)",border:"1px solid rgba(255,204,0,0.22)",borderRadius:10,padding:"14px 12px",textAlign:"center",fontSize:13,color:"#E09818",fontWeight:600,marginBottom:14}}>⏭ Partita saltata</div>
+          <div style={{background:"rgba(161,161,170,0.06)",border:"1px solid rgba(161,161,170,0.22)",borderRadius:10,padding:"14px 12px",textAlign:"center",fontSize:13,color:"#A1A1AA",fontWeight:600,marginBottom:14}}>⏭ Partita saltata</div>
         ):cur?(
           <div style={{marginBottom:14}}>
             {cur.score&&typeof cur.score.mia==="number"&&typeof cur.score.avv==="number"&&(()=>{
               const win=cur.score.mia>cur.score.avv;
               const draw=cur.score.mia===cur.score.avv;
-              const color=draw?"#E09818":(win?"#1EC96A":"#0A84FF");
-              const bg=draw?"rgba(255,204,0,0.07)":(win?"rgba(0,218,120,0.08)":"rgba(10,132,255,0.07)");
-              const border=draw?"rgba(255,204,0,0.22)":(win?"rgba(0,218,120,0.25)":"rgba(10,132,255,0.22)");
+              const color=draw?"#A1A1AA":(win?"#E4E4E7":"#FFFFFF");
+              const bg=draw?"rgba(161,161,170,0.07)":(win?"rgba(228,228,231,0.08)":"rgba(255,255,255,0.07)");
+              const border=draw?"rgba(161,161,170,0.22)":(win?"rgba(228,228,231,0.25)":"rgba(255,255,255,0.22)");
               return(
                 <div style={{background:bg,border:"1px solid "+border,borderRadius:10,padding:"10px 12px",marginBottom:10,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
                   <span style={{fontSize:11,color:color,fontWeight:700,letterSpacing:.3}}>{draw?"= PAREGGIO":(win?"✓ VITTORIA":"✗ SCONFITTA")}</span>
@@ -495,7 +495,7 @@ function StatsPartite(){
           <div style={{display:"flex",gap:5,marginBottom:10,flexWrap:"wrap"}}>
             {["Ultima vs Penultima","Ultima vs Prima","Media"].map(m=>(
               <button key={m} onClick={()=>setChartMode(m)}
-                style={{flex:1,minWidth:80,padding:"6px 6px",borderRadius:9,fontSize:10,fontWeight:600,cursor:"pointer",border:"1px solid "+(chartMode===m?"rgba(10,132,255,0.45)":"rgba(255,255,255,0.07)"),background:chartMode===m?"rgba(10,132,255,0.12)":"rgba(255,255,255,0.03)",color:chartMode===m?"#0A84FF":"rgba(255,255,255,0.4)"}}>{m}</button>
+                style={{flex:1,minWidth:80,padding:"6px 6px",borderRadius:9,fontSize:10,fontWeight:600,cursor:"pointer",border:"1px solid "+(chartMode===m?"rgba(255,255,255,0.45)":"rgba(255,255,255,0.07)"),background:chartMode===m?"rgba(255,255,255,0.12)":"rgba(255,255,255,0.03)",color:chartMode===m?"#FFFFFF":"rgba(255,255,255,0.4)"}}>{m}</button>
             ))}
           </div>
           {/* Legenda */}
@@ -569,12 +569,12 @@ function StatsPartite(){
             🏁 Nuova stagione
           </button>
         ):(
-          <div style={{background:"rgba(10,132,255,0.06)",border:"1px solid rgba(10,132,255,0.22)",borderRadius:10,padding:11}}>
+          <div style={{background:"rgba(255,255,255,0.06)",border:"1px solid rgba(255,255,255,0.22)",borderRadius:10,padding:11}}>
             <div style={{fontSize:12,color:"rgba(255,255,255,0.85)",marginBottom:8,fontWeight:600}}>Sei sicuro? La stagione attuale verrà archiviata.</div>
             <div style={{fontSize:10,color:"rgba(255,255,255,0.4)",marginBottom:10,lineHeight:1.5}}>Le partite vecchie restano navigabili, ma le medie e il grafico si resettano sulla nuova stagione.</div>
             <div style={{display:"flex",gap:7}}>
               <button onClick={()=>setSeasonConfirm(false)} style={{flex:1,padding:"8px",borderRadius:8,border:"1px solid rgba(255,255,255,0.08)",background:"rgba(255,255,255,0.04)",color:"rgba(255,255,255,0.55)",fontSize:11,cursor:"pointer",fontWeight:600}}>Annulla</button>
-              <button onClick={newSeason} style={{flex:1,padding:"8px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#0A7AE8,#0A84FF)",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>Conferma</button>
+              <button onClick={newSeason} style={{flex:1,padding:"8px",borderRadius:8,border:"none",background:"linear-gradient(135deg,#E4E4E7,#FFFFFF)",color:"#fff",fontSize:11,fontWeight:700,cursor:"pointer"}}>Conferma</button>
             </div>
           </div>
         )}

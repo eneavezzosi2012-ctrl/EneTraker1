@@ -237,10 +237,10 @@ function App(){
           <div style={{fontSize:11,color:"rgba(235,235,245,0.3)",marginTop:4,fontWeight:500,letterSpacing:.2,textTransform:"capitalize"}}>{new Date().toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"})}</div>
         </div>
         <div style={{display:"flex",gap:8,alignItems:"center"}}>
-          <button onClick={()=>{haptic.light();setEditMode(!editMode);}} aria-label={editMode?"Chiudi impostazioni":"Apri impostazioni"} style={{background:editMode?"rgba(10,132,255,0.14)":"rgba(255,255,255,0.06)",border:`1px solid ${editMode?"rgba(10,132,255,0.3)":"rgba(255,255,255,0.08)"}`,borderRadius:9,padding:"7px 10px",cursor:"pointer",color:editMode?"#0A84FF":"rgba(235,235,245,0.35)",fontSize:15,fontWeight:600,transition:"all .22s var(--ios)",fontFamily:"var(--font-sys)"}}>⚙</button>
+          <button onClick={()=>{haptic.light();setEditMode(!editMode);}} aria-label={editMode?"Chiudi impostazioni":"Apri impostazioni"} style={{background:editMode?"rgba(255,255,255,0.14)":"rgba(255,255,255,0.06)",border:`1px solid ${editMode?"rgba(255,255,255,0.3)":"rgba(255,255,255,0.08)"}`,borderRadius:9,padding:"7px 10px",cursor:"pointer",color:editMode?"#FFFFFF":"rgba(235,235,245,0.35)",fontSize:15,fontWeight:600,transition:"all .22s var(--ios)",fontFamily:"var(--font-sys)"}}>⚙</button>
           <div style={{background:"rgba(255,255,255,0.04)",border:"1px solid rgba(255,255,255,0.07)",borderRadius:10,padding:"6px 12px",textAlign:"center",minWidth:52}}>
             <div style={{fontSize:9,color:"rgba(235,235,245,0.3)",fontWeight:700,letterSpacing:.8,textTransform:"uppercase",fontFamily:"var(--font-mono)"}}>STREAK</div>
-            <div style={{fontSize:17,color:"#0A84FF",fontWeight:700,lineHeight:1.2,fontFamily:"var(--font-mono)",letterSpacing:-.5}}>{streak}<span style={{fontSize:10,color:"rgba(235,235,245,0.3)",fontWeight:500,marginLeft:1}}>d</span></div>
+            <div style={{fontSize:17,color:"#FFFFFF",fontWeight:700,lineHeight:1.2,fontFamily:"var(--font-mono)",letterSpacing:-.5}}>{streak}<span style={{fontSize:10,color:"rgba(235,235,245,0.3)",fontWeight:500,marginLeft:1}}>d</span></div>
           </div>
         </div>
       </div>

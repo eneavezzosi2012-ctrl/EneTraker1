@@ -23,6 +23,18 @@ function fmtNoteDate(ts){
   return d.toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit",year:"2-digit"});
 }
 
+// Se il titolo è vuoto, usa la prima riga del corpo come titolo automatico
+// (comportamento nativo di Apple Notes)
+function deriveTitle(title,body){
+  const t=(title||"").trim();
+  if(t)return t;
+  const plain=stripHtml(body||"");
+  if(!plain)return "Nuova nota";
+  const firstLine=plain.split("\n")[0].trim();
+  if(!firstLine)return "Nuova nota";
+  return firstLine.length>60?firstLine.slice(0,60)+"…":firstLine;
+}
+
 // Anteprima note nella Home (massimo 3, pinnate in cima)
 function NoteCard({notes,setNotes}){
   const [editor,setEditor]=useState(null);
@@ -39,15 +51,15 @@ function NoteCard({notes,setNotes}){
   function openExisting(n){haptic.light();setEditor({...n});}
   function saveEditor(){
     if(!editor)return;
-    const trimmedTitle=(editor.title||"").trim();
     const cleanBody=(editor.body||"").trim();
-    if(!trimmedTitle&&!stripHtml(cleanBody)){setEditor(null);return;}
+    if(!(editor.title||"").trim()&&!stripHtml(cleanBody)){setEditor(null);return;}
+    const finalTitle=deriveTitle(editor.title,cleanBody);
     haptic.success();
     const ts=Date.now();
     if(editor.id){
-      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:trimmedTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
+      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:finalTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
     } else {
-      setNotes(prev=>[{id:genId(),title:trimmedTitle||"Nuova nota",body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
+      setNotes(prev=>[{id:genId(),title:finalTitle,body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
     }
     setEditor(null);
   }
@@ -119,15 +131,15 @@ function NotesArchive({notes,setNotes}){
   function openExisting(n){haptic.light();setEditor({...n});}
   function saveEditor(){
     if(!editor)return;
-    const trimmedTitle=(editor.title||"").trim();
     const cleanBody=(editor.body||"").trim();
-    if(!trimmedTitle&&!stripHtml(cleanBody)){setEditor(null);return;}
+    if(!(editor.title||"").trim()&&!stripHtml(cleanBody)){setEditor(null);return;}
+    const finalTitle=deriveTitle(editor.title,cleanBody);
     haptic.success();
     const ts=Date.now();
     if(editor.id){
-      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:trimmedTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
+      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:finalTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
     } else {
-      setNotes(prev=>[{id:genId(),title:trimmedTitle||"Nuova nota",body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
+      setNotes(prev=>[{id:genId(),title:finalTitle,body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
     }
     setEditor(null);
   }
@@ -187,6 +199,22 @@ function NotesArchive({notes,setNotes}){
 function NoteEditor({editor,setEditor,onSave,onDelete}){
   const bodyRef=useRef(null);
   const titleRef=useRef(null);
+  const [showFormat,setShowFormat]=useState(false);
+  const [activeFmt,setActiveFmt]=useState({bold:false,italic:false,underline:false,strike:false,block:"P"});
+
+  // Legge lo stato di formattazione nel punto del cursore, per evidenziare i pulsanti attivi
+  function refreshActiveFmt(){
+    try{
+      const block=(document.queryCommandValue("formatBlock")||"P").toUpperCase();
+      setActiveFmt({
+        bold:document.queryCommandState("bold"),
+        italic:document.queryCommandState("italic"),
+        underline:document.queryCommandState("underline"),
+        strike:document.queryCommandState("strikeThrough"),
+        block,
+      });
+    }catch(e){/* queryCommandState non disponibile: ignora */}
+  }
 
   // Resetta il body e sincronizza il placeholder quando si apre una nota diversa
   useEffect(()=>{
@@ -258,6 +286,7 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
     }
     try{document.execCommand(cmd,false,val);}catch(e){console.warn("execCommand failed:",cmd,e);}
     syncBody();
+    refreshActiveFmt();
   }
   function syncBody(){
     if(!bodyRef.current)return;
@@ -266,32 +295,33 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
   }
   function insertChecklist(){
     haptic.light();
-    bodyRef.current&&bodyRef.current.focus();
-    try{document.execCommand("insertText",false,"☐ ");}catch{}
+    if(!bodyRef.current)return;
+    bodyRef.current.focus();
+    const sel=window.getSelection();
+    if(!sel||sel.rangeCount===0||!bodyRef.current.contains(sel.anchorNode)){
+      const r=document.createRange();
+      r.selectNodeContents(bodyRef.current);
+      r.collapse(false);
+      if(sel){sel.removeAllRanges();sel.addRange(r);}
+    }
+    try{
+      // Inserisce un checkbox HTML reale (non più il carattere Unicode ☐)
+      document.execCommand("insertHTML",false,'<span class="note-checkbox" contenteditable="false"></span>&nbsp;');
+    }catch(e){console.warn("insertChecklist failed:",e);}
     syncBody();
   }
   function handleBodyClick(e){
-    // Tap su ☐ → diventa ☑ e viceversa
-    if(!bodyRef.current)return;
-    const range=document.caretRangeFromPoint?document.caretRangeFromPoint(e.clientX,e.clientY):null;
-    if(!range)return;
-    const node=range.startContainer;
-    if(node&&node.nodeType===3){
-      const txt=node.textContent;
-      const offset=range.startOffset;
-      for(let delta=-1;delta<=0;delta++){
-        const pos=offset+delta;
-        if(pos<0||pos>=txt.length)continue;
-        const ch=txt[pos];
-        if(ch==="☐"||ch==="☑"){
-          haptic.success();
-          const newCh=ch==="☐"?"☑":"☐";
-          node.textContent=txt.slice(0,pos)+newCh+txt.slice(pos+1);
-          syncBody();
-          return;
-        }
-      }
+    // Tap su un .note-checkbox → toggla checked/unchecked
+    const cb=e.target.closest&&e.target.closest(".note-checkbox");
+    if(cb&&bodyRef.current&&bodyRef.current.contains(cb)){
+      haptic.success();
+      cb.classList.toggle("checked");
+      const line=cb.closest(".checklist-line");
+      if(line)line.classList.toggle("done",cb.classList.contains("checked"));
+      syncBody();
+      return;
     }
+    refreshActiveFmt();
   }
 
   function togglePin(){
@@ -317,7 +347,7 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
           <div style={{display:"flex",gap:8,alignItems:"center"}}>
             <button className={"note-hdr-btn icon icon-pin "+(editor.pinned?"pinned":"")} onClick={togglePin} title={editor.pinned?"Rimuovi pin":"Pin"} aria-label={editor.pinned?"Rimuovi pin":"Aggiungi pin"}></button>
             {editor.id&&<button className="note-hdr-btn icon danger icon-trash" onClick={async()=>{if(await window.__appConfirm("Eliminare questa nota?",{confirm:"Elimina",cancel:"Annulla"}))onDelete();}} aria-label="Elimina nota"></button>}
-            <button className="note-hdr-btn bold" onClick={onSave} aria-label="Salva nota">Fine</button>
+            <button className="note-hdr-btn bold" onClick={onSave} aria-label="Salva nota" title="Fine"></button>
           </div>
         </div>
 
@@ -347,20 +377,46 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
           onInput={syncBody}
           onBlur={syncBody}
           onClick={handleBodyClick}
+          onKeyUp={refreshActiveFmt}
         />
 
         {/* Toolbar fluttuante in basso stile iOS */}
         <div className="note-toolbar">
-          <button className="note-tb-btn title" type="button" onClick={()=>exec("formatBlock","H3")} title="Titolo" aria-label="Formato titolo">Aa</button>
+          <button className="note-tb-btn title" type="button" onClick={()=>{refreshActiveFmt();setShowFormat(true);haptic.light();}} title="Formato" aria-label="Apri menu formato">Aa</button>
           <div className="note-tb-divider"/>
-          <button className="note-tb-btn bold" type="button" onClick={()=>exec("bold")} title="Grassetto" aria-label="Grassetto">B</button>
-          <button className="note-tb-btn italic" type="button" onClick={()=>exec("italic")} title="Corsivo" aria-label="Corsivo">I</button>
-          <button className="note-tb-btn under" type="button" onClick={()=>exec("underline")} title="Sottolineato" aria-label="Sottolineato">U</button>
-          <div className="note-tb-divider"/>
-          <button className="note-tb-btn" type="button" onClick={()=>exec("insertUnorderedList")} title="Elenco puntato" aria-label="Elenco puntato">•</button>
-          <button className="note-tb-btn" type="button" onClick={()=>exec("insertOrderedList")} title="Elenco numerato" aria-label="Elenco numerato">1.</button>
-          <button className="note-tb-btn" type="button" onClick={insertChecklist} title="Lista di controllo (tocca ☐ per spuntare)" aria-label="Lista di controllo">☐</button>
+          <button className="note-tb-btn" type="button" onClick={insertChecklist} title="Lista di controllo" aria-label="Lista di controllo"><span className="tb-ico checklist"></span></button>
+          <button className="note-tb-btn" type="button" onClick={()=>exec("insertHTML",'<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></table>')} title="Tabella" aria-label="Inserisci tabella"><span className="tb-ico table"></span></button>
+          <button className="note-tb-btn" type="button" title="Allegato" aria-label="Aggiungi allegato"><span className="tb-ico attach"></span></button>
+          <button className="note-tb-btn" type="button" title="Markup" aria-label="Disegna con il pennarello"><span className="tb-ico markup"></span></button>
         </div>
+
+        {/* Menu Formato — pillole Titolo/Sottointestazione/Corpo + B/I/U/S */}
+        {showFormat&&(
+          <div className="note-format-overlay" onClick={()=>setShowFormat(false)}>
+            <div className="note-format-sheet" onClick={e=>e.stopPropagation()}>
+              <div className="note-format-hdr">
+                <div className="note-format-title">Formato</div>
+                <button className="note-format-close" onClick={()=>setShowFormat(false)} aria-label="Chiudi formato"></button>
+              </div>
+              <div className="note-format-row" role="group" aria-label="Stile testo">
+                <button className={"note-format-pill heading"+(activeFmt.block==="H1"?" selected":"")} onClick={()=>exec("formatBlock","H1")}>Titolo</button>
+                <button className={"note-format-pill subheading"+(activeFmt.block==="H3"?" selected":"")} onClick={()=>exec("formatBlock","H3")}>Sottointestazione</button>
+                <button className={"note-format-pill"+(activeFmt.block==="P"||activeFmt.block==="DIV"?" selected":"")} onClick={()=>exec("formatBlock","P")}>Corpo</button>
+              </div>
+              <div className="note-format-icons">
+                <button className={"note-format-icon-btn"+(activeFmt.bold?" selected":"")} onClick={()=>exec("bold")} aria-label="Grassetto">B</button>
+                <button className={"note-format-icon-btn italic"+(activeFmt.italic?" selected":"")} onClick={()=>exec("italic")} aria-label="Corsivo">I</button>
+                <button className={"note-format-icon-btn under"+(activeFmt.underline?" selected":"")} onClick={()=>exec("underline")} aria-label="Sottolineato">U</button>
+                <button className={"note-format-icon-btn strike"+(activeFmt.strike?" selected":"")} onClick={()=>exec("strikeThrough")} aria-label="Barrato">S</button>
+              </div>
+              <div className="note-format-list-row">
+                <button className="note-tb-btn" type="button" onClick={()=>exec("insertUnorderedList")} title="Elenco puntato" aria-label="Elenco puntato">•</button>
+                <button className="note-tb-btn" type="button" onClick={()=>exec("insertOrderedList")} title="Elenco numerato" aria-label="Elenco numerato">1.</button>
+                <button className="note-tb-btn" type="button" onClick={insertChecklist} title="Lista di controllo" aria-label="Lista di controllo"><span className="tb-ico checklist"></span></button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

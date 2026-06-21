@@ -1,8 +1,15 @@
+// ═══════════════════════════════════════════════════════════════════
+// NOTE — clone monocromatico di Apple Notes (editor full-screen iOS)
+// ═══════════════════════════════════════════════════════════════════
+
 function stripHtml(html){
   if(!html)return "";
   const tmp=document.createElement("div");
   tmp.innerHTML=html;
   return (tmp.textContent||tmp.innerText||"").trim();
+}
+function escapeHtml(s){
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
 }
 function fmtNoteDate(ts){
   if(!ts)return "";
@@ -23,16 +30,63 @@ function fmtNoteDate(ts){
   return d.toLocaleDateString("it-IT",{day:"2-digit",month:"2-digit",year:"2-digit"});
 }
 
-// Se il titolo è vuoto, usa la prima riga del corpo come titolo automatico
-// (comportamento nativo di Apple Notes)
-function deriveTitle(title,body){
-  const t=(title||"").trim();
-  if(t)return t;
-  const plain=stripHtml(body||"");
-  if(!plain)return "Nuova nota";
-  const firstLine=plain.split("\n")[0].trim();
-  if(!firstLine)return "Nuova nota";
-  return firstLine.length>60?firstLine.slice(0,60)+"…":firstLine;
+// Riga "vuota" del contentEditable (usata per mostrare/nascondere il placeholder):
+// una sola riga (div/p/h1-6) senza testo, oppure un singolo <br>.
+const NOTE_EMPTY_RE=/^(\s|<br\s*\/?>|<(div|p|h[1-6])>(\s|<br\s*\/?>)?<\/\2>)*$/i;
+function isContentEmpty(html){return NOTE_EMPTY_RE.test(html||"");}
+
+// La prima riga del contentEditable = titolo (formattato in automatico via CSS).
+// Tutto il resto = corpo. Round-trip compatibile con {id,title,body,pinned,...}.
+function buildInitialHtml(note){
+  const t=note&&note.title?escapeHtml(note.title):"";
+  const titleLine=t?("<div>"+t+"</div>"):"<div><br></div>";
+  return titleLine+((note&&note.body)||"");
+}
+function splitEditorContent(root){
+  if(!root)return {title:"",body:""};
+  const first=root.firstChild;
+  const title=first?(first.textContent||"").replace(/\u00a0/g," ").trim():"";
+  const rest=document.createElement("div");
+  let node=first?first.nextSibling:null;
+  while(node){
+    rest.appendChild(node.cloneNode(true));
+    node=node.nextSibling;
+  }
+  return {title,body:rest.innerHTML};
+}
+
+// Stili di testo del pannello "Aa" (formatBlock)
+const TEXT_STYLES=[
+  {tag:"H1",label:"Titolo"},
+  {tag:"H2",label:"Intestazione"},
+  {tag:"H3",label:"Sottotitolo"},
+  {tag:"DIV",label:"Corpo"},
+  {tag:"PRE",label:"Monospazio"},
+];
+// Evidenziatori — esclusivamente scale di grigio (nessun colore)
+const HILITES=[
+  {id:"h-white",bg:"rgb(255,255,255)",fg:"rgb(17,17,17)",label:"Bianco"},
+  {id:"h-light",bg:"rgb(178,178,182)",fg:"rgb(17,17,17)",label:"Grigio chiaro"},
+  {id:"h-mid",  bg:"rgb(110,110,115)",fg:"rgb(255,255,255)",label:"Grigio"},
+  {id:"h-dark", bg:"rgb(58,58,60)",   fg:"rgb(255,255,255)",label:"Grigio scuro"},
+];
+
+// Riga di anteprima condivisa tra widget Home e archivio Impostazioni
+function NoteRow({n,onClick}){
+  const txt=stripHtml(n.body);
+  const snippet=txt.length>140?txt.slice(0,140)+"…":txt;
+  return(
+    <button onClick={onClick} className={"note-row"+(n.pinned?" pinned":"")}>
+      <div className="note-icon"></div>
+      <div style={{flex:1,minWidth:0}}>
+        <div className="note-title">{n.title||"Senza titolo"}</div>
+        <div className="note-meta-line">
+          <span className="note-meta">{fmtNoteDate(n.updatedAt)}</span>
+          {snippet&&<span className="note-snippet"> {snippet}</span>}
+        </div>
+      </div>
+    </button>
+  );
 }
 
 // Anteprima note nella Home (massimo 3, pinnate in cima)
@@ -51,15 +105,15 @@ function NoteCard({notes,setNotes}){
   function openExisting(n){haptic.light();setEditor({...n});}
   function saveEditor(){
     if(!editor)return;
+    const trimmedTitle=(editor.title||"").trim();
     const cleanBody=(editor.body||"").trim();
-    if(!(editor.title||"").trim()&&!stripHtml(cleanBody)){setEditor(null);return;}
-    const finalTitle=deriveTitle(editor.title,cleanBody);
+    if(!trimmedTitle&&!stripHtml(cleanBody)){setEditor(null);return;}
     haptic.success();
     const ts=Date.now();
     if(editor.id){
-      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:finalTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
+      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:trimmedTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
     } else {
-      setNotes(prev=>[{id:genId(),title:finalTitle,body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
+      setNotes(prev=>[{id:genId(),title:trimmedTitle||"Nuova nota",body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
     }
     setEditor(null);
   }
@@ -68,21 +122,6 @@ function NoteCard({notes,setNotes}){
     haptic.warn();
     setNotes(prev=>prev.filter(n=>n.id!==editor.id));
     setEditor(null);
-  }
-
-  function renderRow(n){
-    const txt=stripHtml(n.body);
-    const snippet=txt.length>120?txt.slice(0,120)+"…":txt;
-    return(
-      <button key={n.id} onClick={()=>openExisting(n)} className={"note-row"+(n.pinned?" pinned":"")}>
-        <div className="note-icon"></div>
-        <div style={{flex:1,minWidth:0}}>
-          <div className="note-title">{n.title||"Senza titolo"}</div>
-          {snippet&&<div className="note-snippet">{snippet}</div>}
-          <div className="note-meta">{fmtNoteDate(n.updatedAt)}</div>
-        </div>
-      </button>
-    );
   }
 
   return(
@@ -97,18 +136,18 @@ function NoteCard({notes,setNotes}){
           Nessuna nota.<br/>Tocca <span style={{color:"#A1A1AA",fontWeight:700}}>＋ Nuova</span> per crearne una.
         </div>
       ):(<>
-        {pinned.length>0&&<div className="note-section-hdr"><span className="icon-pin-inline"></span> In alto</div>}
-        {pinned.map(renderRow)}
-        {others.length>0&&pinned.length>0&&<div className="note-section-hdr gray" style={{marginTop:10}}>Tutte</div>}
-        {others.map(renderRow)}
+        {pinned.length>0&&<div className="note-section-hdr"><span className="icon-pin-inline"></span> Fissate in alto</div>}
+        {pinned.map(n=><NoteRow key={n.id} n={n} onClick={()=>openExisting(n)}/>)}
+        {others.length>0&&pinned.length>0&&<div className="note-section-hdr gray" style={{marginTop:10}}>Tutte le note</div>}
+        {others.map(n=><NoteRow key={n.id} n={n} onClick={()=>openExisting(n)}/>)}
       </>)}
       {notes&&notes.length>preview.length&&<div style={{fontSize:11,color:"rgba(255,255,255,0.3)",textAlign:"center",marginTop:8,fontStyle:"italic"}}>+ altre {notes.length-preview.length} note in Impostazioni → Note</div>}
-      {editor&&<NoteEditor editor={editor} setEditor={setEditor} onSave={saveEditor} onDelete={deleteEditor}/>}
+      {editor&&<NoteEditorScreen editor={editor} setEditor={setEditor} onSave={saveEditor} onDelete={deleteEditor}/>}
     </div>
   );
 }
 
-// Archivio completo note (sezione Impostazioni) con ricerca full-text
+// Archivio completo note (sezione Impostazioni): lista Apple Notes-style con ricerca full-text
 function NotesArchive({notes,setNotes}){
   const [editor,setEditor]=useState(null);
   const [search,setSearch]=useState("");
@@ -131,15 +170,15 @@ function NotesArchive({notes,setNotes}){
   function openExisting(n){haptic.light();setEditor({...n});}
   function saveEditor(){
     if(!editor)return;
+    const trimmedTitle=(editor.title||"").trim();
     const cleanBody=(editor.body||"").trim();
-    if(!(editor.title||"").trim()&&!stripHtml(cleanBody)){setEditor(null);return;}
-    const finalTitle=deriveTitle(editor.title,cleanBody);
+    if(!trimmedTitle&&!stripHtml(cleanBody)){setEditor(null);return;}
     haptic.success();
     const ts=Date.now();
     if(editor.id){
-      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:finalTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
+      setNotes(prev=>prev.map(n=>n.id===editor.id?{...n,title:trimmedTitle,body:cleanBody,pinned:!!editor.pinned,updatedAt:ts}:n));
     } else {
-      setNotes(prev=>[{id:genId(),title:finalTitle,body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
+      setNotes(prev=>[{id:genId(),title:trimmedTitle||"Nuova nota",body:cleanBody,pinned:!!editor.pinned,createdAt:ts,updatedAt:ts},...prev]);
     }
     setEditor(null);
   }
@@ -150,82 +189,98 @@ function NotesArchive({notes,setNotes}){
     setEditor(null);
   }
 
-  function renderRow(n){
-    const txt=stripHtml(n.body);
-    const snippet=txt.length>140?txt.slice(0,140)+"…":txt;
-    return(
-      <button key={n.id} onClick={()=>openExisting(n)} className={"note-row"+(n.pinned?" pinned":"")}>
-        <div className="note-icon"></div>
-        <div style={{flex:1,minWidth:0}}>
-          <div className="note-title">{n.title||"Senza titolo"}</div>
-          {snippet&&<div className="note-snippet">{snippet}</div>}
-          <div className="note-meta">{fmtNoteDate(n.updatedAt)}</div>
-        </div>
-      </button>
-    );
-  }
-
   return(
-    <div>
-      {/* Search bar iOS-style */}
-      <div className="note-search">
-        <span className="icon-search"></span>
-        <input placeholder="Cerca nelle note" value={search} onChange={e=>setSearch(e.target.value)}/>
-        {search&&<button onClick={()=>setSearch("")} style={{background:"rgba(255,255,255,0.1)",border:"none",borderRadius:"50%",width:18,height:18,color:"rgba(255,255,255,0.5)",fontSize:12,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",lineHeight:1}}>✕</button>}
+    <div className="note-list-wrap">
+      {/* Search bar iOS-style, fissa in alto durante lo scroll */}
+      <div className="note-search-sticky">
+        <div className="note-search">
+          <span className="icon-search"></span>
+          <input
+            placeholder="Cerca nelle note"
+            value={search}
+            onChange={e=>setSearch(e.target.value)}
+            autoCorrect="off" autoCapitalize="off" spellCheck="false"
+          />
+          {search&&<button onClick={()=>setSearch("")} className="note-search-clear" aria-label="Cancella ricerca">✕</button>}
+        </div>
       </div>
-      <button onClick={openNew} className="btn-p" style={{width:"100%",padding:"12px",fontSize:14,marginBottom:14}}>＋ Nuova nota</button>
 
       {filtered.length===0?(
         <div style={{fontSize:13,color:"rgba(255,255,255,0.28)",textAlign:"center",padding:"36px 0",lineHeight:1.6}}>
           <div className="icon-note-empty" style={{marginBottom:8,opacity:.5}}></div>
-          {q?"Nessuna nota corrisponde alla ricerca.":"Nessuna nota. Tocca + Nuova per crearne una."}
+          {q?"Nessuna nota corrisponde alla ricerca.":"Nessuna nota. Tocca ＋ per crearne una."}
         </div>
       ):(<>
         {pinnedF.length>0&&<>
-          <div className="note-section-hdr"><span className="icon-pin-inline"></span> In alto · {pinnedF.length}</div>
-          {pinnedF.map(renderRow)}
+          <div className="note-section-hdr"><span className="icon-pin-inline"></span> Fissate in alto · {pinnedF.length}</div>
+          {pinnedF.map(n=><NoteRow key={n.id} n={n} onClick={()=>openExisting(n)}/>)}
         </>}
         {otherF.length>0&&<>
-          {pinnedF.length>0&&<div className="note-section-hdr gray" style={{marginTop:14}}>Tutte · {otherF.length}</div>}
-          {otherF.map(renderRow)}
+          <div className="note-section-hdr gray" style={{marginTop:pinnedF.length>0?14:0}}>Tutte le note · {otherF.length}</div>
+          {otherF.map(n=><NoteRow key={n.id} n={n} onClick={()=>openExisting(n)}/>)}
         </>}
       </>)}
-      {editor&&<NoteEditor editor={editor} setEditor={setEditor} onSave={saveEditor} onDelete={deleteEditor}/>}
+
+      {/* Tasto "Nuova Nota" — cerchio fluttuante sempre visibile */}
+      <div className="note-fab-wrap">
+        <button className="note-fab" onClick={openNew} aria-label="Nuova nota">
+          <span className="icon-edit"></span>
+        </button>
+      </div>
+
+      {editor&&<NoteEditorScreen editor={editor} setEditor={setEditor} onSave={saveEditor} onDelete={deleteEditor}/>}
     </div>
   );
 }
 
-// Editor note full-screen (sheet iOS-style con toolbar flottante)
-function NoteEditor({editor,setEditor,onSave,onDelete}){
+// Editor note full-screen (vera schermata, stile navigazione a stack iOS — non un bottom sheet)
+function NoteEditorScreen({editor,setEditor,onSave,onDelete}){
   const bodyRef=useRef(null);
-  const titleRef=useRef(null);
-  const [showFormat,setShowFormat]=useState(false);
-  const [activeFmt,setActiveFmt]=useState({bold:false,italic:false,underline:false,strike:false,block:"P"});
+  const screenRef=useRef(null);
+  const moreRef=useRef(null);
+  const [keyboardOpen,setKeyboardOpen]=useState(false);
+  const [panelOpen,setPanelOpen]=useState(false);
+  const [moreOpen,setMoreOpen]=useState(false);
+  const [fmt,setFmt]=useState({bold:false,italic:false,underline:false,strike:false,ul:false,ol:false,block:"DIV"});
 
-  // Legge lo stato di formattazione nel punto del cursore, per evidenziare i pulsanti attivi
-  function refreshActiveFmt(){
+  function updateEmptyClass(){
+    const root=bodyRef.current;
+    if(!root)return;
+    root.classList.toggle("is-empty",isContentEmpty(root.innerHTML));
+  }
+  function refreshFmtState(){
     try{
-      const block=(document.queryCommandValue("formatBlock")||"P").toUpperCase();
-      setActiveFmt({
+      setFmt({
         bold:document.queryCommandState("bold"),
         italic:document.queryCommandState("italic"),
         underline:document.queryCommandState("underline"),
         strike:document.queryCommandState("strikeThrough"),
-        block,
+        ul:document.queryCommandState("insertUnorderedList"),
+        ol:document.queryCommandState("insertOrderedList"),
+        block:(document.queryCommandValue("formatBlock")||"").toUpperCase(),
       });
-    }catch(e){/* queryCommandState non disponibile: ignora */}
+    }catch(e){}
   }
 
-  // Resetta il body e sincronizza il placeholder quando si apre una nota diversa
+  // Inizializza il contenuto (1a riga = titolo, auto-formattata via CSS) e porta il focus alla fine
   useEffect(()=>{
-    if(bodyRef.current&&typeof editor.body==="string"){
-      bodyRef.current.innerHTML=editor.body;
-      updateEmptyClass();
-    }
-    // Auto-focus sul titolo solo per le note nuove
-    if(!editor.id&&!editor.title&&titleRef.current){
-      setTimeout(()=>titleRef.current&&titleRef.current.focus(),350);
-    }
+    const root=bodyRef.current;
+    if(!root)return;
+    try{document.execCommand("defaultParagraphSeparator",false,"div");}catch(e){}
+    root.innerHTML=buildInitialHtml(editor);
+    updateEmptyClass();
+    const t=setTimeout(()=>{
+      const r2=bodyRef.current;
+      if(!r2)return;
+      r2.focus();
+      const r=document.createRange();
+      r.selectNodeContents(r2);
+      r.collapse(false);
+      const sel=window.getSelection();
+      if(sel){sel.removeAllRanges();sel.addRange(r);}
+      refreshFmtState();
+    },300);
+    return ()=>clearTimeout(t);
   // eslint-disable-next-line
   },[editor.id]);
 
@@ -246,180 +301,260 @@ function NoteEditor({editor,setEditor,onSave,onDelete}){
     };
   },[]);
 
-  // Sposta la toolbar sopra la tastiera su iOS (tramite visualViewport)
+  // Visual Viewport API: calcola l'altezza esattamente visibile (sopra la tastiera) e la applica
+  // come altezza dello schermo editor — toolbar/pannello, essendo in fondo al flusso flex, finiscono
+  // così esattamente sopra la tastiera senza bisogno di hack di posizionamento.
   useEffect(()=>{
-    if(!window.visualViewport)return;
-    function adjust(){
-      const tb=document.querySelector(".note-toolbar");
-      if(!tb)return;
-      const offset=window.innerHeight-window.visualViewport.height-(window.visualViewport.offsetTop||0);
-      tb.style.transform=offset>0?`translateY(${-offset}px)`:"";
+    const el=screenRef.current;
+    if(!el)return;
+    function apply(){
+      const vv=window.visualViewport;
+      const h=vv?vv.height:window.innerHeight;
+      el.style.setProperty("--vvh",h+"px");
     }
-    window.visualViewport.addEventListener("resize",adjust);
-    window.visualViewport.addEventListener("scroll",adjust);
+    apply();
+    const vv=window.visualViewport;
+    if(vv){vv.addEventListener("resize",apply);vv.addEventListener("scroll",apply);}
+    window.addEventListener("orientationchange",apply);
     return()=>{
-      window.visualViewport.removeEventListener("resize",adjust);
-      window.visualViewport.removeEventListener("scroll",adjust);
+      if(vv){vv.removeEventListener("resize",apply);vv.removeEventListener("scroll",apply);}
+      window.removeEventListener("orientationchange",apply);
     };
   },[]);
 
-  // Aggiorna la classe is-empty per mostrare/nascondere il placeholder (gestisce edge case come <h3><br></h3>)
-  function updateEmptyClass(){
-    if(!bodyRef.current)return;
-    const html=bodyRef.current.innerHTML;
-    const isEmpty=/^(\s|<br\s*\/?>|<div><br\s*\/?><\/div>|<p>(\s|<br\s*\/?>)?<\/p>|<h\d>(\s|<br\s*\/?>)?<\/h\d>)*$/i.test(html);
-    bodyRef.current.classList.toggle("is-empty",isEmpty);
+  // Chiude il menu "···" al tocco fuori
+  useEffect(()=>{
+    if(!moreOpen)return;
+    function h(e){if(moreRef.current&&!moreRef.current.contains(e.target))setMoreOpen(false);}
+    document.addEventListener("pointerdown",h);
+    return()=>document.removeEventListener("pointerdown",h);
+  },[moreOpen]);
+
+  // Riflette lo stato dei tasti di formattazione (B/I/U/S, elenchi, stile blocco) sulla selezione corrente
+  useEffect(()=>{
+    function onSelChange(){if(document.activeElement===bodyRef.current)refreshFmtState();}
+    document.addEventListener("selectionchange",onSelChange);
+    return()=>document.removeEventListener("selectionchange",onSelChange);
+  },[]);
+
+  function syncBody(){
+    const root=bodyRef.current;
+    if(!root)return;
+    updateEmptyClass();
+    const {title,body}=splitEditorContent(root);
+    setEditor(prev=>({...prev,title,body}));
   }
 
   // Salva e ripristina la selezione prima di execCommand (su iOS viene persa facilmente)
   function exec(cmd,val){
     haptic.light();
-    if(!bodyRef.current)return;
+    const root=bodyRef.current;
+    if(!root)return;
     const sel=window.getSelection();
-    // Se il cursore non è nel body, lo posiziona alla fine
-    if(!sel||sel.rangeCount===0||!bodyRef.current.contains(sel.anchorNode)){
-      bodyRef.current.focus();
+    if(!sel||sel.rangeCount===0||!root.contains(sel.anchorNode)){
+      root.focus();
       const r=document.createRange();
-      r.selectNodeContents(bodyRef.current);
+      r.selectNodeContents(root);
       r.collapse(false);
       if(sel){sel.removeAllRanges();sel.addRange(r);}
     }
     try{document.execCommand(cmd,false,val);}catch(e){console.warn("execCommand failed:",cmd,e);}
     syncBody();
-    refreshActiveFmt();
-  }
-  function syncBody(){
-    if(!bodyRef.current)return;
-    updateEmptyClass();
-    setEditor(prev=>({...prev,body:bodyRef.current.innerHTML}));
+    refreshFmtState();
   }
   function insertChecklist(){
     haptic.light();
-    if(!bodyRef.current)return;
-    bodyRef.current.focus();
-    const sel=window.getSelection();
-    if(!sel||sel.rangeCount===0||!bodyRef.current.contains(sel.anchorNode)){
-      const r=document.createRange();
-      r.selectNodeContents(bodyRef.current);
-      r.collapse(false);
-      if(sel){sel.removeAllRanges();sel.addRange(r);}
-    }
-    try{
-      // Inserisce un checkbox HTML reale (non più il carattere Unicode ☐)
-      document.execCommand("insertHTML",false,'<span class="note-checkbox" contenteditable="false"></span>&nbsp;');
-    }catch(e){console.warn("insertChecklist failed:",e);}
+    if(bodyRef.current)bodyRef.current.focus();
+    try{document.execCommand("insertText",false,"☐ ");}catch(e){}
     syncBody();
   }
   function handleBodyClick(e){
-    // Tap su un .note-checkbox → toggla checked/unchecked
-    const cb=e.target.closest&&e.target.closest(".note-checkbox");
-    if(cb&&bodyRef.current&&bodyRef.current.contains(cb)){
-      haptic.success();
-      cb.classList.toggle("checked");
-      const line=cb.closest(".checklist-line");
-      if(line)line.classList.toggle("done",cb.classList.contains("checked"));
-      syncBody();
-      return;
+    // Tap su ☐ → diventa ☑ e viceversa
+    const root=bodyRef.current;
+    if(!root)return;
+    const range=document.caretRangeFromPoint?document.caretRangeFromPoint(e.clientX,e.clientY):null;
+    if(!range)return;
+    const node=range.startContainer;
+    if(node&&node.nodeType===3){
+      const txt=node.textContent;
+      const offset=range.startOffset;
+      for(let delta=-1;delta<=0;delta++){
+        const pos=offset+delta;
+        if(pos<0||pos>=txt.length)continue;
+        const ch=txt[pos];
+        if(ch==="☐"||ch==="☑"){
+          haptic.success();
+          const newCh=ch==="☐"?"☑":"☐";
+          node.textContent=txt.slice(0,pos)+newCh+txt.slice(pos+1);
+          syncBody();
+          return;
+        }
+      }
     }
-    refreshActiveFmt();
   }
-
+  function applyHighlight(h){
+    haptic.light();
+    if(bodyRef.current)bodyRef.current.focus();
+    try{
+      document.execCommand("styleWithCSS",false,true);
+      document.execCommand("hiliteColor",false,h.bg);
+      document.execCommand("foreColor",false,h.fg);
+    }catch(e){}
+    syncBody();
+  }
+  function clearHighlight(){
+    haptic.light();
+    if(bodyRef.current)bodyRef.current.focus();
+    try{
+      document.execCommand("styleWithCSS",false,true);
+      document.execCommand("hiliteColor",false,"transparent");
+      document.execCommand("foreColor",false,"rgba(255,255,255,0.92)");
+    }catch(e){}
+    syncBody();
+  }
+  function dismissKeyboard(){
+    haptic.light();
+    setPanelOpen(false);
+    setKeyboardOpen(false);
+    if(bodyRef.current)bodyRef.current.blur();
+  }
   function togglePin(){
     haptic.light();
+    setMoreOpen(false);
     setEditor(prev=>({...prev,pinned:!prev.pinned}));
+  }
+  async function handleDelete(){
+    setMoreOpen(false);
+    if(await window.__appConfirm("Eliminare questa nota?",{confirm:"Elimina",cancel:"Annulla"}))onDelete();
+  }
+  function handleBack(){
+    // Il blur (mousedown sul tasto, prima del click) ha già sincronizzato editor.title/body:
+    // onSave legge sempre lo stato più recente. Salvataggio automatico, nessun tasto "Annulla".
+    onSave();
   }
 
   const metaDate=editor.updatedAt?fmtNoteDate(editor.updatedAt):(editor.id?"Nota":"Nuova nota");
 
-  // Render via Portal su document.body per evitare che i parent con backdrop-filter
-  // collassino position:fixed dell'overlay
   const ui=(
-    <div className="note-overlay" onClick={()=>setEditor(null)}>
-      <div className="note-sheet" onClick={e=>e.stopPropagation()}>
-        {/* Drag handle */}
-        <div className="note-drag" onClick={()=>setEditor(null)}>
-          <div className="note-drag-bar"/>
-        </div>
+    <div className="note-editor-overlay">
+      <div className="note-editor-screen" ref={screenRef} style={{height:"var(--vvh, 100dvh)"}}>
 
-        {/* Header iOS-style: Annulla sx, azioni dx */}
-        <div className="note-sheet-hdr">
-          <button className="note-hdr-btn" onClick={()=>setEditor(null)} aria-label="Annulla">Annulla</button>
-          <div style={{display:"flex",gap:8,alignItems:"center"}}>
-            <button className={"note-hdr-btn icon icon-pin "+(editor.pinned?"pinned":"")} onClick={togglePin} title={editor.pinned?"Rimuovi pin":"Pin"} aria-label={editor.pinned?"Rimuovi pin":"Aggiungi pin"}></button>
-            {editor.id&&<button className="note-hdr-btn icon danger icon-trash" onClick={async()=>{if(await window.__appConfirm("Eliminare questa nota?",{confirm:"Elimina",cancel:"Annulla"}))onDelete();}} aria-label="Elimina nota"></button>}
-            <button className="note-hdr-btn bold" onClick={onSave} aria-label="Salva nota" title="Fine"></button>
+        {/* Top bar: back (salva in automatico) a sx · Fine (solo a tastiera aperta) + menu ··· a dx */}
+        <div className="ne-topbar">
+          <button className="ne-back" onClick={handleBack} aria-label="Torna alle note">‹ Note</button>
+          <div className="ne-top-actions">
+            {keyboardOpen&&<button className="ne-done" onClick={dismissKeyboard} aria-label="Chiudi tastiera">Fine</button>}
+            <div className="ne-more-wrap" ref={moreRef}>
+              <button className="ne-more-btn" onClick={()=>setMoreOpen(o=>!o)} aria-label="Altre azioni">•••</button>
+              {moreOpen&&(
+                <div className="ne-more-menu">
+                  <button onClick={togglePin}>
+                    <span className="icon-pin-inline"></span>
+                    {editor.pinned?"Rimuovi da In alto":"Fissa in alto"}
+                  </button>
+                  {editor.id&&<>
+                    <div className="ne-more-sep"></div>
+                    <button className="danger" onClick={handleDelete}>
+                      <span className="icon-trash"></span>
+                      Elimina nota
+                    </button>
+                  </>}
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Meta date */}
-        <div className="note-meta-bar">{metaDate}</div>
+        <div className="ne-meta">{metaDate}</div>
 
-        {/* Big title */}
-        <input
-          ref={titleRef}
-          className="note-title-input"
-          placeholder="Titolo"
-          aria-label="Titolo della nota"
-          value={editor.title}
-          onChange={e=>setEditor(prev=>({...prev,title:e.target.value}))}
-        />
-
-        {/* Body contentEditable */}
+        {/* Unico contentEditable: la prima riga è il titolo, formattata in automatico via CSS */}
         <div
           ref={bodyRef}
-          className="note-body"
+          className="ne-body"
           contentEditable
           role="textbox"
           aria-multiline="true"
-          aria-label="Corpo della nota"
+          aria-label="Nota"
           suppressContentEditableWarning
-          data-placeholder="Inizia a scrivere..."
+          data-placeholder="Nuova nota"
           onInput={syncBody}
-          onBlur={syncBody}
+          onBlur={()=>{syncBody();setKeyboardOpen(false);}}
+          onFocus={()=>{setKeyboardOpen(true);refreshFmtState();}}
           onClick={handleBodyClick}
-          onKeyUp={refreshActiveFmt}
-        />
+        ></div>
 
-        {/* Toolbar fluttuante in basso stile iOS */}
-        <div className="note-toolbar">
-          <button className="note-tb-btn title" type="button" onClick={()=>{refreshActiveFmt();setShowFormat(true);haptic.light();}} title="Formato" aria-label="Apri menu formato">Aa</button>
-          <div className="note-tb-divider"/>
-          <button className="note-tb-btn" type="button" onClick={insertChecklist} title="Lista di controllo" aria-label="Lista di controllo"><span className="tb-ico checklist"></span></button>
-          <button className="note-tb-btn" type="button" onClick={()=>exec("insertHTML",'<table><tr><td>&nbsp;</td><td>&nbsp;</td></tr><tr><td>&nbsp;</td><td>&nbsp;</td></tr></table>')} title="Tabella" aria-label="Inserisci tabella"><span className="tb-ico table"></span></button>
-          <button className="note-tb-btn" type="button" title="Allegato" aria-label="Aggiungi allegato"><span className="tb-ico attach"></span></button>
-          <button className="note-tb-btn" type="button" title="Markup" aria-label="Disegna con il pennarello"><span className="tb-ico markup"></span></button>
-        </div>
+        {/* Barra incollata sopra la tastiera (altezza schermo = visualViewport ⇒ resta sempre sopra) */}
+        {keyboardOpen&&(
+          <div className="ne-keyboard-bar">
+            {panelOpen?(
+              <div className="ne-aa-panel">
+                <div className="ne-aa-head">
+                  <span>Formattazione</span>
+                  <button type="button" className="ne-aa-close" onMouseDown={e=>e.preventDefault()} onClick={()=>setPanelOpen(false)} aria-label="Chiudi pannello">✕</button>
+                </div>
 
-        {/* Menu Formato — pillole Titolo/Sottointestazione/Corpo + B/I/U/S */}
-        {showFormat&&(
-          <div className="note-format-overlay" onClick={()=>setShowFormat(false)}>
-            <div className="note-format-sheet" onClick={e=>e.stopPropagation()}>
-              <div className="note-format-hdr">
-                <div className="note-format-title">Formato</div>
-                <button className="note-format-close" onClick={()=>setShowFormat(false)} aria-label="Chiudi formato"></button>
+                <div className="ne-aa-group">
+                  <div className="ne-aa-label">Stile testo</div>
+                  <div className="ne-aa-row">
+                    {TEXT_STYLES.map(s=>(
+                      <button key={s.tag} type="button"
+                        className={"ne-aa-pill"+(fmt.block===s.tag?" active":"")}
+                        onMouseDown={e=>e.preventDefault()}
+                        onClick={()=>exec("formatBlock",s.tag)}>{s.label}</button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="ne-aa-group">
+                  <div className="ne-aa-label">Stile carattere</div>
+                  <div className="ne-aa-row">
+                    <button type="button" className={"ne-aa-charbtn bold"+(fmt.bold?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("bold")} aria-label="Grassetto">B</button>
+                    <button type="button" className={"ne-aa-charbtn italic"+(fmt.italic?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("italic")} aria-label="Corsivo">I</button>
+                    <button type="button" className={"ne-aa-charbtn under"+(fmt.underline?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("underline")} aria-label="Sottolineato">U</button>
+                    <button type="button" className={"ne-aa-charbtn strike"+(fmt.strike?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("strikeThrough")} aria-label="Barrato">S</button>
+                  </div>
+                </div>
+
+                <div className="ne-aa-group">
+                  <div className="ne-aa-label">Elenchi e indentazione</div>
+                  <div className="ne-aa-row">
+                    <button type="button" className={"ne-aa-charbtn"+(fmt.ul?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("insertUnorderedList")} aria-label="Elenco puntato">•</button>
+                    <button type="button" className={"ne-aa-charbtn"+(fmt.ol?" active":"")} onMouseDown={e=>e.preventDefault()} onClick={()=>exec("insertOrderedList")} aria-label="Elenco numerato">1.</button>
+                    <button type="button" className="ne-aa-charbtn" onMouseDown={e=>e.preventDefault()} onClick={insertChecklist} aria-label="Lista di controllo">☐</button>
+                    <div className="ne-aa-divider"></div>
+                    <button type="button" className="ne-aa-charbtn" onMouseDown={e=>e.preventDefault()} onClick={()=>exec("outdent")} aria-label="Sposta a sinistra">⇤</button>
+                    <button type="button" className="ne-aa-charbtn" onMouseDown={e=>e.preventDefault()} onClick={()=>exec("indent")} aria-label="Sposta a destra">⇥</button>
+                  </div>
+                </div>
+
+                <div className="ne-aa-group">
+                  <div className="ne-aa-label">Evidenziatore</div>
+                  <div className="ne-aa-row hl">
+                    {HILITES.map(h=>(
+                      <button key={h.id} type="button" className="ne-hl-swatch" style={{background:h.bg}}
+                        onMouseDown={e=>e.preventDefault()} onClick={()=>applyHighlight(h)}
+                        aria-label={h.label} title={h.label}></button>
+                    ))}
+                    <button type="button" className="ne-hl-swatch clear" onMouseDown={e=>e.preventDefault()} onClick={clearHighlight} aria-label="Rimuovi evidenziazione" title="Rimuovi evidenziazione">
+                      <span className="icon-ban-inline"></span>
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div className="note-format-row" role="group" aria-label="Stile testo">
-                <button className={"note-format-pill heading"+(activeFmt.block==="H1"?" selected":"")} onClick={()=>exec("formatBlock","H1")}>Titolo</button>
-                <button className={"note-format-pill subheading"+(activeFmt.block==="H3"?" selected":"")} onClick={()=>exec("formatBlock","H3")}>Sottointestazione</button>
-                <button className={"note-format-pill"+(activeFmt.block==="P"||activeFmt.block==="DIV"?" selected":"")} onClick={()=>exec("formatBlock","P")}>Corpo</button>
+            ):(
+              <div className="ne-toolbar">
+                <button type="button" className="ne-tb-btn" onMouseDown={e=>e.preventDefault()} onClick={insertChecklist} aria-label="Lista di controllo">☐</button>
+                <button type="button" className="ne-tb-btn aa" onMouseDown={e=>e.preventDefault()} onClick={()=>setPanelOpen(true)} aria-label="Formattazione">Aa</button>
+                <button type="button" className="ne-tb-btn close-kb" onClick={dismissKeyboard} aria-label="Chiudi tastiera">⌄</button>
               </div>
-              <div className="note-format-icons">
-                <button className={"note-format-icon-btn"+(activeFmt.bold?" selected":"")} onClick={()=>exec("bold")} aria-label="Grassetto">B</button>
-                <button className={"note-format-icon-btn italic"+(activeFmt.italic?" selected":"")} onClick={()=>exec("italic")} aria-label="Corsivo">I</button>
-                <button className={"note-format-icon-btn under"+(activeFmt.underline?" selected":"")} onClick={()=>exec("underline")} aria-label="Sottolineato">U</button>
-                <button className={"note-format-icon-btn strike"+(activeFmt.strike?" selected":"")} onClick={()=>exec("strikeThrough")} aria-label="Barrato">S</button>
-              </div>
-              <div className="note-format-list-row">
-                <button className="note-tb-btn" type="button" onClick={()=>exec("insertUnorderedList")} title="Elenco puntato" aria-label="Elenco puntato">•</button>
-                <button className="note-tb-btn" type="button" onClick={()=>exec("insertOrderedList")} title="Elenco numerato" aria-label="Elenco numerato">1.</button>
-                <button className="note-tb-btn" type="button" onClick={insertChecklist} title="Lista di controllo" aria-label="Lista di controllo"><span className="tb-ico checklist"></span></button>
-              </div>
-            </div>
+            )}
           </div>
         )}
       </div>
     </div>
   );
+  // Render via Portal su document.body per evitare che i parent con backdrop-filter
+  // collassino position:fixed dell'overlay
   return ReactDOM.createPortal(ui,document.body);
 }
 
@@ -432,4 +567,3 @@ function StarRating({value,onChange,size=19}){
     </div>
   );
 }
-

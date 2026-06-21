@@ -571,23 +571,21 @@ textarea{resize:none;line-height:1.55;}
   mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22%20fill%3D%22black%22%20stroke%3D%22black%22/%3E%3C/svg%3E");
 }
 .note-title{
-  font-size:14px;font-weight:600;
-  color:rgba(255,255,255,.92);
+  font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.95);
   letter-spacing:-.1px;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.note-snippet{
-  font-size:12px;color:var(--lbl-2);
-  line-height:1.45;margin-top:2px;
+/* Data + anteprima reale sulla stessa "riga" (come Apple Notes), clampati insieme a 2 righe */
+.note-meta-line{
   display:-webkit-box;
   -webkit-line-clamp:2;
   -webkit-box-orient:vertical;
   overflow:hidden;
+  margin-top:3px;line-height:1.4;
 }
-.note-meta{
-  font-size:11px;color:var(--lbl-3);
-  margin-top:3px;font-weight:400;
-}
+.note-meta{font-size:12.5px;color:var(--lbl-2);font-weight:500;}
+.note-snippet{font-size:12.5px;color:var(--lbl-3);font-weight:400;}
 .note-section-hdr{
   font-size:11px;font-weight:700;letter-spacing:.6px;
   text-transform:uppercase;color:var(--lbl-3);
@@ -596,13 +594,21 @@ textarea{resize:none;line-height:1.55;}
 }
 .note-section-hdr.gray{color:var(--lbl-3);}
 
-/* ── NOTE SEARCH ── */
+/* ── NOTE SEARCH — barra fissa in alto (sticky) stile iOS ── */
+.note-list-wrap{position:relative;}
+.note-search-sticky{
+  position:sticky;top:0;z-index:5;
+  background:rgba(0,0,0,.88);
+  backdrop-filter:blur(14px) saturate(120%);
+  -webkit-backdrop-filter:blur(14px) saturate(120%);
+  padding:6px 0 10px;margin-bottom:2px;
+}
 .note-search{
   display:flex;align-items:center;gap:8px;
   background:var(--fill-4);
   border:1px solid var(--sep);
   border-radius:var(--r-md);
-  padding:9px 12px;margin-bottom:14px;
+  padding:9px 12px;
   transition:border-color .1s linear,background .1s linear;
 }
 .note-search:focus-within{
@@ -611,293 +617,247 @@ textarea{resize:none;line-height:1.55;}
 }
 .note-search input{
   flex:1;background:transparent;border:none;outline:none;
-  color:#fff;font-size:15px;font-family:var(--font-sys);
+  color:#fff;font-size:16px;font-family:var(--font-sys);
 }
 .note-search input::placeholder{color:var(--lbl-3);}
+.note-search-clear{
+  background:rgba(255,255,255,.12);border:none;border-radius:50%;
+  width:20px;height:20px;color:rgba(255,255,255,.6);font-size:12px;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  line-height:1;flex-shrink:0;-webkit-tap-highlight-color:transparent;
+}
+
+/* ── NOTE FAB — tasto "Nuova nota" fluttuante, sempre visibile, centrato come .nav ── */
+.note-fab-wrap{
+  position:fixed;left:50%;transform:translateX(-50%);
+  bottom:calc(14px + env(safe-area-inset-bottom,0px));
+  width:100%;max-width:430px;
+  display:flex;justify-content:flex-end;
+  padding:0 18px;
+  pointer-events:none;
+  z-index:60;
+}
+.note-fab{
+  pointer-events:auto;
+  width:54px;height:54px;border-radius:50%;
+  background:#FFFFFF;border:none;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  transition:transform .1s linear;
+}
+.note-fab:active{transform:scale(.93);}
+.note-fab .icon-edit{width:19px;height:19px;}
+.note-fab .icon-edit::before{background-color:#000000;}
 
 /* ═══════════════════════════════════════
-   NOTE SHEET EDITOR — bottom sheet
-   Animazioni ridotte a dissolvenze rapide e secche
+   NOTE EDITOR — schermata full-screen (stack iOS, non bottom sheet)
+   Animazioni ridotte a dissolvenze/scorrimenti rapidi e secchi
    ═══════════════════════════════════════ */
-@keyframes sheetUp{
-  from{opacity:0;}
-  to{opacity:1;}
+@keyframes neSlideIn{
+  from{transform:translateX(100%);}
+  to{transform:translateX(0);}
 }
-@keyframes overlayIn{
-  from{opacity:0;}
-  to{opacity:1;}
-}
-.note-overlay{
+.note-editor-overlay{
   position:fixed;inset:0;
-  background:rgba(0,0,0,.7);
-  backdrop-filter:blur(6px);
-  -webkit-backdrop-filter:blur(6px);
+  background:var(--bg);
   z-index:9999;
-  display:flex;align-items:flex-end;justify-content:center;
-  animation:overlayIn .1s linear;
+  display:flex;justify-content:center;
   overscroll-behavior:contain;
 }
-.note-sheet{
-  background:#0A0A0A;
-  border:1px solid rgba(255,255,255,.08);
-  border-bottom:none;
-  border-radius:var(--r-xl) var(--r-xl) 0 0;
-  width:100%;max-width:430px;height:94vh;
-  display:flex;flex-direction:column;overflow:hidden;
-  position:relative;
-  animation:sheetUp .12s linear;
-  box-shadow:none;
+.note-editor-screen{
+  width:100%;max-width:430px;
+  background:var(--bg);
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+  animation:neSlideIn .18s var(--ios);
 }
-.note-drag{
-  display:flex;justify-content:center;
-  padding:8px 0 4px;flex-shrink:0;
-}
-.note-drag-bar{
-  width:36px;height:4px;border-radius:2px;
-  background:rgba(255,255,255,.18);
-}
-.note-sheet-hdr{
+
+/* ── Top bar: "‹ Note" (salva e torna indietro) · "Fine" (chiude la tastiera) · ··· (Fissa/Elimina) ── */
+.ne-topbar{
   display:flex;align-items:center;justify-content:space-between;
-  padding:6px 14px 10px;flex-shrink:0;
-  border-bottom:.5px solid var(--sep);
+  padding:max(16px, env(safe-area-inset-top)) 8px 8px 4px;
+  flex-shrink:0;
 }
-.note-hdr-btn{
+.ne-back{
   background:none;border:none;color:var(--accent);
-  font-family:var(--font-sys);font-size:16px;font-weight:500;
-  cursor:pointer;padding:4px 6px;
+  font-family:var(--font-sys);font-size:17px;font-weight:400;
+  padding:4px 8px 4px 4px;cursor:pointer;
   transition:opacity .1s linear;
   -webkit-tap-highlight-color:transparent;
 }
-.note-hdr-btn:active{opacity:.5;}
-.note-hdr-btn.icon{
-  width:34px;height:34px;
-  display:flex;align-items:center;justify-content:center;
-  border-radius:50%;background:var(--fill-4);font-size:15px;
+.ne-back:active{opacity:.5;}
+.ne-top-actions{display:flex;align-items:center;gap:2px;}
+.ne-done{
+  background:none;border:none;color:var(--accent);
+  font-family:var(--font-sys);font-size:17px;font-weight:700;
+  padding:4px 8px;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
 }
-.note-hdr-btn.icon.danger{background:rgba(255,255,255,.10);color:#FFFFFF;}
-.note-hdr-btn.icon.pinned{background:rgba(255,255,255,.14);color:#FFFFFF;}
+.ne-done:active{opacity:.5;}
+.ne-more-wrap{position:relative;}
+.ne-more-btn{
+  background:var(--fill-4);border:none;border-radius:50%;
+  width:32px;height:32px;
+  color:rgba(255,255,255,.85);font-size:15px;letter-spacing:1px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+}
+.ne-more-btn:active{background:var(--fill-2);}
+.ne-more-menu{
+  position:absolute;top:calc(100% + 6px);right:0;
+  background:#161616;border:1px solid var(--sep-strong);
+  border-radius:var(--r-lg);min-width:188px;overflow:hidden;
+  box-shadow:0 10px 30px rgba(0,0,0,.55);
+  z-index:20;
+}
+.ne-more-menu button{
+  width:100%;display:flex;align-items:center;gap:10px;
+  padding:12px 14px;background:none;border:none;
+  color:#fff;font-family:var(--font-sys);font-size:14px;font-weight:500;
+  cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;
+}
+.ne-more-menu button:active{background:var(--fill-3);}
+.ne-more-menu .icon-pin-inline,.ne-more-menu .icon-trash{width:15px;height:15px;top:0;}
+.ne-more-menu .icon-pin-inline::before{background-color:var(--lbl-1);}
+.ne-more-menu .icon-trash::before{background-color:var(--lbl-1);}
+.ne-more-sep{height:.5px;background:var(--sep);}
 
-.note-meta-bar{
+.ne-meta{
   text-align:center;font-size:11px;color:var(--lbl-3);
   font-weight:400;letter-spacing:.1px;
-  padding:4px 14px 8px;flex-shrink:0;
+  padding:2px 16px 8px;flex-shrink:0;
 }
-.note-title-input{
-  background:transparent;border:none;outline:none;
-  color:#fff;font-family:var(--font-sys);
-  font-size:22px;font-weight:700;letter-spacing:-.4px;
-  padding:8px 18px 4px;width:100%;
-  -webkit-user-select:text;user-select:text;
-}
-.note-title-input::placeholder{color:var(--lbl-4);font-weight:600;}
-.note-body{
-  flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:6px 18px 100px;
-  color:rgba(255,255,255,.9);
+
+/* ── Corpo: unico contentEditable, la 1a riga = titolo (stile automatico) ── */
+.ne-body{
+  flex:1;min-height:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+  padding:4px 18px 40px;
+  color:rgba(255,255,255,.92);
   font-family:var(--font-sys);font-size:17px;line-height:1.55;
   outline:none;-webkit-user-select:text;user-select:text;
 }
-.note-body:empty::before,.note-body.is-empty::before{
+.ne-body>:first-child{
+  display:block;font-size:24px;font-weight:800;
+  letter-spacing:-.3px;margin-bottom:6px;color:#fff;
+}
+.ne-body.is-empty:before{
   content:attr(data-placeholder);color:var(--lbl-4);
   pointer-events:none;display:block;
+  font-size:24px;font-weight:800;letter-spacing:-.3px;
 }
-.note-body h3{font-size:20px;font-weight:700;margin:8px 0 4px;letter-spacing:-.2px;}
-.note-body ul,.note-body ol{padding-left:24px;margin:6px 0;}
-.note-body li{margin-bottom:4px;}
-.note-body b,.note-body strong{font-weight:700;color:#fff;}
+.ne-body h1{font-size:26px;font-weight:800;letter-spacing:-.4px;margin:10px 0 4px;}
+.ne-body h2{font-size:20px;font-weight:700;letter-spacing:-.2px;margin:9px 0 4px;}
+.ne-body h3{font-size:17px;font-weight:700;margin:8px 0 3px;color:rgba(255,255,255,.9);}
+.ne-body pre{
+  font-family:var(--font-mono);font-size:15px;line-height:1.5;
+  white-space:pre-wrap;word-break:break-word;
+  background:var(--fill-4);border:1px solid var(--sep);
+  border-radius:var(--r-sm);padding:8px 10px;margin:6px 0;
+}
+.ne-body ul,.ne-body ol{padding-left:24px;margin:6px 0;}
+.ne-body li{margin-bottom:4px;}
+.ne-body blockquote{
+  margin:4px 0 4px 4px;padding-left:12px;
+  border-left:2px solid var(--sep-strong);color:var(--lbl-2);
+}
+.ne-body b,.ne-body strong{font-weight:700;color:#fff;}
+.ne-body u{text-decoration:underline;}
+.ne-body s,.ne-body strike{text-decoration:line-through;}
+.ne-body mark{border-radius:3px;padding:0 2px;}
 
-/* ── NOTE TOOLBAR ── */
-.note-toolbar{
-  position:absolute;bottom:0;left:0;right:0;
-  background:rgba(10,10,10,.96);
-  backdrop-filter:blur(16px) saturate(120%);
-  -webkit-backdrop-filter:blur(16px) saturate(120%);
+/* ── Barra incollata sopra la tastiera: altezza schermo = visualViewport, quindi
+     toolbar/pannello restano in fondo al flusso flex esattamente sopra la tastiera ── */
+.ne-keyboard-bar{
+  flex-shrink:0;
+  background:rgba(10,10,10,.97);
+  backdrop-filter:blur(18px) saturate(120%);
+  -webkit-backdrop-filter:blur(18px) saturate(120%);
   border-top:.5px solid var(--sep);
-  padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px));
-  display:flex;align-items:center;gap:3px;flex-shrink:0;
 }
-.note-tb-btn{
-  flex:1;height:36px;
-  background:transparent;border:none;border-radius:var(--r-xs);
-  color:rgba(255,255,255,.72);
-  font-family:var(--font-sys);font-size:15px;font-weight:600;
-  cursor:pointer;
+
+/* Toolbar minima: Checklist · Aa · Chiudi tastiera */
+.ne-toolbar{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 14px calc(8px + env(safe-area-inset-bottom,0px));
+}
+.ne-tb-btn{
+  flex:1;height:40px;
+  background:var(--fill-4);border:none;border-radius:var(--r-md);
+  color:rgba(255,255,255,.85);
+  font-family:var(--font-sys);font-size:17px;font-weight:600;
   display:flex;align-items:center;justify-content:center;
-  transition:background .1s linear;
-  -webkit-tap-highlight-color:transparent;
-}
-.note-tb-btn:active{background:var(--fill-2);transform:none;}
-.note-tb-btn.bold{font-weight:900;}
-.note-tb-btn.italic{font-style:italic;}
-.note-tb-btn.under{text-decoration:underline;}
-.note-tb-btn.title{font-family:var(--font-display);font-size:18px;}
-.note-tb-divider{
-  width:.5px;height:20px;
-  background:var(--sep);margin:0 2px;flex-shrink:0;
-}
-.note-tb-hint{
-  position:absolute;bottom:calc(100% + 6px);left:0;right:0;
-  text-align:center;font-size:10px;color:var(--lbl-3);pointer-events:none;
-}
-
-/* ── Tasto "Fine" (cerchio bianco pieno + check nero, niente giallo) ── */
-.note-hdr-btn.bold{
-  width:30px;height:30px;border-radius:50%;
-  background:var(--accent);color:transparent;font-size:0;
-  padding:0;position:relative;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.note-hdr-btn.bold::before{
-  content:"";position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:14px;height:12px;background-color:#000;
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012l6%206L20%206%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012l6%206L20%206%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%223%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E");
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-}
-.note-hdr-btn.bold:active{opacity:.7;}
-
-/* ── Icone toolbar editor: checklist / tabella / allegato / markup ── */
-.note-tb-btn .tb-ico{
-  display:inline-block;position:relative;
-  width:18px;height:18px;
-}
-.note-tb-btn .tb-ico::before{
-  content:"";position:absolute;inset:0;
-  background-color:currentColor;
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-position:center;mask-position:center;
-}
-.note-tb-btn .tb-ico.checklist::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%2213.5%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221.2%22/%3E%3Cpath%20d%3D%22M4.7%2017l1.3%201.3%202.3-2.6%22/%3E%3Cpath%20d%3D%22M13%204h8%22/%3E%3Cpath%20d%3D%22M13%209h8%22/%3E%3Cpath%20d%3D%22M3%204.2h7%22/%3E%3Cpath%20d%3D%22M3%208.2h7%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223%22%20y%3D%2213.5%22%20width%3D%227%22%20height%3D%227%22%20rx%3D%221.2%22/%3E%3Cpath%20d%3D%22M4.7%2017l1.3%201.3%202.3-2.6%22/%3E%3Cpath%20d%3D%22M13%204h8%22/%3E%3Cpath%20d%3D%22M13%209h8%22/%3E%3Cpath%20d%3D%22M3%204.2h7%22/%3E%3Cpath%20d%3D%22M3%208.2h7%22/%3E%3C/svg%3E");
-}
-.note-tb-btn .tb-ico.table::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%224.5%22%20width%3D%2217%22%20height%3D%2215%22%20rx%3D%221.5%22/%3E%3Cpath%20d%3D%22M3.5%209.5h17%22/%3E%3Cpath%20d%3D%22M3.5%2014.5h17%22/%3E%3Cpath%20d%3D%22M9.5%204.5v15%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%223.5%22%20y%3D%224.5%22%20width%3D%2217%22%20height%3D%2215%22%20rx%3D%221.5%22/%3E%3Cpath%20d%3D%22M3.5%209.5h17%22/%3E%3Cpath%20d%3D%22M3.5%2014.5h17%22/%3E%3Cpath%20d%3D%22M9.5%204.5v15%22/%3E%3C/svg%3E");
-}
-.note-tb-btn .tb-ico.attach::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16.5%206.5l-7%207a3%203%200%201%200%204.2%204.2l7-7a5%205%200%201%200-7.1-7.1l-7.4%207.4%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M16.5%206.5l-7%207a3%203%200%201%200%204.2%204.2l7-7a5%205%200%201%200-7.1-7.1l-7.4%207.4%22/%3E%3C/svg%3E");
-}
-.note-tb-btn .tb-ico.markup::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2020l1-4.8L15.8%204.4a1.6%201.6%200%200%201%202.3%200l1.5%201.5a1.6%201.6%200%200%201%200%202.3L8.8%2019%204%2020z%22/%3E%3Cpath%20d%3D%22M13.8%206.4l3.8%203.8%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M4%2020l1-4.8L15.8%204.4a1.6%201.6%200%200%201%202.3%200l1.5%201.5a1.6%201.6%200%200%201%200%202.3L8.8%2019%204%2020z%22/%3E%3Cpath%20d%3D%22M13.8%206.4l3.8%203.8%22/%3E%3C/svg%3E");
-}
-.note-tb-btn[aria-pressed="true"]{background:var(--fill-3);color:#fff;}
-
-/* ═══════════════════════════════════════
-   MENU "FORMATO" — sheet con pillole di stile
-   (Titolo/Sottointestazione/Corpo, B/I/U/S)
-   Stato selezionato: grigio chiaro + testo nero (niente giallo)
-   ═══════════════════════════════════════ */
-.note-format-overlay{
-  position:fixed;inset:0;z-index:10000;
-  background:rgba(0,0,0,.55);
-  animation:overlayIn .1s linear;
-}
-.note-format-sheet{
-  position:absolute;left:0;right:0;bottom:0;
-  background:rgba(20,20,20,.92);
-  backdrop-filter:blur(20px) saturate(120%);
-  -webkit-backdrop-filter:blur(20px) saturate(120%);
-  border:1px solid rgba(255,255,255,.08);
-  border-bottom:none;
-  border-radius:20px 20px 0 0;
-  padding:14px 14px calc(18px + env(safe-area-inset-bottom,0px));
-  max-width:430px;margin:0 auto;
-  animation:sheetUp .12s linear;
-}
-.note-format-hdr{
-  display:flex;align-items:center;justify-content:space-between;
-  margin-bottom:14px;
-}
-.note-format-title{
-  font-size:17px;font-weight:700;color:#fff;letter-spacing:-.2px;
-}
-.note-format-close{
-  width:28px;height:28px;border-radius:50%;
-  background:var(--fill-3);border:none;color:transparent;
-  font-size:0;position:relative;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.note-format-close::before{
-  content:"";position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:12px;height:12px;background-color:#fff;
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M5%205l14%2014M19%205L5%2019%22%20stroke%3D%22black%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M5%205l14%2014M19%205L5%2019%22%20stroke%3D%22black%22%20stroke-width%3D%222.4%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E");
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-}
-.note-format-row{
-  display:flex;gap:6px;margin-bottom:8px;overflow-x:auto;
-}
-.note-format-pill{
-  flex:1;background:var(--fill-3);border:none;border-radius:12px;
-  color:#fff;font-size:14px;font-weight:600;padding:11px 8px;
-  cursor:pointer;white-space:nowrap;text-align:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
   transition:background .1s linear,color .1s linear;
-  -webkit-tap-highlight-color:transparent;
 }
-.note-format-pill.heading{font-size:17px;font-weight:800;}
-.note-format-pill.subheading{font-size:15px;font-weight:700;}
-.note-format-pill.selected{
-  background:var(--accent-2);color:#000;
-}
-.note-format-icons{display:flex;gap:6px;margin-bottom:8px;}
-.note-format-icon-btn{
-  flex:1;height:42px;background:var(--fill-3);border:none;border-radius:12px;
-  color:#fff;font-size:15px;font-weight:700;cursor:pointer;position:relative;
-  display:flex;align-items:center;justify-content:center;
-  -webkit-tap-highlight-color:transparent;
-}
-.note-format-icon-btn.italic{font-style:italic;}
-.note-format-icon-btn.under{text-decoration:underline;}
-.note-format-icon-btn.strike{text-decoration:line-through;}
-.note-format-icon-btn.selected{background:var(--accent-2);color:#000;}
-.note-format-icon-btn .dot{
-  width:13px;height:13px;border-radius:50%;background:#9F9FA8;
-}
-.note-format-list-row{display:flex;gap:6px;}
-.note-format-list-row .note-tb-btn{
-  background:var(--fill-3);border-radius:12px;height:42px;
-}
-.note-format-list-row .note-tb-btn[aria-pressed="true"]{background:var(--accent-2);color:#000;}
+.ne-tb-btn:active{background:var(--fill-2);}
+.ne-tb-btn.aa{font-size:16px;font-weight:700;}
+.ne-tb-btn.close-kb{flex:.7;font-size:19px;}
 
-/* ═══════════════════════════════════════
-   CHECKLIST INTERATTIVA — cerchio che diventa
-   bianco pieno + check nero quando spuntato
-   ═══════════════════════════════════════ */
-.note-checkbox{
-  display:inline-flex;align-items:center;justify-content:center;
-  width:18px;height:18px;border-radius:50%;
-  border:1.5px solid var(--lbl-3);
-  background:transparent;position:relative;flex-shrink:0;
-  cursor:pointer;vertical-align:middle;margin-right:2px;
+/* Pannello "Aa" — sostituisce la toolbar, resta sopra la tastiera (che rimane aperta) */
+.ne-aa-panel{
+  max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
+}
+.ne-aa-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+  color:var(--lbl-3);margin-bottom:10px;
+}
+.ne-aa-close{
+  background:var(--fill-3);border:none;border-radius:50%;
+  width:22px;height:22px;color:var(--lbl-1);font-size:11px;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
   -webkit-tap-highlight-color:transparent;
-  transition:background .1s linear,border-color .1s linear;
 }
-.note-checkbox.checked{
-  background:#fff;border-color:#fff;
+.ne-aa-group{margin-bottom:12px;}
+.ne-aa-group:last-child{margin-bottom:0;}
+.ne-aa-label{
+  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--lbl-3);margin-bottom:6px;
 }
-.note-checkbox.checked::before{
-  content:"";position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:10px;height:8px;background-color:#000;
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012l6%206L20%206%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%223.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20d%3D%22M4%2012l6%206L20%206%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%223.4%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E");
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+.ne-aa-row{
+  display:flex;align-items:center;gap:6px;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  padding-bottom:2px;
 }
-.note-body .checklist-line{
-  display:flex;align-items:flex-start;gap:7px;margin:3px 0;
+.ne-aa-pill{
+  flex-shrink:0;padding:8px 14px;border-radius:999px;
+  background:var(--fill-4);border:1px solid var(--sep);
+  color:rgba(255,255,255,.85);
+  font-family:var(--font-sys);font-size:14px;font-weight:600;
+  cursor:pointer;white-space:nowrap;
+  transition:background .1s linear,color .1s linear,border-color .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
-.note-body .checklist-line.done span.checklist-text{
-  color:var(--lbl-3);text-decoration:line-through;
+.ne-aa-pill.active{background:#FFFFFF;color:#000;border-color:#FFFFFF;}
+.ne-aa-charbtn{
+  flex-shrink:0;width:40px;height:40px;border-radius:var(--r-md);
+  background:var(--fill-4);border:none;
+  color:rgba(255,255,255,.85);
+  font-family:var(--font-sys);font-size:16px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .1s linear,color .1s linear;
+  -webkit-tap-highlight-color:transparent;
 }
+.ne-aa-charbtn.italic{font-style:italic;}
+.ne-aa-charbtn.under{text-decoration:underline;}
+.ne-aa-charbtn.strike{text-decoration:line-through;}
+.ne-aa-charbtn.active,.ne-tb-btn.active{background:#FFFFFF;color:#000;}
+.ne-aa-divider{width:.5px;height:24px;background:var(--sep);flex-shrink:0;margin:0 2px;}
+
+/* Evidenziatori — 4 grigi + rimuovi, nessun colore */
+.ne-hl-swatch{
+  flex-shrink:0;width:30px;height:30px;border-radius:50%;
+  border:1px solid rgba(255,255,255,.25);
+  cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;
+}
+.ne-hl-swatch.clear{
+  background:var(--fill-4);
+  display:flex;align-items:center;justify-content:center;
+}
+.ne-hl-swatch.clear .icon-ban-inline{width:14px;height:14px;color:var(--lbl-2);}
 
 /* ═══════════════════════════════════════
    ICONE STRUTTURALI AGGIUNTIVE — v5.1
@@ -1113,33 +1073,6 @@ button.icon-trash::after{content:none;}
 button.icon-trash:active::before{background-color:#FFFFFF;}
 
 
-/* ── Pin nell'header dell'editor nota ── */
-.note-hdr-btn.icon-pin{color:transparent;font-size:0;position:relative;}
-.note-hdr-btn.icon-pin::before{
-  content:"";position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:15px;height:15px;
-  background-color:var(--lbl-2);
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22/%3E%3C/svg%3E");
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-position:center;mask-position:center;
-}
-.note-hdr-btn.icon-pin.pinned::before{background-color:#FFFFFF;}
-.note-hdr-btn.icon-trash{color:transparent;font-size:0;position:relative;}
-.note-hdr-btn.icon-trash::before{
-  content:"";position:absolute;left:50%;top:50%;
-  transform:translate(-50%,-50%);
-  width:15px;height:15px;
-  background-color:var(--lbl-2);
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%207h14%22/%3E%3Cpath%20d%3D%22M9%207V4.5a1%201%200%200%201%201-1h4a1%201%200%200%201%201%201V7%22/%3E%3Cpath%20d%3D%22M6.5%207l.8%2012a1.5%201.5%200%200%200%201.5%201.4h6.4a1.5%201.5%200%200%200%201.5-1.4l.8-12%22/%3E%3Cpath%20d%3D%22M10%2011v6%22/%3E%3Cpath%20d%3D%22M14%2011v6%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%207h14%22/%3E%3Cpath%20d%3D%22M9%207V4.5a1%201%200%200%201%201-1h4a1%201%200%200%201%201%201V7%22/%3E%3Cpath%20d%3D%22M6.5%207l.8%2012a1.5%201.5%200%200%200%201.5%201.4h6.4a1.5%201.5%200%200%200%201.5-1.4l.8-12%22/%3E%3Cpath%20d%3D%22M10%2011v6%22/%3E%3Cpath%20d%3D%22M14%2011v6%22/%3E%3C/svg%3E");
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-position:center;mask-position:center;
-}
-.note-hdr-btn.icon-trash.danger::before{background-color:#F5F5F5;}
 
 
 /* ── Bottone impostazioni (ingranaggio) in app.js ── */

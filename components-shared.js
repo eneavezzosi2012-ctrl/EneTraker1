@@ -105,3 +105,13 @@ function GameStatsModal({onSave,onCancel}){
   );
 }
 
+function StarRating({value,onChange,size=19}){
+  return(
+    <div style={{display:"flex",gap:2}}>
+      {[1,2,3,4,5].map(s=>(
+        <button key={s} onClick={()=>{haptic.light();onChange(value===s?0:s);}} className={"starbtn "+(s<=value?"on":"")} style={{fontSize:size,lineHeight:1,color:s<=value?"#A1A1AA":"rgba(255,255,255,0.1)"}}>★</button>
+      ))}
+    </div>
+  );
+}
+

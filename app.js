@@ -24,39 +24,6 @@ function App(){
   const [specialTasks,setSpecialTasks]=useState(()=>load("stasks",[]));
   const [foodStars,setFoodStars]=useState(()=>load("fstars_"+td,0));
 
-  // Note: migra le vecchie note giornaliere "enea_note_<date>" nel nuovo array unificato
-  const [notes,setNotes]=useState(()=>{
-    const existing=load("notes_v1",null);
-    if(existing&&Array.isArray(existing))return existing;
-    const migrated=[];
-    try{
-      for(let i=0;i<localStorage.length;i++){
-        const k=localStorage.key(i);
-        if(k&&k.startsWith("enea_note_")){
-          const dateStr=k.replace("enea_note_","");
-          if(!/^\d{4}-\d{2}-\d{2}$/.test(dateStr))continue;
-          let txt="";
-          try{txt=JSON.parse(localStorage.getItem(k))||"";}catch{}
-          if(typeof txt==="string"&&txt.trim()){
-            const ts=new Date(dateStr+"T12:00:00").getTime();
-            migrated.push({
-              id:String(ts)+"_"+Math.random().toString(36).slice(2,10),
-              title:new Date(dateStr+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"}),
-              body:txt.replace(/\n/g,"<br/>"),
-              pinned:false,
-              createdAt:ts,
-              updatedAt:ts,
-            });
-          }
-        }
-      }
-    }catch{}
-    migrated.sort((a,b)=>b.updatedAt-a.updatedAt);
-    save("notes_v1",migrated);
-    return migrated;
-  });
-  useEffect(()=>{save("notes_v1",notes);},[notes]);
-
   // Eventi "imprevisto": esercizi/pasti/task saltati nel giorno corrente
   const [skippedEx,setSkippedEx]=useState(()=>new Set(load("skip_ex_"+td,[])));
   const [skippedMeals,setSkippedMeals]=useState(()=>new Set(load("skip_meals_"+td,[])));
@@ -216,7 +183,6 @@ function App(){
     compEx,compSk,total,allDone,
     skippedEx,setSkippedEx,skippedMeals,setSkippedMeals,skippedTasks2,setSkippedTasks2,
     calEvents,setCalEvents,
-    notes,setNotes,
   };
 
   const [editMode,setEditMode]=useState(false);
@@ -255,7 +221,6 @@ function App(){
               dailyLogs={dailyLogs} setDailyLogs={setDailyLogs}
               completedDays={completedDays} setCompletedDays={setCompletedDays}
               setStreak={setStreak}
-              notes={notes} setNotes={setNotes}
             />
           : <>
               {tab==="home"&&<HomeTab {...p}/>}

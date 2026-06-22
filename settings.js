@@ -28,7 +28,7 @@ function EmojiPicker({value,onChange,list,size=44}){
   );
 }
 
-function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,customMealPlan,setCustomMealPlan,tasks,setTasks,onClose,dailyLogs,setDailyLogs,completedDays,setCompletedDays,setStreak,notes,setNotes}){
+function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,customMealPlan,setCustomMealPlan,tasks,setTasks,onClose,dailyLogs,setDailyLogs,completedDays,setCompletedDays,setStreak}){
   const [section,setSection]=useState(null);
   const [draft,setDraft]=useState({...profile});
   const [schedDraft,setSchedDraft]=useState(()=>JSON.parse(JSON.stringify(customSchedule)));
@@ -120,7 +120,6 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
   const SECS=[
     {id:"profile",  icon:"",label:"Dati profilo"},
     {id:"tracking", icon:"",label:"Stato app (inizia / pausa / reset)"},
-    {id:"notes",    icon:"",label:"Note"},
     {id:"training", icon:"",label:"Piano allenamento"},
     {id:"nutrition",icon:"",label:"Piano alimentare"},
     {id:"tasks",    icon:"", label:"Task quotidiane"},
@@ -307,7 +306,6 @@ function SettingsTab({profile,setProfile,customSchedule,setCustomSchedule,custom
                 <button onClick={()=>setTaskDraft(p=>[...p,{id:genId(),text:"",subtitle:"",days:[0,1,2,3,4,5,6]}])} style={{background:"rgba(255,255,255,0.04)",border:"1px dashed rgba(255,255,255,0.1)",borderRadius:10,color:"rgba(255,255,255,0.3)",fontSize:13,padding:"9px",cursor:"pointer",width:"100%",marginTop:6}}>+ Nuova task in coda</button>
               </div>
             )}
-            {s.id==="notes"&&<NotesArchive notes={notes} setNotes={setNotes}/>}
             {s.id==="tracking"&&<TrackingSection/>}
             {s.id==="history"&&<HistoryEditor dailyLogs={dailyLogs} setDailyLogs={setDailyLogs} completedDays={completedDays} setCompletedDays={setCompletedDays} setStreak={setStreak}/>}
             {s.id==="partite"&&<PartiteCalendar/>}

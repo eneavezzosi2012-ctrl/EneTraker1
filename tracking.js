@@ -46,12 +46,12 @@ function TrackingSection(){
   }
 
   async function doFullReset(){
-    // Cancella SOLO i dati STATISTICI — preserva profilo, schede, piani pasto, task, goal, note, calendario, ecc.
+    // Cancella SOLO i dati STATISTICI — preserva profilo, schede, piani pasto, task, goal, calendario, ecc.
     const keepPrefixes=new Set([
       "enea_current_user","enea_local_accounts","enea_data_version","enea_fip_seeded_v22",
       "enea_profile","enea_custom_schedule","enea_custom_meal_plan",
       "enea_tasks_v2","enea_stasks",
-      "enea_notes_v1","enea_cal_events",
+      "enea_cal_events",
       "enea_fip_team_name",
       "enea_records","enea_records_banner_dismissed",
     ]);

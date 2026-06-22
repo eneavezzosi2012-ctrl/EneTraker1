@@ -1,6 +1,6 @@
 function HomeTab({profile,setProfile,
   dailyLogs,td,wd,dow,sched,completedDays,trainingDone,compTasks,todayTasks,taskDone,
-  water,weekComp,streak,bmi,foodStars,taskPct,compEx,compSk,total,skippedEx,skippedMeals,skippedTasks2,exercises,skills,calEvents,notes,setNotes,customSchedule}){
+  water,weekComp,streak,bmi,foodStars,taskPct,compEx,compSk,total,skippedEx,skippedMeals,skippedTasks2,exercises,skills,calEvents,customSchedule}){
   const [editP,setEditP]=useState(false);
   const [draft,setDraft]=useState(profile);
   const [homeView,setHomeView]=useState("general"); // "general" | "stats"
@@ -230,8 +230,6 @@ function HomeTab({profile,setProfile,
         <span style={{fontSize:9,color:"rgba(255,255,255,0.15)"}}>oggi</span>
       </div>
     </div>
-
-    <NoteCard notes={notes} setNotes={setNotes}/>
 
     {(()=>{
       // Priorità: partite importate da PDF FIP; fallback al default storico

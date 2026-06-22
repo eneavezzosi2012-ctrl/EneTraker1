@@ -515,351 +515,6 @@ textarea{resize:none;line-height:1.55;}
 }
 
 /* ═══════════════════════════════════════
-   NOTE LIST — minimal, icone via mask CSS
-   ═══════════════════════════════════════ */
-.note-row{
-  display:flex;align-items:flex-start;gap:11px;
-  padding:11px 13px;
-  background:transparent;border:none;
-  border-radius:var(--r-md);
-  cursor:pointer;width:100%;text-align:left;
-  position:relative;margin-bottom:2px;
-  transition:background .1s linear;
-  -webkit-tap-highlight-color:transparent;
-}
-.note-row:active{transform:none;background:var(--fill-4);}
-.note-row + .note-row::before{
-  content:"";
-  position:absolute;top:-1px;left:58px;right:13px;
-  height:.5px;background:var(--sep);
-}
-.note-row.pinned{
-  background:rgba(255,255,255,.045);
-  border:1px solid rgba(255,255,255,.10);
-}
-.note-row.pinned + .note-row::before{display:none;}
-.note-row.pinned + .note-row.pinned::before{display:block;}
-
-/* Icona nota: niente cerchietti colorati di sfondo, superficie neutra */
-.note-icon{
-  width:38px;height:38px;border-radius:var(--r-md);
-  background:var(--fill-4);
-  border:1px solid var(--sep);
-  display:flex;align-items:center;justify-content:center;
-  font-size:0;color:transparent;flex-shrink:0;
-  position:relative;
-}
-.note-icon::before{
-  content:"";
-  position:absolute;
-  width:17px;height:17px;
-  background-color:var(--lbl-2);
-  -webkit-mask-size:contain;mask-size:contain;
-  -webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
-  -webkit-mask-position:center;mask-position:center;
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
-}
-.note-row.pinned .note-icon{
-  background:rgba(255,255,255,.08);
-  border-color:rgba(255,255,255,.18);
-}
-.note-row.pinned .note-icon::before{
-  background-color:#FFFFFF;
-  width:15px;height:15px;
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22%20fill%3D%22black%22%20stroke%3D%22black%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22%20fill%3D%22black%22%20stroke%3D%22black%22/%3E%3C/svg%3E");
-}
-.note-title{
-  font-size:14px;font-weight:700;
-  color:rgba(255,255,255,.95);
-  letter-spacing:-.1px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
-}
-/* Data + anteprima reale sulla stessa "riga" (come Apple Notes), clampati insieme a 2 righe */
-.note-meta-line{
-  display:-webkit-box;
-  -webkit-line-clamp:2;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  margin-top:3px;line-height:1.4;
-}
-.note-meta{font-size:12.5px;color:var(--lbl-2);font-weight:500;}
-.note-snippet{font-size:12.5px;color:var(--lbl-3);font-weight:400;}
-.note-section-hdr{
-  font-size:11px;font-weight:700;letter-spacing:.6px;
-  text-transform:uppercase;color:var(--lbl-3);
-  margin:6px 4px 8px;
-  display:flex;align-items:center;gap:6px;
-}
-.note-section-hdr.gray{color:var(--lbl-3);}
-
-/* ── NOTE SEARCH — barra fissa in alto (sticky) stile iOS ── */
-.note-list-wrap{position:relative;}
-.note-search-sticky{
-  position:sticky;top:0;z-index:5;
-  background:rgba(0,0,0,.88);
-  backdrop-filter:blur(14px) saturate(120%);
-  -webkit-backdrop-filter:blur(14px) saturate(120%);
-  padding:6px 0 10px;margin-bottom:2px;
-}
-.note-search{
-  display:flex;align-items:center;gap:8px;
-  background:var(--fill-4);
-  border:1px solid var(--sep);
-  border-radius:var(--r-md);
-  padding:9px 12px;
-  transition:border-color .1s linear,background .1s linear;
-}
-.note-search:focus-within{
-  border-color:rgba(255,255,255,.32);
-  background:rgba(255,255,255,.045);
-}
-.note-search input{
-  flex:1;background:transparent;border:none;outline:none;
-  color:#fff;font-size:16px;font-family:var(--font-sys);
-}
-.note-search input::placeholder{color:var(--lbl-3);}
-.note-search-clear{
-  background:rgba(255,255,255,.12);border:none;border-radius:50%;
-  width:20px;height:20px;color:rgba(255,255,255,.6);font-size:12px;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  line-height:1;flex-shrink:0;-webkit-tap-highlight-color:transparent;
-}
-
-/* ── NOTE FAB — tasto "Nuova nota" fluttuante, sempre visibile, centrato come .nav ── */
-.note-fab-wrap{
-  position:fixed;left:50%;transform:translateX(-50%);
-  bottom:calc(14px + env(safe-area-inset-bottom,0px));
-  width:100%;max-width:430px;
-  display:flex;justify-content:flex-end;
-  padding:0 18px;
-  pointer-events:none;
-  z-index:60;
-}
-.note-fab{
-  pointer-events:auto;
-  width:54px;height:54px;border-radius:50%;
-  background:#FFFFFF;border:none;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 6px 18px rgba(0,0,0,.45),0 2px 6px rgba(0,0,0,.3);
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:transform .1s linear;
-}
-.note-fab:active{transform:scale(.93);}
-.note-fab .icon-edit{width:19px;height:19px;}
-.note-fab .icon-edit::before{background-color:#000000;}
-
-/* ═══════════════════════════════════════
-   NOTE EDITOR — schermata full-screen (stack iOS, non bottom sheet)
-   Animazioni ridotte a dissolvenze/scorrimenti rapidi e secchi
-   ═══════════════════════════════════════ */
-@keyframes neSlideIn{
-  from{transform:translateX(100%);}
-  to{transform:translateX(0);}
-}
-.note-editor-overlay{
-  position:fixed;inset:0;
-  background:var(--bg);
-  z-index:9999;
-  display:flex;justify-content:center;
-  overscroll-behavior:contain;
-}
-.note-editor-screen{
-  width:100%;max-width:430px;
-  background:var(--bg);
-  display:flex;flex-direction:column;
-  position:relative;overflow:hidden;
-  animation:neSlideIn .18s var(--ios);
-}
-
-/* ── Top bar: "‹ Note" (salva e torna indietro) · "Fine" (chiude la tastiera) · ··· (Fissa/Elimina) ── */
-.ne-topbar{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:max(16px, env(safe-area-inset-top)) 8px 8px 4px;
-  flex-shrink:0;
-}
-.ne-back{
-  background:none;border:none;color:var(--accent);
-  font-family:var(--font-sys);font-size:17px;font-weight:400;
-  padding:4px 8px 4px 4px;cursor:pointer;
-  transition:opacity .1s linear;
-  -webkit-tap-highlight-color:transparent;
-}
-.ne-back:active{opacity:.5;}
-.ne-top-actions{display:flex;align-items:center;gap:2px;}
-.ne-done{
-  background:none;border:none;color:var(--accent);
-  font-family:var(--font-sys);font-size:17px;font-weight:700;
-  padding:4px 8px;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.ne-done:active{opacity:.5;}
-.ne-more-wrap{position:relative;}
-.ne-more-btn{
-  background:var(--fill-4);border:none;border-radius:50%;
-  width:32px;height:32px;
-  color:rgba(255,255,255,.85);font-size:15px;letter-spacing:1px;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-}
-.ne-more-btn:active{background:var(--fill-2);}
-.ne-more-menu{
-  position:absolute;top:calc(100% + 6px);right:0;
-  background:#161616;border:1px solid var(--sep-strong);
-  border-radius:var(--r-lg);min-width:188px;overflow:hidden;
-  box-shadow:0 10px 30px rgba(0,0,0,.55);
-  z-index:20;
-}
-.ne-more-menu button{
-  width:100%;display:flex;align-items:center;gap:10px;
-  padding:12px 14px;background:none;border:none;
-  color:#fff;font-family:var(--font-sys);font-size:14px;font-weight:500;
-  cursor:pointer;text-align:left;-webkit-tap-highlight-color:transparent;
-}
-.ne-more-menu button:active{background:var(--fill-3);}
-.ne-more-menu .icon-pin-inline,.ne-more-menu .icon-trash{width:15px;height:15px;top:0;}
-.ne-more-menu .icon-pin-inline::before{background-color:var(--lbl-1);}
-.ne-more-menu .icon-trash::before{background-color:var(--lbl-1);}
-.ne-more-sep{height:.5px;background:var(--sep);}
-
-.ne-meta{
-  text-align:center;font-size:11px;color:var(--lbl-3);
-  font-weight:400;letter-spacing:.1px;
-  padding:2px 16px 8px;flex-shrink:0;
-}
-
-/* ── Corpo: unico contentEditable, la 1a riga = titolo (stile automatico) ── */
-.ne-body{
-  flex:1;min-height:0;
-  overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;
-  padding:4px 18px 40px;
-  color:rgba(255,255,255,.92);
-  font-family:var(--font-sys);font-size:17px;line-height:1.55;
-  outline:none;-webkit-user-select:text;user-select:text;
-}
-.ne-body>:first-child{
-  display:block;font-size:24px;font-weight:800;
-  letter-spacing:-.3px;margin-bottom:6px;color:#fff;
-}
-.ne-body.is-empty:before{
-  content:attr(data-placeholder);color:var(--lbl-4);
-  pointer-events:none;display:block;
-  font-size:24px;font-weight:800;letter-spacing:-.3px;
-}
-.ne-body h1{font-size:26px;font-weight:800;letter-spacing:-.4px;margin:10px 0 4px;}
-.ne-body h2{font-size:20px;font-weight:700;letter-spacing:-.2px;margin:9px 0 4px;}
-.ne-body h3{font-size:17px;font-weight:700;margin:8px 0 3px;color:rgba(255,255,255,.9);}
-.ne-body pre{
-  font-family:var(--font-mono);font-size:15px;line-height:1.5;
-  white-space:pre-wrap;word-break:break-word;
-  background:var(--fill-4);border:1px solid var(--sep);
-  border-radius:var(--r-sm);padding:8px 10px;margin:6px 0;
-}
-.ne-body ul,.ne-body ol{padding-left:24px;margin:6px 0;}
-.ne-body li{margin-bottom:4px;}
-.ne-body blockquote{
-  margin:4px 0 4px 4px;padding-left:12px;
-  border-left:2px solid var(--sep-strong);color:var(--lbl-2);
-}
-.ne-body b,.ne-body strong{font-weight:700;color:#fff;}
-.ne-body u{text-decoration:underline;}
-.ne-body s,.ne-body strike{text-decoration:line-through;}
-.ne-body mark{border-radius:3px;padding:0 2px;}
-
-/* ── Barra incollata sopra la tastiera: altezza schermo = visualViewport, quindi
-     toolbar/pannello restano in fondo al flusso flex esattamente sopra la tastiera ── */
-.ne-keyboard-bar{
-  flex-shrink:0;
-  background:rgba(10,10,10,.97);
-  backdrop-filter:blur(18px) saturate(120%);
-  -webkit-backdrop-filter:blur(18px) saturate(120%);
-  border-top:.5px solid var(--sep);
-}
-
-/* Toolbar minima: Checklist · Aa · Chiudi tastiera */
-.ne-toolbar{
-  display:flex;align-items:center;gap:6px;
-  padding:8px 14px calc(8px + env(safe-area-inset-bottom,0px));
-}
-.ne-tb-btn{
-  flex:1;height:40px;
-  background:var(--fill-4);border:none;border-radius:var(--r-md);
-  color:rgba(255,255,255,.85);
-  font-family:var(--font-sys);font-size:17px;font-weight:600;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;-webkit-tap-highlight-color:transparent;
-  transition:background .1s linear,color .1s linear;
-}
-.ne-tb-btn:active{background:var(--fill-2);}
-.ne-tb-btn.aa{font-size:16px;font-weight:700;}
-.ne-tb-btn.close-kb{flex:.7;font-size:19px;}
-
-/* Pannello "Aa" — sostituisce la toolbar, resta sopra la tastiera (che rimane aperta) */
-.ne-aa-panel{
-  max-height:300px;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));
-}
-.ne-aa-head{
-  display:flex;align-items:center;justify-content:space-between;
-  font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
-  color:var(--lbl-3);margin-bottom:10px;
-}
-.ne-aa-close{
-  background:var(--fill-3);border:none;border-radius:50%;
-  width:22px;height:22px;color:var(--lbl-1);font-size:11px;
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  -webkit-tap-highlight-color:transparent;
-}
-.ne-aa-group{margin-bottom:12px;}
-.ne-aa-group:last-child{margin-bottom:0;}
-.ne-aa-label{
-  font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
-  color:var(--lbl-3);margin-bottom:6px;
-}
-.ne-aa-row{
-  display:flex;align-items:center;gap:6px;
-  overflow-x:auto;-webkit-overflow-scrolling:touch;
-  padding-bottom:2px;
-}
-.ne-aa-pill{
-  flex-shrink:0;padding:8px 14px;border-radius:999px;
-  background:var(--fill-4);border:1px solid var(--sep);
-  color:rgba(255,255,255,.85);
-  font-family:var(--font-sys);font-size:14px;font-weight:600;
-  cursor:pointer;white-space:nowrap;
-  transition:background .1s linear,color .1s linear,border-color .1s linear;
-  -webkit-tap-highlight-color:transparent;
-}
-.ne-aa-pill.active{background:#FFFFFF;color:#000;border-color:#FFFFFF;}
-.ne-aa-charbtn{
-  flex-shrink:0;width:40px;height:40px;border-radius:var(--r-md);
-  background:var(--fill-4);border:none;
-  color:rgba(255,255,255,.85);
-  font-family:var(--font-sys);font-size:16px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .1s linear,color .1s linear;
-  -webkit-tap-highlight-color:transparent;
-}
-.ne-aa-charbtn.italic{font-style:italic;}
-.ne-aa-charbtn.under{text-decoration:underline;}
-.ne-aa-charbtn.strike{text-decoration:line-through;}
-.ne-aa-charbtn.active,.ne-tb-btn.active{background:#FFFFFF;color:#000;}
-.ne-aa-divider{width:.5px;height:24px;background:var(--sep);flex-shrink:0;margin:0 2px;}
-
-/* Evidenziatori — 4 grigi + rimuovi, nessun colore */
-.ne-hl-swatch{
-  flex-shrink:0;width:30px;height:30px;border-radius:50%;
-  border:1px solid rgba(255,255,255,.25);
-  cursor:pointer;position:relative;-webkit-tap-highlight-color:transparent;
-}
-.ne-hl-swatch.clear{
-  background:var(--fill-4);
-  display:flex;align-items:center;justify-content:center;
-}
-.ne-hl-swatch.clear .icon-ban-inline{width:14px;height:14px;color:var(--lbl-2);}
-
-/* ═══════════════════════════════════════
    ICONE STRUTTURALI AGGIUNTIVE — v5.1
    Tutte le emoji di interfaccia (impostazioni, cibo, azioni, navigazione)
    sono sostituite da maschere SVG monocromatiche.
@@ -868,8 +523,8 @@ textarea{resize:none;line-height:1.55;}
    ═══════════════════════════════════════ */
 
 /* ── Base comune per tutte le icone-maschera inline ── */
-.icon-trash,.icon-warning,.icon-pin-inline,.icon-search,.icon-note-inline,
-.icon-note-empty,.icon-dumbbell-inline,.icon-meal-inline,.icon-meal,
+.icon-trash,.icon-warning,
+.icon-dumbbell-inline,.icon-meal-inline,.icon-meal,
 .icon-meal-tiny,.icon-dumbbell-tiny,.icon-pause,.sec-icon,
 .icon-edit,.icon-repeat,.icon-home,.icon-plane,.icon-chart,.icon-eye,
 .icon-ban,.icon-flag,.icon-box,.icon-clipboard,.icon-pin-marker,
@@ -878,8 +533,8 @@ textarea{resize:none;line-height:1.55;}
   position:relative;
   flex-shrink:0;
 }
-.icon-trash::before,.icon-warning::before,.icon-pin-inline::before,.icon-search::before,
-.icon-note-inline::before,.icon-note-empty::before,.icon-dumbbell-inline::before,
+.icon-trash::before,.icon-warning::before,
+.icon-dumbbell-inline::before,
 .icon-meal-inline::before,.icon-meal::before,.icon-meal-tiny::before,
 .icon-dumbbell-tiny::before,.icon-pause::before,.sec-icon::before,
 .icon-edit::before,.icon-repeat::before,.icon-home::before,.icon-plane::before,
@@ -898,14 +553,6 @@ textarea{resize:none;line-height:1.55;}
 .icon-trash::before{background-color:var(--lbl-2);}
 .icon-warning{width:14px;height:14px;top:1px;}
 .icon-warning::before{background-color:#F5F5F5;}
-.icon-pin-inline{width:11px;height:11px;top:1px;}
-.icon-pin-inline::before{background-color:var(--lbl-3);}
-.icon-search{width:15px;height:15px;}
-.icon-search::before{background-color:var(--lbl-3);}
-.icon-note-inline{width:11px;height:11px;top:1px;}
-.icon-note-inline::before{background-color:var(--lbl-3);}
-.icon-note-empty{width:34px;height:34px;margin:0 auto;}
-.icon-note-empty::before{background-color:var(--lbl-3);}
 .icon-dumbbell-inline{width:12px;height:12px;top:1px;}
 .icon-dumbbell-inline::before{background-color:var(--lbl-3);}
 .icon-meal-inline{width:11px;height:11px;top:1px;}
@@ -954,18 +601,6 @@ textarea{resize:none;line-height:1.55;}
 .icon-warning::before{
   -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203.5l9.5%2016.5H2.5z%22/%3E%3Cpath%20d%3D%22M12%209.5v4.5%22/%3E%3Cpath%20d%3D%22M12%2017h0%22/%3E%3C/svg%3E");
   mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M12%203.5l9.5%2016.5H2.5z%22/%3E%3Cpath%20d%3D%22M12%209.5v4.5%22/%3E%3Cpath%20d%3D%22M12%2017h0%22/%3E%3C/svg%3E");
-}
-.icon-pin-inline::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.6%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M14.5%203.5l6%206-3.1%203.1.4%204-3-3-5.4%205.4-1.4-1.4%205.4-5.4-3-3%204-.4%203.1-3.1z%22/%3E%3C/svg%3E");
-}
-.icon-search::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2210.5%22%20r%3D%226.5%22/%3E%3Cpath%20d%3D%22M19.5%2019.5l-4.3-4.3%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Ccircle%20cx%3D%2210.5%22%20cy%3D%2210.5%22%20r%3D%226.5%22/%3E%3Cpath%20d%3D%22M19.5%2019.5l-4.3-4.3%22/%3E%3C/svg%3E");
-}
-.icon-note-inline::before,.icon-note-empty::before{
-  -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
-  mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M6%203.5h9l3%203v13a1%201%200%200%201-1%201H6a1%201%200%200%201-1-1V4.5a1%201%200%200%201%201-1z%22/%3E%3Cpath%20d%3D%22M15%203.5v3a1%201%200%200%200%201%201h3%22/%3E%3Cpath%20d%3D%22M8.2%2012h7.6%22/%3E%3Cpath%20d%3D%22M8.2%2015.3h7.6%22/%3E%3Cpath%20d%3D%22M8.2%208.7h4.5%22/%3E%3C/svg%3E");
 }
 .icon-dumbbell-inline::before,.icon-dumbbell-tiny::before{
   -webkit-mask-image:url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22black%22%20stroke-width%3D%221.7%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22M5%208v8%22/%3E%3Cpath%20d%3D%22M3%2010v4%22/%3E%3Cpath%20d%3D%22M19%208v8%22/%3E%3Cpath%20d%3D%22M21%2010v4%22/%3E%3Cpath%20d%3D%22M8%2012h8%22/%3E%3C/svg%3E");
@@ -1071,8 +706,6 @@ button.icon-trash::before{
 }
 button.icon-trash::after{content:none;}
 button.icon-trash:active::before{background-color:#FFFFFF;}
-
-
 
 
 /* ── Bottone impostazioni (ingranaggio) in app.js ── */
